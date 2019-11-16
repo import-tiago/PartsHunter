@@ -2,10 +2,10 @@
 PartsHunter is an automatic organizer drawer part identificator system with wireless connection for remote management via smartphones and computers.
 
 ## PCB Gerber Preview
-![enter image description here](https://lh3.googleusercontent.com/K7e8IVE0NYXMukJ8DKRDlWNtipu_It7PXWK6e7vAwahFuzRGvGKD8U49hNaJK8dmCcfjk_rcUTBtwQ)
+<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Others/PartsHunter%20Gerber%20Preview.png" width="70%" height="70%">
 
 ## Schematic
-![enter image description here](https://lh3.googleusercontent.com/-XdKLJyOVVpQAgo-qhVDoIEv0AKoE9KByOqFftETB7E4rWh-Zzq6cLmRBjIU5i2Y3aLlAA6yOBuCQg=s2000)
+<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Others/PartsHunter%20Schematic%20Preview.png" width="100%" height="100%">
 
 ### Contributing
 0. Give this project a :star:
