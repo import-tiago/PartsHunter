@@ -1,6 +1,6 @@
 # PartsHunter
 
-[![Status](https://img.shields.io/badge/status-WIP-red)](https://github.com/TiagoPaulaSilva/PowerSpy) [![Donate](https://img.shields.io/badge/support-Buy%20me%20a%20coffee-yellow)](https://www.buymeacoffee.com/TiagoPaulaSilva)
+[![Status](https://img.shields.io/badge/status-WIP-red)](https://github.com/TiagoPaulaSilva/PartsHunter) [![Donate](https://img.shields.io/badge/support-Buy%20me%20a%20coffee-yellow)](https://www.buymeacoffee.com/TiagoPaulaSilva)
 
 PartsHunter is an automatic organizer drawer part identificator system with wireless connection for remote management via smartphones and computers.
 
