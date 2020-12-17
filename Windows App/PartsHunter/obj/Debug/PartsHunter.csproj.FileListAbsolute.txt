@@ -1,0 +1,10 @@
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\bin\Debug\PartsHunter.exe.config
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\bin\Debug\PartsHunter.exe
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\bin\Debug\PartsHunter.pdb
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.csprojAssemblyReference.cache
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.Form1.resources
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.Properties.Resources.resources
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.csproj.GenerateResource.cache
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.csproj.CoreCompileInputs.cache
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.exe
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.pdb
