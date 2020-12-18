@@ -8,3 +8,10 @@ C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunt
 C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.csproj.CoreCompileInputs.cache
 C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.exe
 C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.pdb
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\bin\Debug\FireSharp.dll
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\bin\Debug\FireSharp.Serialization.JsonNet.dll
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\bin\Debug\RestSharp.dll
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\bin\Debug\RestSharp.xml
+C:\Users\Tiago\Documents\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.csproj.CopyComplete
