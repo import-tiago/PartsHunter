@@ -581,7 +581,7 @@ namespace PartsHunter
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+           
             comboBoxSearchCategory.Text = comboBoxSearchCategory.Items[0].ToString();
 
             SerialPort.PortName = "COM5";
@@ -616,8 +616,7 @@ namespace PartsHunter
         }
 
         void GetFirebase(string input)
-        {
-            
+        {            
             FirebaseResponse response = Client.Get(input);
 
             string stringJSON = response.Body;
@@ -625,50 +624,104 @@ namespace PartsHunter
              decodedJSON = serializer.DeserializeObject(stringJSON);
             if (decodedJSON == null)
                 decodedJSON = decodedJSON = serializer.DeserializeObject("{void:0}");
-
-
-
         }
 
         void SearchByCategory()
         {
             string[] newRow;
             GetFirebase(comboBoxSearchCategory.Text);
-
+            dataGridViewResults.AllowUserToAddRows = true;
             dataGridViewResults.Rows.Clear();           
             
-                foreach (var key in decodedJSON.Keys)
+            foreach (var key in decodedJSON.Keys)
+            {
+                if (key != "void")
                 {
-                    if (key != "void")
-                    {
-                        int numberResults = decodedJSON.Keys.Count;
-                        labelNumberResults.Text = numberResults.ToString() + " results found";
+                    int numberResults = decodedJSON.Keys.Count;
+                    labelNumberResults.Text = numberResults.ToString() + " results found";
 
-                        foreach (DataGridViewRow row in dataGridViewResults.Rows)
-                        {
-                            newRow = new string[] { decodedJSON[key]["Description"], decodedJSON[key]["Quantity"], decodedJSON[key]["Box"], decodedJSON[key]["Drawer"] };
+                    foreach (DataGridViewRow row in dataGridViewResults.Rows)
+                    {
+                        newRow = new string[] { decodedJSON[key]["Description"], decodedJSON[key]["Quantity"], decodedJSON[key]["Box"], decodedJSON[key]["Drawer"] };
                            
-                            if (row.Cells[0].Value != decodedJSON[key]["Description"])
+                        if (row.Cells[0].Value != decodedJSON[key]["Description"])
+                        {
+                            dataGridViewResults.Rows.Add(newRow);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    Send_UART("0");
+                    Highlight_Selected_Drawer("0", SEARCH);
+                    Highlight_Selected_Drawer("0", REGISTER);
+                    labelNumberResults.Text = "0" + " results found";
+                }
+            }
+            dataGridViewResults.AllowUserToAddRows = false;
+        }
+
+        void SearchByDescription(string input)
+        {
+            string[] newRow;
+            GetFirebase("");
+            
+            
+            dataGridViewResults.AllowUserToAddRows = true;
+            
+            
+            dataGridViewResults.Rows.Clear();
+
+            foreach (var key in decodedJSON.Keys)
+            {
+                if (key != "void")
+                {
+                    foreach (var key2 in decodedJSON[key].Keys)
+                    {
+                        string s = decodedJSON[key][key2]["Description"].ToString();
+
+                        string[] words = input.Split(' ');
+
+
+
+                        foreach (var w in words)
+                        {
+
+                            if (s.Contains(w))
                             {
-                                dataGridViewResults.Rows.Add(newRow);
-                                break;
+                                foreach (DataGridViewRow row in dataGridViewResults.Rows)
+                                {
+                                    newRow = new string[] { decodedJSON[key][key2]["Description"], decodedJSON[key][key2]["Quantity"], decodedJSON[key][key2]["Box"], decodedJSON[key][key2]["Drawer"] };
+
+                                    if (row.Cells[0].Value != decodedJSON[key][key2]["Description"])
+                                    {
+                                        dataGridViewResults.Rows.Add(newRow);
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                labelNumberResults.Text = "0" + " results found";
                             }
                         }
                     }
-                    else
-                    {
-                        Send_UART("0");
-                        Highlight_Selected_Drawer("0", SEARCH);
-                        Highlight_Selected_Drawer("0", REGISTER);
-                        labelNumberResults.Text = "0" + " results found";
                 }
-                }
-            
+                else
+                {
+                    Send_UART("0");
+                    Highlight_Selected_Drawer("0", SEARCH);
+                    Highlight_Selected_Drawer("0", REGISTER);
+                    labelNumberResults.Text = "0" + " results found";
+                }                
+            }
+            dataGridViewResults.AllowUserToAddRows = false;
         }
 
         private void buttonSearch_Click(object sender, EventArgs e)
         {
-            SearchByCategory();
+            SearchByDescription(textBoxSearch.Text);
         }
 
         private void textBoxSearch_KeyDown(object sender, KeyEventArgs e)

@@ -194,7 +194,7 @@ namespace PartsHunter
             this.textBoxSearch.Name = "textBoxSearch";
             this.textBoxSearch.Size = new System.Drawing.Size(636, 20);
             this.textBoxSearch.TabIndex = 56;
-            this.textBoxSearch.Text = "Resistor";
+            this.textBoxSearch.Text = "10k";
             this.textBoxSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxSearch_KeyDown);
             // 
             // btCOMConnect
@@ -569,6 +569,8 @@ namespace PartsHunter
             this.dataGridViewResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewResults.Location = new System.Drawing.Point(3, 16);
             this.dataGridViewResults.Name = "dataGridViewResults";
+            this.dataGridViewResults.ReadOnly = true;
+            this.dataGridViewResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewResults.Size = new System.Drawing.Size(424, 429);
             this.dataGridViewResults.TabIndex = 0;
             this.dataGridViewResults.SelectionChanged += new System.EventHandler(this.dataGridViewResults_SelectionChanged);
