@@ -19,7 +19,7 @@ void setup()
 	FastLED.clear();
 	FastLED.show();
 
-	Serial.begin(9600);
+	Serial.begin(115200);
 }
 
 void loop()
@@ -40,7 +40,7 @@ void Highlight_Drawer(unsigned int box, unsigned int drawer)
 
 	if (drawer > 0)
 	{
-		leds[((box * NUM_LEDS_IN_BOX) - NUM_LEDS_IN_BOX) + drawer - 1] = CRGB::Blue;
+		leds[((box * NUM_LEDS_IN_BOX) - NUM_LEDS_IN_BOX) + drawer - 1] = CRGB::Red;
 	}
 
 	FastLED.show();
