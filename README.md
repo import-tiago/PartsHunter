@@ -2,13 +2,30 @@
 
 [![Status](https://img.shields.io/badge/status-WIP-red)](https://github.com/TiagoPaulaSilva/PartsHunter) [![Donate](https://img.shields.io/badge/support-Buy%20me%20a%20coffee-yellow)](https://www.buymeacoffee.com/TiagoPaulaSilva)
 
-PartsHunter is an automatic organizer drawer part identificator system with wireless connection for remote management via smartphones and computers.
+PartsHunter is an organizer system for storage and automatic identification of electronic components.
 
-## PCB Gerber Preview
-<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Others/PartsHunter%20Gerber%20Preview.png" width="70%" height="70%">
+## Mechanical Preview
+### PartsHunter
+<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Parts%20Hunter%20(Rendered%20Image).png" width="70%" height="70%">
 
-## Schematic
-<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Others/PartsHunter%20Schematic%20Preview.png" width="100%" height="100%">
+### Front Panel
+<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Front%20Panel%20(Rendered%20Image).png" width="70%" height="70%">
+
+### Back Panel
+<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Back%20Panel%20(Rendered%20Image).png" width="70%" height="70%">
+
+### Tube Glass
+<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Tube%20Glass%20(Rendered%20Image).png" width="70%" height="70%">
+
+### Top Support
+<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Top%20Support%20(Rendered%20Image).png" width="70%" height="70%">
+
+### Bottom Support
+<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Bottom%20Support%20(Rendered%20Image).png" width="70%" height="70%">
+
+### LED Strip Support
+<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/LED%20Strip%20Support%20(Rendered%20Image).png" width="70%" height="70%">
+
 
 ### Contributing
 0. Give this project a :star:
