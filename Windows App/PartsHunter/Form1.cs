@@ -36,6 +36,10 @@ namespace PartsHunter
 
         dynamic[] Last_Button_Properties = {"", Color.Transparent};
 
+        bool validatedCategory;
+        bool validatedDescription;
+        bool validatedQuantity;
+
         JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
 
         IFirebaseConfig Config = new FirebaseConfig
@@ -503,16 +507,6 @@ namespace PartsHunter
 
         }
 
-        private void buttonSave_Click(object sender, EventArgs e)
-        {
-            /*
-            Push_New_Component(comboBoxCategory.Text,
-                             textBoxDescription.Text,
-                             textBoxQuantity.Text,
-                          //   textBoxNewBox.Text,
-                             Selected_Drawer);
-            */
-        }
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -838,7 +832,7 @@ namespace PartsHunter
             Last_Button_Properties[0] = (sender as Button).Text;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonNewBox_Click(object sender, EventArgs e)
         {
             string[] newRow;
             
@@ -854,21 +848,75 @@ namespace PartsHunter
 
         }
 
-        private void textBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+
+
+        private void comboBoxCategory_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-      
-            if (string.IsNullOrWhiteSpace(comboBoxCategory.Text))
+            if (string.IsNullOrWhiteSpace(comboBoxCategory.Text) || comboBoxCategory.Text == comboBoxCategory.Items[0].ToString())
             {
-                e.Cancel = true;
-                comboBoxCategory.Focus();
-                errorProvider1.SetError(comboBoxCategory, "Name should not be left blank!");
+                // e.Cancel = true;
+                // comboBoxCategory.Focus();
+                validatedCategory = false;
+                errorProvider1.SetError(comboBoxCategory, "should not be left blank!");
             }
             else
             {
                 e.Cancel = false;
+                validatedCategory = true;
                 errorProvider1.SetError(comboBoxCategory, "");
             }
+        }
 
+        private void textBoxDescription_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(textBoxDescription.Text))
+            {
+                // e.Cancel = true;
+                // textBoxDescription.Focus();
+                validatedDescription = false;
+                errorProvider1.SetError(textBoxDescription, "should not be left blank!");
+            }
+            else
+            {
+                e.Cancel = false;
+                validatedDescription = true;
+                errorProvider1.SetError(textBoxDescription, "");
+            }
+        }
+
+        private void textBoxQuantity_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(textBoxQuantity.Text))
+            {
+                // e.Cancel = true;
+                // textBoxQuantity.Focus();
+                validatedQuantity = false;
+                errorProvider1.SetError(textBoxQuantity, "should not be left blank!");
+            }
+            else
+            {
+                e.Cancel = false;
+                validatedQuantity = true;
+                errorProvider1.SetError(textBoxQuantity, "");
+            }
+        }
+
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            if (validatedCategory && validatedDescription && validatedQuantity)
+            
+                MessageBox.Show("ok");
+            
+            else
+                MessageBox.Show("nok");
+            /*
+            Push_New_Component(comboBoxCategory.Text,
+                             textBoxDescription.Text,
+                             textBoxQuantity.Text,
+                          //   textBoxNewBox.Text,
+                             Selected_Drawer);
+            */
         }
     }
 }
