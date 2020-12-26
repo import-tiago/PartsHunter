@@ -31,6 +31,10 @@ namespace PartsHunter
         int Current_Selected_Registered_Box = 0;
         bool Pre_Load_Done = false;
         string Last_Draw_Highlight = "0";
+        string Current_Button_Click = String.Empty;
+        string Last_Button_Click = String.Empty;
+
+        dynamic[] Last_Button_Properties = {"", Color.Transparent};
 
         JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
 
@@ -309,7 +313,7 @@ namespace PartsHunter
         {
             labelNumberResults.Visible = false;
             comboBoxSearchCategory.Text = comboBoxSearchCategory.Items[0].ToString();
-
+            comboBoxCategory.Text = comboBoxCategory.Items[0].ToString();
             SerialPort.PortName = "COM5";
             SerialPort.Open();
             btCOMConnect.BackColor = Color.LightCoral;
@@ -501,11 +505,13 @@ namespace PartsHunter
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
+            /*
             Push_New_Component(comboBoxCategory.Text,
                              textBoxDescription.Text,
                              textBoxQuantity.Text,
-                             textBoxNewBox.Text,
+                          //   textBoxNewBox.Text,
                              Selected_Drawer);
+            */
         }
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -704,30 +710,30 @@ namespace PartsHunter
                             
                                 switch (JSON_Firebase[key][key2]["Drawer"])
                                 {
-                                    case "1": btnSelected_Drawer_1.BackColor = Color.LemonChiffon; break;
-                                    case "2": btnSelected_Drawer_2.BackColor = Color.LemonChiffon; break;
-                                    case "3": btnSelected_Drawer_3.BackColor = Color.LemonChiffon; break;
-                                    case "4": btnSelected_Drawer_4.BackColor = Color.LemonChiffon; break;
-                                    case "5": btnSelected_Drawer_5.BackColor = Color.LemonChiffon; break;
-                                    case "6": btnSelected_Drawer_6.BackColor = Color.LemonChiffon; break;
-                                    case "7": btnSelected_Drawer_7.BackColor = Color.LemonChiffon; break;
-                                    case "8": btnSelected_Drawer_8.BackColor = Color.LemonChiffon; break;
-                                    case "9": btnSelected_Drawer_9.BackColor = Color.LemonChiffon; break;
-                                    case "10": btnSelected_Drawer_10.BackColor = Color.LemonChiffon; break;
-                                    case "11": btnSelected_Drawer_11.BackColor = Color.LemonChiffon; break;
-                                    case "12": btnSelected_Drawer_12.BackColor = Color.LemonChiffon; break;
-                                    case "13": btnSelected_Drawer_13.BackColor = Color.LemonChiffon; break;
-                                    case "14": btnSelected_Drawer_14.BackColor = Color.LemonChiffon; break;
-                                    case "15": btnSelected_Drawer_15.BackColor = Color.LemonChiffon; break;
-                                    case "16": btnSelected_Drawer_16.BackColor = Color.LemonChiffon; break;
-                                    case "17": btnSelected_Drawer_17.BackColor = Color.LemonChiffon; break;
-                                    case "18": btnSelected_Drawer_18.BackColor = Color.LemonChiffon; break;
-                                    case "19": btnSelected_Drawer_19.BackColor = Color.LemonChiffon; break;
-                                    case "20": btnSelected_Drawer_20.BackColor = Color.LemonChiffon; break;
-                                    case "21": btnSelected_Drawer_21.BackColor = Color.LemonChiffon; break;
-                                    case "22": btnSelected_Drawer_22.BackColor = Color.LemonChiffon; break;
-                                    case "23": btnSelected_Drawer_23.BackColor = Color.LemonChiffon; break;
-                                    case "24": btnSelected_Drawer_24.BackColor = Color.LemonChiffon; break;
+                                    case "1":  if (btnSelected_Drawer_1.BackColor  != Color.LightGreen) btnSelected_Drawer_1.BackColor = Color.LemonChiffon; break;
+                                    case "2":  if (btnSelected_Drawer_2.BackColor  != Color.LightGreen) btnSelected_Drawer_2.BackColor = Color.LemonChiffon; break;
+                                    case "3":  if (btnSelected_Drawer_3.BackColor  != Color.LightGreen) btnSelected_Drawer_3.BackColor = Color.LemonChiffon; break;
+                                    case "4":  if (btnSelected_Drawer_4.BackColor  != Color.LightGreen) btnSelected_Drawer_4.BackColor = Color.LemonChiffon; break;
+                                    case "5":  if (btnSelected_Drawer_5.BackColor  != Color.LightGreen) btnSelected_Drawer_5.BackColor = Color.LemonChiffon; break;
+                                    case "6":  if (btnSelected_Drawer_6.BackColor  != Color.LightGreen) btnSelected_Drawer_6.BackColor = Color.LemonChiffon; break;
+                                    case "7":  if (btnSelected_Drawer_7.BackColor  != Color.LightGreen) btnSelected_Drawer_7.BackColor = Color.LemonChiffon; break;
+                                    case "8":  if (btnSelected_Drawer_8.BackColor  != Color.LightGreen) btnSelected_Drawer_8.BackColor = Color.LemonChiffon; break;
+                                    case "9":  if (btnSelected_Drawer_9.BackColor  != Color.LightGreen) btnSelected_Drawer_9.BackColor = Color.LemonChiffon; break;
+                                    case "10": if (btnSelected_Drawer_10.BackColor != Color.LightGreen) btnSelected_Drawer_10.BackColor = Color.LemonChiffon; break;
+                                    case "11": if (btnSelected_Drawer_11.BackColor != Color.LightGreen) btnSelected_Drawer_11.BackColor = Color.LemonChiffon; break;
+                                    case "12": if (btnSelected_Drawer_12.BackColor != Color.LightGreen) btnSelected_Drawer_12.BackColor = Color.LemonChiffon; break;
+                                    case "13": if (btnSelected_Drawer_13.BackColor != Color.LightGreen) btnSelected_Drawer_13.BackColor = Color.LemonChiffon; break;
+                                    case "14": if (btnSelected_Drawer_14.BackColor != Color.LightGreen) btnSelected_Drawer_14.BackColor = Color.LemonChiffon; break;
+                                    case "15": if (btnSelected_Drawer_15.BackColor != Color.LightGreen) btnSelected_Drawer_15.BackColor = Color.LemonChiffon; break;
+                                    case "16": if (btnSelected_Drawer_16.BackColor != Color.LightGreen) btnSelected_Drawer_16.BackColor = Color.LemonChiffon; break;
+                                    case "17": if (btnSelected_Drawer_17.BackColor != Color.LightGreen) btnSelected_Drawer_17.BackColor = Color.LemonChiffon; break;
+                                    case "18": if (btnSelected_Drawer_18.BackColor != Color.LightGreen) btnSelected_Drawer_18.BackColor = Color.LemonChiffon; break;
+                                    case "19": if (btnSelected_Drawer_19.BackColor != Color.LightGreen) btnSelected_Drawer_19.BackColor = Color.LemonChiffon; break;
+                                    case "20": if (btnSelected_Drawer_20.BackColor != Color.LightGreen) btnSelected_Drawer_20.BackColor = Color.LemonChiffon; break;
+                                    case "21": if (btnSelected_Drawer_21.BackColor != Color.LightGreen) btnSelected_Drawer_21.BackColor = Color.LemonChiffon; break;
+                                    case "22": if (btnSelected_Drawer_22.BackColor != Color.LightGreen) btnSelected_Drawer_22.BackColor = Color.LemonChiffon; break;
+                                    case "23": if (btnSelected_Drawer_23.BackColor != Color.LightGreen) btnSelected_Drawer_23.BackColor = Color.LemonChiffon; break;
+                                    case "24": if (btnSelected_Drawer_24.BackColor != Color.LightGreen) btnSelected_Drawer_24.BackColor = Color.LemonChiffon; break;
                                 }
                             
                             }
@@ -804,6 +810,8 @@ namespace PartsHunter
                                 case "24": btnSelected_Drawer_24.BackColor = Color.LemonChiffon; break;
                             }
 
+                            var _t = JSON_Firebase[key][key2]["Drawer"];
+
                             Highlight_Selected_Drawer(JSON_Firebase[key][key2]["Drawer"], REGISTER, Color.LightGreen);
                             Last_Draw_Highlight = JSON_Firebase[key][key2]["Drawer"];
 
@@ -815,124 +823,52 @@ namespace PartsHunter
             }            
         }
 
-        private void btnSelected_Drawer_24_Click_1(object sender, EventArgs e)
+        private void Get_Button_Click(object sender, EventArgs e)
         {
-            Highlight_Selected_Drawer(btnSelected_Drawer_24.Text, tabControl1.SelectedIndex, Color.LightCoral);
+           
+            
+            if (Last_Button_Properties[0] != (sender as Button).Text && Last_Button_Properties[0] != String.Empty)
+                Highlight_Selected_Drawer(Last_Button_Properties[0], tabControl1.SelectedIndex, Last_Button_Properties[1]);
+            Last_Button_Properties[1] = (sender as Button).BackColor;
+
+            Highlight_Selected_Drawer((sender as Button).Text, tabControl1.SelectedIndex, Color.LightCoral);
+            
+          
+
+            Last_Button_Properties[0] = (sender as Button).Text;
         }
 
-        private void btnSelected_Drawer_23_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
-            Highlight_Selected_Drawer(btnSelected_Drawer_23.Text, tabControl1.SelectedIndex, Color.LightCoral);
+            string[] newRow;
+            
+            dataGridViewBoxes.AllowUserToAddRows = true;
+
+            int newBox = dataGridViewBoxes.RowCount;
+          
+            newRow = new string[] { "BOX " + newBox };
+
+            dataGridViewBoxes.Rows.Add(newRow);
+           
+            dataGridViewBoxes.AllowUserToAddRows = false;
+
         }
 
-        private void btnSelected_Drawer_22_Click(object sender, EventArgs e)
+        private void textBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Highlight_Selected_Drawer(btnSelected_Drawer_22.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
+      
+            if (string.IsNullOrWhiteSpace(comboBoxCategory.Text))
+            {
+                e.Cancel = true;
+                comboBoxCategory.Focus();
+                errorProvider1.SetError(comboBoxCategory, "Name should not be left blank!");
+            }
+            else
+            {
+                e.Cancel = false;
+                errorProvider1.SetError(comboBoxCategory, "");
+            }
 
-        private void btnSelected_Drawer_21_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_21.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_20_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_20.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_19_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_19.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_18_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_18.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_17_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_17.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_16_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_16.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_15_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_15.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_14_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_14.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_13_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_13.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_12_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_12.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_11_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_11.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_10_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_10.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_9_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_9.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_8_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_8.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_7_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_7.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_6_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_6.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_5_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_5.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_4_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_4.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_3_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_3.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_2_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_2.Text, tabControl1.SelectedIndex, Color.LightCoral);
-        }
-
-        private void btnSelected_Drawer_1_Click(object sender, EventArgs e)
-        {
-            Highlight_Selected_Drawer(btnSelected_Drawer_1.Text, tabControl1.SelectedIndex, Color.LightCoral);
         }
     }
 }

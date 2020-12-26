@@ -77,8 +77,6 @@ namespace PartsHunter
             this.button2 = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
             this.comboBoxCategory = new System.Windows.Forms.ComboBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.textBoxNewBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.textBoxQuantity = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -110,6 +108,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_23 = new System.Windows.Forms.Button();
             this.btnSelected_Drawer_24 = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.dataGridViewBoxes = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBoxContent = new System.Windows.Forms.GroupBox();
@@ -118,6 +117,7 @@ namespace PartsHunter
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SerialPort = new System.IO.Ports.SerialPort(this.components);
             this.timerCOM = new System.Windows.Forms.Timer(this.components);
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -129,6 +129,7 @@ namespace PartsHunter
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewBoxes)).BeginInit();
             this.groupBoxContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCurrentContent)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -206,13 +207,15 @@ namespace PartsHunter
             // 
             // buttonSearch
             // 
-            this.buttonSearch.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.buttonSearch.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.buttonSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSearch.Font = new System.Drawing.Font("Microsoft New Tai Lue", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonSearch.Location = new System.Drawing.Point(329, 42);
             this.buttonSearch.Name = "buttonSearch";
             this.buttonSearch.Size = new System.Drawing.Size(106, 23);
             this.buttonSearch.TabIndex = 58;
             this.buttonSearch.Text = "Search";
-            this.buttonSearch.UseVisualStyleBackColor = true;
+            this.buttonSearch.UseVisualStyleBackColor = false;
             this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
             // 
             // label2
@@ -619,8 +622,6 @@ namespace PartsHunter
             this.tabPage2.Controls.Add(this.button2);
             this.tabPage2.Controls.Add(this.buttonSave);
             this.tabPage2.Controls.Add(this.comboBoxCategory);
-            this.tabPage2.Controls.Add(this.label7);
-            this.tabPage2.Controls.Add(this.textBoxNewBox);
             this.tabPage2.Controls.Add(this.label5);
             this.tabPage2.Controls.Add(this.textBoxQuantity);
             this.tabPage2.Controls.Add(this.label4);
@@ -640,7 +641,7 @@ namespace PartsHunter
             // button2
             // 
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button2.Location = new System.Drawing.Point(349, 42);
+            this.button2.Location = new System.Drawing.Point(363, 42);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(126, 23);
             this.button2.TabIndex = 4;
@@ -653,9 +654,9 @@ namespace PartsHunter
             this.buttonSave.BackColor = System.Drawing.Color.PaleTurquoise;
             this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSave.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSave.Location = new System.Drawing.Point(6, 572);
+            this.buttonSave.Location = new System.Drawing.Point(9, 572);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(1082, 31);
+            this.buttonSave.Size = new System.Drawing.Size(1076, 31);
             this.buttonSave.TabIndex = 66;
             this.buttonSave.Text = "SAVE";
             this.buttonSave.UseVisualStyleBackColor = false;
@@ -665,27 +666,12 @@ namespace PartsHunter
             // 
             this.comboBoxCategory.FormattingEnabled = true;
             this.comboBoxCategory.Items.AddRange(new object[] {
-            "New Category"});
+            "<Select one or type a new one>"});
             this.comboBoxCategory.Location = new System.Drawing.Point(77, 17);
             this.comboBoxCategory.Name = "comboBoxCategory";
             this.comboBoxCategory.Size = new System.Drawing.Size(266, 21);
             this.comboBoxCategory.TabIndex = 0;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(736, 20);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(53, 13);
-            this.label7.TabIndex = 64;
-            this.label7.Text = "New Box:";
-            // 
-            // textBoxNewBox
-            // 
-            this.textBoxNewBox.Location = new System.Drawing.Point(792, 17);
-            this.textBoxNewBox.Name = "textBoxNewBox";
-            this.textBoxNewBox.Size = new System.Drawing.Size(76, 20);
-            this.textBoxNewBox.TabIndex = 63;
+            this.comboBoxCategory.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_Validating);
             // 
             // label5
             // 
@@ -702,6 +688,7 @@ namespace PartsHunter
             this.textBoxQuantity.Name = "textBoxQuantity";
             this.textBoxQuantity.Size = new System.Drawing.Size(266, 20);
             this.textBoxQuantity.TabIndex = 3;
+            this.textBoxQuantity.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_Validating);
             // 
             // label4
             // 
@@ -718,6 +705,7 @@ namespace PartsHunter
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.Size = new System.Drawing.Size(266, 20);
             this.textBoxDescription.TabIndex = 1;
+            this.textBoxDescription.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_Validating);
             // 
             // label3
             // 
@@ -771,7 +759,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_14.TabIndex = 40;
             this.btnSelected_Drawer_14.Text = "14";
             this.btnSelected_Drawer_14.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_14.Click += new System.EventHandler(this.btnSelected_Drawer_14_Click);
+            this.btnSelected_Drawer_14.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_13
             // 
@@ -783,7 +771,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_13.TabIndex = 41;
             this.btnSelected_Drawer_13.Text = "13";
             this.btnSelected_Drawer_13.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_13.Click += new System.EventHandler(this.btnSelected_Drawer_13_Click);
+            this.btnSelected_Drawer_13.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_6
             // 
@@ -795,7 +783,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_6.TabIndex = 53;
             this.btnSelected_Drawer_6.Text = "6";
             this.btnSelected_Drawer_6.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_6.Click += new System.EventHandler(this.btnSelected_Drawer_6_Click);
+            this.btnSelected_Drawer_6.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_5
             // 
@@ -807,7 +795,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_5.TabIndex = 52;
             this.btnSelected_Drawer_5.Text = "5";
             this.btnSelected_Drawer_5.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_5.Click += new System.EventHandler(this.btnSelected_Drawer_5_Click);
+            this.btnSelected_Drawer_5.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_4
             // 
@@ -819,7 +807,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_4.TabIndex = 51;
             this.btnSelected_Drawer_4.Text = "4";
             this.btnSelected_Drawer_4.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_4.Click += new System.EventHandler(this.btnSelected_Drawer_4_Click);
+            this.btnSelected_Drawer_4.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_3
             // 
@@ -831,7 +819,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_3.TabIndex = 50;
             this.btnSelected_Drawer_3.Text = "3";
             this.btnSelected_Drawer_3.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_3.Click += new System.EventHandler(this.btnSelected_Drawer_3_Click);
+            this.btnSelected_Drawer_3.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_2
             // 
@@ -843,7 +831,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_2.TabIndex = 49;
             this.btnSelected_Drawer_2.Text = "2";
             this.btnSelected_Drawer_2.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_2.Click += new System.EventHandler(this.btnSelected_Drawer_2_Click);
+            this.btnSelected_Drawer_2.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_1
             // 
@@ -855,7 +843,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_1.TabIndex = 48;
             this.btnSelected_Drawer_1.Text = "1";
             this.btnSelected_Drawer_1.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_1.Click += new System.EventHandler(this.btnSelected_Drawer_1_Click);
+            this.btnSelected_Drawer_1.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_7
             // 
@@ -867,7 +855,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_7.TabIndex = 47;
             this.btnSelected_Drawer_7.Text = "7";
             this.btnSelected_Drawer_7.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_7.Click += new System.EventHandler(this.btnSelected_Drawer_7_Click);
+            this.btnSelected_Drawer_7.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_8
             // 
@@ -879,7 +867,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_8.TabIndex = 46;
             this.btnSelected_Drawer_8.Text = "8";
             this.btnSelected_Drawer_8.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_8.Click += new System.EventHandler(this.btnSelected_Drawer_8_Click);
+            this.btnSelected_Drawer_8.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_9
             // 
@@ -891,7 +879,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_9.TabIndex = 45;
             this.btnSelected_Drawer_9.Text = "9";
             this.btnSelected_Drawer_9.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_9.Click += new System.EventHandler(this.btnSelected_Drawer_9_Click);
+            this.btnSelected_Drawer_9.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_10
             // 
@@ -903,7 +891,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_10.TabIndex = 44;
             this.btnSelected_Drawer_10.Text = "10";
             this.btnSelected_Drawer_10.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_10.Click += new System.EventHandler(this.btnSelected_Drawer_10_Click);
+            this.btnSelected_Drawer_10.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_11
             // 
@@ -915,7 +903,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_11.TabIndex = 43;
             this.btnSelected_Drawer_11.Text = "11";
             this.btnSelected_Drawer_11.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_11.Click += new System.EventHandler(this.btnSelected_Drawer_11_Click);
+            this.btnSelected_Drawer_11.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_12
             // 
@@ -927,7 +915,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_12.TabIndex = 42;
             this.btnSelected_Drawer_12.Text = "12";
             this.btnSelected_Drawer_12.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_12.Click += new System.EventHandler(this.btnSelected_Drawer_12_Click);
+            this.btnSelected_Drawer_12.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_15
             // 
@@ -939,7 +927,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_15.TabIndex = 39;
             this.btnSelected_Drawer_15.Text = "15";
             this.btnSelected_Drawer_15.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_15.Click += new System.EventHandler(this.btnSelected_Drawer_15_Click);
+            this.btnSelected_Drawer_15.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_16
             // 
@@ -951,7 +939,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_16.TabIndex = 38;
             this.btnSelected_Drawer_16.Text = "16";
             this.btnSelected_Drawer_16.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_16.Click += new System.EventHandler(this.btnSelected_Drawer_16_Click);
+            this.btnSelected_Drawer_16.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_17
             // 
@@ -963,7 +951,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_17.TabIndex = 37;
             this.btnSelected_Drawer_17.Text = "17";
             this.btnSelected_Drawer_17.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_17.Click += new System.EventHandler(this.btnSelected_Drawer_17_Click);
+            this.btnSelected_Drawer_17.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_18
             // 
@@ -975,7 +963,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_18.TabIndex = 36;
             this.btnSelected_Drawer_18.Text = "18";
             this.btnSelected_Drawer_18.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_18.Click += new System.EventHandler(this.btnSelected_Drawer_18_Click);
+            this.btnSelected_Drawer_18.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_19
             // 
@@ -987,7 +975,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_19.TabIndex = 35;
             this.btnSelected_Drawer_19.Text = "19";
             this.btnSelected_Drawer_19.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_19.Click += new System.EventHandler(this.btnSelected_Drawer_19_Click);
+            this.btnSelected_Drawer_19.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_20
             // 
@@ -999,7 +987,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_20.TabIndex = 34;
             this.btnSelected_Drawer_20.Text = "20";
             this.btnSelected_Drawer_20.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_20.Click += new System.EventHandler(this.btnSelected_Drawer_20_Click);
+            this.btnSelected_Drawer_20.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_21
             // 
@@ -1011,7 +999,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_21.TabIndex = 33;
             this.btnSelected_Drawer_21.Text = "21";
             this.btnSelected_Drawer_21.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_21.Click += new System.EventHandler(this.btnSelected_Drawer_21_Click);
+            this.btnSelected_Drawer_21.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_22
             // 
@@ -1023,7 +1011,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_22.TabIndex = 32;
             this.btnSelected_Drawer_22.Text = "22";
             this.btnSelected_Drawer_22.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_22.Click += new System.EventHandler(this.btnSelected_Drawer_22_Click);
+            this.btnSelected_Drawer_22.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_23
             // 
@@ -1035,7 +1023,7 @@ namespace PartsHunter
             this.btnSelected_Drawer_23.TabIndex = 31;
             this.btnSelected_Drawer_23.Text = "23";
             this.btnSelected_Drawer_23.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_23.Click += new System.EventHandler(this.btnSelected_Drawer_23_Click);
+            this.btnSelected_Drawer_23.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // btnSelected_Drawer_24
             // 
@@ -1047,10 +1035,11 @@ namespace PartsHunter
             this.btnSelected_Drawer_24.TabIndex = 30;
             this.btnSelected_Drawer_24.Text = "24";
             this.btnSelected_Drawer_24.UseVisualStyleBackColor = false;
-            this.btnSelected_Drawer_24.Click += new System.EventHandler(this.btnSelected_Drawer_24_Click_1);
+            this.btnSelected_Drawer_24.Click += new System.EventHandler(this.Get_Button_Click);
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.button1);
             this.groupBox3.Controls.Add(this.dataGridViewBoxes);
             this.groupBox3.Location = new System.Drawing.Point(6, 117);
             this.groupBox3.Name = "groupBox3";
@@ -1058,6 +1047,17 @@ namespace PartsHunter
             this.groupBox3.TabIndex = 38;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "EXISTING BOXES";
+            // 
+            // button1
+            // 
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Location = new System.Drawing.Point(3, 417);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(119, 25);
+            this.button1.TabIndex = 67;
+            this.button1.Text = "ADD NEW BOX";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // dataGridViewBoxes
             // 
@@ -1067,13 +1067,13 @@ namespace PartsHunter
             this.dataGridViewBoxes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewBoxes.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn3});
-            this.dataGridViewBoxes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewBoxes.Dock = System.Windows.Forms.DockStyle.Top;
             this.dataGridViewBoxes.Location = new System.Drawing.Point(3, 16);
             this.dataGridViewBoxes.Name = "dataGridViewBoxes";
             this.dataGridViewBoxes.ReadOnly = true;
             this.dataGridViewBoxes.RowHeadersVisible = false;
             this.dataGridViewBoxes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewBoxes.Size = new System.Drawing.Size(119, 429);
+            this.dataGridViewBoxes.Size = new System.Drawing.Size(119, 402);
             this.dataGridViewBoxes.TabIndex = 1;
             this.dataGridViewBoxes.SelectionChanged += new System.EventHandler(this.dataGridViewBoxes_SelectionChanged);
             // 
@@ -1134,6 +1134,11 @@ namespace PartsHunter
             this.timerCOM.Interval = 1000;
             this.timerCOM.Tick += new System.EventHandler(this.timerCOM_Tick_1);
             // 
+            // errorProvider1
+            // 
+            this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
+            this.errorProvider1.ContainerControl = this;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1160,6 +1165,7 @@ namespace PartsHunter
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewBoxes)).EndInit();
             this.groupBoxContent.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCurrentContent)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1236,8 +1242,6 @@ namespace PartsHunter
         private System.Windows.Forms.Button btnSelected_Drawer_22;
         private System.Windows.Forms.Button btnSelected_Drawer_23;
         private System.Windows.Forms.Button btnSelected_Drawer_24;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBoxNewBox;
         private System.Windows.Forms.ComboBox comboBoxCategory;
         private System.Windows.Forms.DataGridView dataGridViewResults;
         private System.Windows.Forms.DataGridViewTextBoxColumn Description;
@@ -1254,6 +1258,8 @@ namespace PartsHunter
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
     }
 }
 
