@@ -17,7 +17,7 @@ PartsHunter is an organizer system for storage and automatic identification of e
 ### PartsHunter - BOXES SET (Back-View)
 <img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/PartsHunter%20Wall%20Panel%20-%20Back%20View%20(Rendered%20Image).png" width="70%" height="70%">
 
-### PartsHunter - Boxes Junction Detail (horizontal and vertical long screws ⌀4mm)
+### PartsHunter - Boxes Junction Detail (horizontal and vertical long screws - ⌀ 4mm)
 <img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Parts%20Hunter%20-%20Box%20Junctions%20Detail%20(Rendered%20Image).png" width="70%" height="70%">
 
 ### Front Box Panel
