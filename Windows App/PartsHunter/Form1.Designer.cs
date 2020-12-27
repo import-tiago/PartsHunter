@@ -112,8 +112,8 @@ namespace PartsHunter
             this.buttonNewBox = new System.Windows.Forms.Button();
             this.dataGridViewBoxes = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.groupBoxContent = new System.Windows.Forms.GroupBox();
-            this.dataGridViewCurrentContent = new System.Windows.Forms.DataGridView();
+            this.groupBoxParts = new System.Windows.Forms.GroupBox();
+            this.dataGridViewCurrentParts = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SerialPort = new System.IO.Ports.SerialPort(this.components);
@@ -129,8 +129,8 @@ namespace PartsHunter
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewBoxes)).BeginInit();
-            this.groupBoxContent.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCurrentContent)).BeginInit();
+            this.groupBoxParts.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCurrentParts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -625,7 +625,7 @@ namespace PartsHunter
             this.tabPage2.Controls.Add(this.buttonSave);
             this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Controls.Add(this.groupBox3);
-            this.tabPage2.Controls.Add(this.groupBoxContent);
+            this.tabPage2.Controls.Add(this.groupBoxParts);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -1095,34 +1095,34 @@ namespace PartsHunter
             this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             this.dataGridViewTextBoxColumn3.ReadOnly = true;
             // 
-            // groupBoxContent
+            // groupBoxParts
             // 
-            this.groupBoxContent.Controls.Add(this.dataGridViewCurrentContent);
-            this.groupBoxContent.Location = new System.Drawing.Point(792, 117);
-            this.groupBoxContent.Name = "groupBoxContent";
-            this.groupBoxContent.Size = new System.Drawing.Size(296, 448);
-            this.groupBoxContent.TabIndex = 37;
-            this.groupBoxContent.TabStop = false;
-            this.groupBoxContent.Text = "CURRENT CONTENT";
+            this.groupBoxParts.Controls.Add(this.dataGridViewCurrentParts);
+            this.groupBoxParts.Location = new System.Drawing.Point(792, 117);
+            this.groupBoxParts.Name = "groupBoxParts";
+            this.groupBoxParts.Size = new System.Drawing.Size(296, 448);
+            this.groupBoxParts.TabIndex = 37;
+            this.groupBoxParts.TabStop = false;
+            this.groupBoxParts.Text = "CURRENT PARTS";
             // 
-            // dataGridViewCurrentContent
+            // dataGridViewCurrentParts
             // 
-            this.dataGridViewCurrentContent.AllowUserToResizeRows = false;
-            this.dataGridViewCurrentContent.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridViewCurrentContent.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            this.dataGridViewCurrentContent.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewCurrentContent.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewCurrentParts.AllowUserToResizeRows = false;
+            this.dataGridViewCurrentParts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewCurrentParts.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewCurrentParts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewCurrentParts.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2});
-            this.dataGridViewCurrentContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewCurrentContent.Location = new System.Drawing.Point(3, 16);
-            this.dataGridViewCurrentContent.Name = "dataGridViewCurrentContent";
-            this.dataGridViewCurrentContent.ReadOnly = true;
-            this.dataGridViewCurrentContent.RowHeadersVisible = false;
-            this.dataGridViewCurrentContent.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewCurrentContent.Size = new System.Drawing.Size(290, 429);
-            this.dataGridViewCurrentContent.TabIndex = 1;
-            this.dataGridViewCurrentContent.SelectionChanged += new System.EventHandler(this.dataGridViewCurrentContent_SelectionChanged);
+            this.dataGridViewCurrentParts.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewCurrentParts.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewCurrentParts.Name = "dataGridViewCurrentParts";
+            this.dataGridViewCurrentParts.ReadOnly = true;
+            this.dataGridViewCurrentParts.RowHeadersVisible = false;
+            this.dataGridViewCurrentParts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewCurrentParts.Size = new System.Drawing.Size(290, 429);
+            this.dataGridViewCurrentParts.TabIndex = 1;
+            this.dataGridViewCurrentParts.SelectionChanged += new System.EventHandler(this.dataGridViewCurrentContent_SelectionChanged);
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -1176,8 +1176,8 @@ namespace PartsHunter
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewBoxes)).EndInit();
-            this.groupBoxContent.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCurrentContent)).EndInit();
+            this.groupBoxParts.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCurrentParts)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
 
@@ -1188,7 +1188,7 @@ namespace PartsHunter
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.GroupBox groupBoxContent;
+        private System.Windows.Forms.GroupBox groupBoxParts;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Button btnDrawer_6;
@@ -1267,7 +1267,7 @@ namespace PartsHunter
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.DataGridView dataGridViewBoxes;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.DataGridView dataGridViewCurrentContent;
+        private System.Windows.Forms.DataGridView dataGridViewCurrentParts;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
