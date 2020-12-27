@@ -3,7 +3,7 @@
 
 #define DATA_PIN 2
 #define BRIGHTNESS 150
-#define NUM_LEDS 48
+#define NUM_LEDS 384
 #define NUM_LEDS_IN_BOX 24
 
 #define SERVER_CONFIRMATION "OK\r\n"
