@@ -5,17 +5,17 @@
 PartsHunter is an organizer system for storage and automatic identification of electronic components.
 
 ## Mechanical Preview
-### PartsHunter
-<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Parts%20Hunter%20(Rendered%20Image).png" width="70%" height="70%">
+### PartsHunter - BOX
+<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Parts%20Hunter%20-%20Box%20(Rendered%20Image).png" width="70%" height="70%">
+
+### Tube Glass - "DRAWER"
+<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Tube%20Glass%20-%20Drawer%20(Rendered%20Image).png" width="70%" height="70%">
 
 ### Front Panel
 <img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Front%20Panel%20(Rendered%20Image).png" width="70%" height="70%">
 
 ### Back Panel
 <img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Back%20Panel%20(Rendered%20Image).png" width="70%" height="70%">
-
-### Tube Glass
-<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Tube%20Glass%20(Rendered%20Image).png" width="70%" height="70%">
 
 ### Top Support
 <img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Top%20Support%20(Rendered%20Image).png" width="70%" height="70%">
