@@ -35,6 +35,7 @@ namespace PartsHunter
         private bool validatedCategory;
         private bool validatedDescription;
         private bool validatedQuantity;
+        private string Current_Selected_Box = string.Empty;
 
         private readonly NameValueCollection configuration = ConfigurationManager.AppSettings;
         private readonly JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -285,22 +286,21 @@ namespace PartsHunter
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (SerialPort.IsOpen == false)
-            {
-                if (tabControl1.SelectedIndex > 0)
-                    MessageBox.Show("Connect first...");
-
-                tabControl1.SelectedIndex = 0;
-                tabControl1.TabIndex = 0;
-
-            }
-            else
+            if (SerialPort.IsOpen)
             {
                 if (tabControl1.SelectedIndex == 1 && !Pre_Load_Done)
                 {
                     Pre_Load_Done = true;
                     Fill_All_Fields_With_Firebase_Data();
                 }
+            }
+            else
+            {
+                if (tabControl1.SelectedIndex > 0)
+                    MessageBox.Show("Connect first...");
+
+                tabControl1.SelectedIndex = 0;
+                tabControl1.TabIndex = 0;
             }
         }
 
@@ -471,13 +471,11 @@ namespace PartsHunter
 
 
         private void dataGridViewResults_SelectionChanged(object sender, EventArgs e)
-        {
-
+        {            
             try
             {
                 int x = dataGridViewResults.SelectedCells[0].RowIndex;
-
-
+                
                 var y = dataGridViewResults[3, x].Value.ToString();
 
                 if (Send_UART(y.ToString()))
@@ -550,8 +548,7 @@ namespace PartsHunter
         }
 
         private void button2_Click(object sender, EventArgs e)
-        {
-            //Number_Boxes
+        {            
             FindRegisteredComponent(textBoxDescription.Text);
         }
 
@@ -621,7 +618,7 @@ namespace PartsHunter
             dataGridViewBoxes.Rows.Clear();
             dataGridViewBoxes.AllowUserToAddRows = true;
 
-            foreach (var key in JSON_Firebase.Keys)
+            foreach (var key in JSON_Firebase.Keys) 
             {
                 if (key != "void")
                 {
@@ -634,31 +631,30 @@ namespace PartsHunter
 
                         newRow = new string[] { "BOX " + value };
 
-
-
-                        foreach (DataGridViewRow row in dataGridViewBoxes.Rows)
+                        int totalRows = 0;
+                        int rowCheck = 0;
+                        foreach (DataGridViewRow existingRow in dataGridViewBoxes.Rows)
                         {
-                            newRow = new string[] { JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Quantity"], JSON_Firebase[key][key2]["Box"], JSON_Firebase[key][key2]["Drawer"] };
-
-                            if (row.Cells[0].Value != JSON_Firebase[key][key2]["Description"])
+                            if (dataGridViewBoxes.Rows.Count > 1)
                             {
-                                dataGridViewResults.Rows.Add(newRow);
-                                numberResults++;
-                                break;
+                                totalRows = dataGridViewBoxes.Rows.Count;                               
+                                
+                                string s1 = newRow[0].ToString();
+                                string s2 = "";
+                                if (existingRow.Cells[0].Value != null)
+                                     s2 = existingRow.Cells[0].Value.ToString();
+                                    
+                                if (s1 != s2)
+                                    rowCheck++;                                
                             }
-                        }
-
-                        /*
-                        foreach (DataGridViewRow existingRow in dataGridViewBoxes.Rows) {
-                            if (newRow != existingRow.Cells[0].Value)
+                            else
                             {
                                 dataGridViewBoxes.Rows.Add(newRow);
                                 break;
                             }
-                        
-                            
                         }
-                        */
+                        if( (totalRows == rowCheck) && (totalRows != 0))
+                            dataGridViewBoxes.Rows.Add(newRow);
                     }
                 }
             }
@@ -668,7 +664,29 @@ namespace PartsHunter
         }
         void Fill_Parts_Datagrid()
         {
+            string[] newRow;
+            string value = string.Empty;
 
+            dataGridViewCurrentParts.Rows.Clear();
+            dataGridViewCurrentParts.AllowUserToAddRows = true;
+
+            foreach (var key in JSON_Firebase.Keys)
+            {
+                if (key != "void")
+                {
+                    foreach (var key2 in JSON_Firebase[key].Keys)
+                    {                        
+                        if (JSON_Firebase[key][key2]["Box"] == Current_Selected_Box)
+                        {
+                            newRow = new string[] { JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Quantity"] };
+
+                            dataGridViewCurrentParts.Rows.Add(newRow);             
+                        }
+                    }
+                }   
+            }
+
+            dataGridViewCurrentParts.AllowUserToAddRows = false;
         }
 
 
@@ -676,70 +694,8 @@ namespace PartsHunter
 
         void Fill_All_Fields_With_Firebase_Data()
         {
-            //string[] newRow;
-            //int numberResults = 0;
-
-
             Fill_Boxes_Datagrid();
-            Fill_Parts_Datagrid();
-
-            /*
-            string y = dataGridViewBoxes.SelectedCells[0].Value.ToString();
-            string Current_Selected_Box = y.Substring(y.IndexOf(" ") + 1);
-
-
-            if (Current_Selected_Registered_Box != Last_Selected_Registered_Box)
-                Last_Selected_Registered_Box = dataGridViewBoxes.SelectedRows[0].Index;
-
-            dataGridViewBoxes.AllowUserToAddRows = true;
-            dataGridViewCurrentParts.AllowUserToAddRows = true;
-
-            dataGridViewBoxes.Rows.Clear();
-            dataGridViewCurrentParts.Rows.Clear();
-
-
-
-            Clear_Highlight_All_Boxes();
-
-            foreach (var key in JSON_Firebase.Keys)
-            {
-                if (key != "void")
-                {
-                    foreach (var key2 in JSON_Firebase[key].Keys)
-                    {
-                        if (JSON_Firebase[key][key2]["Box"] == Current_Selected_Box)
-                        {
-                            newRow = new string[] { JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Quantity"] };
-
-                            dataGridViewCurrentParts.Rows.Add(newRow);
-                            numberResults++;
-
-                            // Highlight_Selected_Drawer(JSON_Firebase[key][key2]["Drawer"], REGISTER);
-
-                        }
-                    }
-                }
-                else
-                {
-                    Send_UART("0");
-                    Highlight_Selected_Drawer("0", SEARCH, Color.WhiteSmoke);
-                    Highlight_Selected_Drawer("0", REGISTER, Color.WhiteSmoke);
-                    labelNumberResults.Text = "0" + " results found";
-                }
-            }
-
-            if (numberResults == 1)
-            {
-                Last_Draw_Highlight = String.Empty;
-            }
-
-
-            dataGridViewCurrentParts.AllowUserToAddRows = false;
-
-            labelNumberResults.Text = numberResults.ToString() + " results found";
-
-            Last_Selected_Registered_Box = dataGridViewBoxes.SelectedRows[0].Index;
-            */
+            Fill_Parts_Datagrid();           
         }
 
 
@@ -788,20 +744,15 @@ namespace PartsHunter
             }
         }
         void Highlight_Drawer_From_Parts_Selection()
-
         {
             string Current_Selected_Component = String.Empty;
 
             if (dataGridViewCurrentParts.SelectedCells.Count > 0)
             {
-
                 Current_Selected_Component = dataGridViewCurrentParts.SelectedCells[0].Value.ToString();
-
-
 
                 if (Last_Selected_Registered_Box != dataGridViewBoxes.SelectedRows[0].Index)
                     Last_Draw_Highlight = String.Empty;
-
             }
 
             foreach (var key in JSON_Firebase.Keys)
@@ -845,14 +796,11 @@ namespace PartsHunter
 
                             Highlight_Selected_Drawer(JSON_Firebase[key][key2]["Drawer"], REGISTER, Color.LightGreen);
                             Last_Draw_Highlight = JSON_Firebase[key][key2]["Drawer"];
-
-
-
                         }
                     }
                 }
             }
-
+            Last_Selected_Registered_Box = dataGridViewBoxes.SelectedRows[0].Index;
         }     
         void Clear_Highlight_All_Boxes()
         {
@@ -885,7 +833,18 @@ namespace PartsHunter
 
         private void dataGridViewBoxes_SelectionChanged(object sender, EventArgs e)
         {
-            Highlight_Drawer_From_Box_Selection();
+            string y = dataGridViewBoxes.SelectedCells[0].Value.ToString();
+            Current_Selected_Box = y.Substring(y.IndexOf(" ") + 1);
+            int boxNumber = int.Parse(Current_Selected_Box);
+            Current_Selected_Box = boxNumber.ToString();
+
+            if (Current_Selected_Registered_Box != Last_Selected_Registered_Box)
+                Last_Selected_Registered_Box = dataGridViewBoxes.SelectedRows[0].Index;
+
+            Fill_Parts_Datagrid();
+
+            Clear_Highlight_All_Boxes();
+            Highlight_Drawer_From_Box_Selection();            
         }
         private void dataGridViewCurrentContent_SelectionChanged(object sender, EventArgs e)
         {
