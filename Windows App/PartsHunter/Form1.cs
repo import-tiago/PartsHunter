@@ -641,6 +641,21 @@ namespace PartsHunter
 
                         newRow = new string[] { "BOX " + value };
 
+
+
+                        foreach (DataGridViewRow row in dataGridViewBoxes.Rows)
+                        {
+                            newRow = new string[] { JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Quantity"], JSON_Firebase[key][key2]["Box"], JSON_Firebase[key][key2]["Drawer"] };
+
+                            if (row.Cells[0].Value != JSON_Firebase[key][key2]["Description"])
+                            {
+                                dataGridViewResults.Rows.Add(newRow);
+                                numberResults++;
+                                break;
+                            }
+                        }
+
+                        /*
                         foreach (DataGridViewRow existingRow in dataGridViewBoxes.Rows) {
                             if (newRow != existingRow.Cells[0].Value)
                             {
@@ -649,7 +664,8 @@ namespace PartsHunter
                             }
                         
                             
-                    }
+                        }
+                        */
                     }
                 }
             }
