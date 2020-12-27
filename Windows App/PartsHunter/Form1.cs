@@ -359,7 +359,7 @@ namespace PartsHunter
         void SearchByCategory()
         {
             string[] newRow;
-            GetFirebase(comboBoxSearchCategory.Text);
+            GetFirebase(comboBoxSearchCategory.Text.ToUpper());
             dataGridViewResults.AllowUserToAddRows = true;
             dataGridViewResults.Rows.Clear();
 
@@ -453,8 +453,8 @@ namespace PartsHunter
         }
 
         private void buttonSearch_Click(object sender, EventArgs e)
-        {
-            SearchByDescription(textBoxSearch.Text);
+        {            
+            SearchByDescription(textBoxSearch.Text.ToUpper());
             labelNumberResults.Visible = true;
         }
 
@@ -897,18 +897,30 @@ namespace PartsHunter
         private void buttonSave_Click(object sender, EventArgs e)
         {
             if (validatedCategory && validatedDescription && validatedQuantity)
+            {
+                int index = dataGridViewBoxes.SelectedCells[0].RowIndex;
+                
+                string drawer = Last_Button_Properties[0];                
+                string box = dataGridViewBoxes.Rows[index].Cells[0].Value.ToString();
+                
+                string category = comboBoxCategory.Text.ToUpper();
+                string description = textBoxDescription.Text.ToUpper();
+                string quantity = textBoxQuantity.Text.ToUpper();
+                drawer = drawer.ToUpper();
+                box = box.ToUpper();
 
-                MessageBox.Show("ok");
-
+                Push_New_Component(category, description, quantity, box, drawer);                
+            }
             else
-                MessageBox.Show("nok");
-            /*
-            Push_New_Component(comboBoxCategory.Text,
-                             textBoxDescription.Text,
-                             textBoxQuantity.Text,
-                          //   textBoxNewBox.Text,
-                             Selected_Drawer);
-            */
+                MessageBox.Show("Fill all fields");
+
+
+
+
+
+            
+            
+            
         }
     }
 }
