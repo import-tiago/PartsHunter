@@ -11,19 +11,28 @@ PartsHunter is an organizer system for storage and automatic identification of e
 ### Tube Glass - "DRAWER"
 <img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Tube%20Glass%20-%20Drawer%20(Rendered%20Image).png" width="70%" height="70%">
 
-### Front Panel
+### PartsHunter - BOXES SET (Front-View)
+<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/PartsHunter%20Wall%20Panel%20-%20Front%20View%20(Rendered%20Image).png" width="70%" height="70%">
+
+### PartsHunter - BOXES SET (Back-View)
+<img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/PartsHunter%20Wall%20Panel%20-%20Back%20View%20(Rendered%20Image).png" width="70%" height="70%">
+
+### PartsHunter - Boxes Junction Detail (horizontal and vertical long screws ⌀4mm)
+<img src="" width="70%" height="70%">
+
+### Front Box Panel
 <img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Front%20Panel%20(Rendered%20Image).png" width="70%" height="70%">
 
-### Back Panel
+### Back Box Panel
 <img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Back%20Panel%20(Rendered%20Image).png" width="70%" height="70%">
 
-### Top Support
+### Top Box Support
 <img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Top%20Support%20(Rendered%20Image).png" width="70%" height="70%">
 
-### Bottom Support
+### Bottom Box Support
 <img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/Bottom%20Support%20(Rendered%20Image).png" width="70%" height="70%">
 
-### LED Strip Support
+### LED Strip Box Support
 <img src="https://github.com/TiagoPaulaSilva/PartsHunter/blob/master/Assets/LED%20Strip%20Support%20(Rendered%20Image).png" width="70%" height="70%">
 
 
