@@ -8,6 +8,6 @@ namespace PartsHunter
 {
     class ApplicationMethods
     {
-
+      
     }
 }
