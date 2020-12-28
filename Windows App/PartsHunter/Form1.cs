@@ -20,6 +20,8 @@ namespace PartsHunter
         private string Selected_Drawer = "0";
         private const int SEARCH = 0;
         private const int REGISTER = 1;
+        private const int CLEAR_ALL = 0;
+        private const int CLEAR_KEEPING_FILLED_DRAWERS = 1;
         private dynamic JSON_Firebase;
         private dynamic JSON_UART;
         private string String_UART;
@@ -35,11 +37,14 @@ namespace PartsHunter
         private bool validatedCategory;
         private bool validatedDescription;
         private bool validatedQuantity;
+        private string Current_Selected_Box = string.Empty;
 
         private readonly NameValueCollection configuration = ConfigurationManager.AppSettings;
         private readonly JavaScriptSerializer serializer = new JavaScriptSerializer();
         private readonly IFirebaseConfig Config = new FirebaseConfig();
         private readonly IFirebaseClient Client;
+
+        ApplicationMethods _extern = new ApplicationMethods();
 
         public Form1()
         {
@@ -285,16 +290,7 @@ namespace PartsHunter
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (SerialPort.IsOpen == false)
-            {
-                if (tabControl1.SelectedIndex > 0)
-                    MessageBox.Show("Connect first...");
-
-                tabControl1.SelectedIndex = 0;
-                tabControl1.TabIndex = 0;
-
-            }
-            else
+            if (SerialPort.IsOpen)
             {
                 if (tabControl1.SelectedIndex == 1 && !Pre_Load_Done)
                 {
@@ -302,10 +298,20 @@ namespace PartsHunter
                     Fill_All_Fields_With_Firebase_Data();
                 }
             }
+            else
+            {
+                if (tabControl1.SelectedIndex > 0)
+                    MessageBox.Show("Connect first...");
+
+                tabControl1.SelectedIndex = 0;
+                tabControl1.TabIndex = 0;
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
+            
             labelNumberResults.Visible = false;
             comboBoxSearchCategory.Text = comboBoxSearchCategory.Items[0].ToString();
             comboBoxCategory.Text = comboBoxCategory.Items[0].ToString();
@@ -471,13 +477,11 @@ namespace PartsHunter
 
 
         private void dataGridViewResults_SelectionChanged(object sender, EventArgs e)
-        {
-
+        {            
             try
             {
                 int x = dataGridViewResults.SelectedCells[0].RowIndex;
-
-
+                
                 var y = dataGridViewResults[3, x].Value.ToString();
 
                 if (Send_UART(y.ToString()))
@@ -550,8 +554,7 @@ namespace PartsHunter
         }
 
         private void button2_Click(object sender, EventArgs e)
-        {
-            //Number_Boxes
+        {            
             FindRegisteredComponent(textBoxDescription.Text);
         }
 
@@ -613,6 +616,131 @@ namespace PartsHunter
             labelNumberResults.Text = numberResults.ToString() + " results found";
         }
 
+        private void Get_Button_Click(object sender, EventArgs e)
+        {
+
+
+            if (Last_Button_Properties[0] != (sender as Button).Text && Last_Button_Properties[0] != String.Empty)
+                Highlight_Selected_Drawer(Last_Button_Properties[0], tabControl1.SelectedIndex, Last_Button_Properties[1]);
+            Last_Button_Properties[1] = (sender as Button).BackColor;
+
+            Highlight_Selected_Drawer((sender as Button).Text, tabControl1.SelectedIndex, Color.LightCoral);
+
+
+
+            Last_Button_Properties[0] = (sender as Button).Text;
+        }
+
+        private void buttonNewBox_Click(object sender, EventArgs e)
+        {
+            string[] newRow;
+
+            dataGridViewBoxes.AllowUserToAddRows = true;
+
+            int newBox = dataGridViewBoxes.RowCount;
+
+            if(newBox <= 9)
+                newRow = new string[] { "BOX 0" + newBox };
+            else
+                newRow = new string[] { "BOX " + newBox };
+
+            dataGridViewBoxes.Rows.Add(newRow);
+
+            var test = dataGridViewBoxes.RowCount - 1;
+            dataGridViewBoxes.Rows[test].Selected = true;
+
+            dataGridViewBoxes.AllowUserToAddRows = false;
+
+        }
+
+        private void comboBoxCategory_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(comboBoxCategory.Text) || comboBoxCategory.Text == comboBoxCategory.Items[0].ToString())
+            {
+                validatedCategory = false;
+                errorProvider1.SetError(comboBoxCategory, "should not be left blank!");
+            }
+            else
+            {
+                e.Cancel = false;
+                validatedCategory = true;
+                errorProvider1.SetError(comboBoxCategory, "");
+            }
+        }
+
+        private void textBoxDescription_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(textBoxDescription.Text))
+            {
+                validatedDescription = false;
+                errorProvider1.SetError(textBoxDescription, "should not be left blank!");
+            }
+            else
+            {
+                e.Cancel = false;
+                validatedDescription = true;
+                errorProvider1.SetError(textBoxDescription, "");
+            }
+        }
+
+        private void textBoxQuantity_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(textBoxQuantity.Text))
+            {
+                validatedQuantity = false;
+                errorProvider1.SetError(textBoxQuantity, "should not be left blank!");
+            }
+            else
+            {
+                e.Cancel = false;
+                validatedQuantity = true;
+                errorProvider1.SetError(textBoxQuantity, "");
+            }
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            if (validatedCategory && validatedDescription && validatedQuantity)
+            {
+                if (!string.IsNullOrWhiteSpace(Last_Button_Properties[0].ToString().ToUpper()))
+                {
+                    string category = comboBoxCategory.Text.ToUpper();
+                    string description = textBoxDescription.Text.ToUpper();
+                    string quantity = textBoxQuantity.Text.ToUpper();
+                    string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1).ToUpper()).ToString();
+                    string drawer = Last_Button_Properties[0].ToString().ToUpper();                    
+
+                    Push_New_Component(category, description, quantity, box, drawer);
+                    
+                    ReLoad_Fields();                    
+                }
+                else
+                    MessageBox.Show("Select a drawer!");
+            }
+            else
+                MessageBox.Show("Fill all fields!");
+        }
+
+        void ReLoad_Fields()
+        {            
+            comboBoxCategory.Text = comboBoxCategory.Items[0].ToString();
+            textBoxDescription.Text = string.Empty;
+            textBoxQuantity.Text = string.Empty;
+
+            //dataGridViewBoxes.Rows.Clear();
+            //dataGridViewCurrentParts.Rows.Clear();
+            
+            GetFirebase(String.Empty);
+
+            Fill_All_Fields_With_Firebase_Data();
+        }
+
+        void Fill_All_Fields_With_Firebase_Data()
+        {
+            Fill_Boxes_Datagrid();
+            Fill_Parts_Datagrid();           
+        }
+
         void Fill_Boxes_Datagrid()
         {
             string[] newRow;
@@ -634,72 +762,45 @@ namespace PartsHunter
 
                         newRow = new string[] { "BOX " + value };
 
-
-
-                        foreach (DataGridViewRow row in dataGridViewBoxes.Rows)
+                        int totalRows = 0;
+                        int rowCheck = 0;
+                        foreach (DataGridViewRow existingRow in dataGridViewBoxes.Rows)
                         {
-                            newRow = new string[] { JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Quantity"], JSON_Firebase[key][key2]["Box"], JSON_Firebase[key][key2]["Drawer"] };
-
-                            if (row.Cells[0].Value != JSON_Firebase[key][key2]["Description"])
+                            if (dataGridViewBoxes.Rows.Count > 1)
                             {
-                                dataGridViewResults.Rows.Add(newRow);
-                                numberResults++;
-                                break;
-                            }
-                        }
+                                totalRows = dataGridViewBoxes.Rows.Count;
 
-                        /*
-                        foreach (DataGridViewRow existingRow in dataGridViewBoxes.Rows) {
-                            if (newRow != existingRow.Cells[0].Value)
+                                string s1 = newRow[0].ToString();
+                                string s2 = "";
+                                if (existingRow.Cells[0].Value != null)
+                                    s2 = existingRow.Cells[0].Value.ToString();
+
+                                if (s1 != s2)
+                                    rowCheck++;
+                            }
+                            else
                             {
                                 dataGridViewBoxes.Rows.Add(newRow);
                                 break;
                             }
-                        
-                            
                         }
-                        */
+                        if ((totalRows == rowCheck) && (totalRows != 0))
+                            dataGridViewBoxes.Rows.Add(newRow);
                     }
                 }
             }
-            
+
             dataGridViewBoxes.Sort(dataGridViewBoxes.Columns[0], ListSortDirection.Ascending);
             dataGridViewBoxes.AllowUserToAddRows = false;
         }
+        
         void Fill_Parts_Datagrid()
         {
+            string[] newRow;
+            string value = string.Empty;
 
-        }
-
-
-
-
-        void Fill_All_Fields_With_Firebase_Data()
-        {
-            //string[] newRow;
-            //int numberResults = 0;
-
-
-            Fill_Boxes_Datagrid();
-            Fill_Parts_Datagrid();
-
-            /*
-            string y = dataGridViewBoxes.SelectedCells[0].Value.ToString();
-            string Current_Selected_Box = y.Substring(y.IndexOf(" ") + 1);
-
-
-            if (Current_Selected_Registered_Box != Last_Selected_Registered_Box)
-                Last_Selected_Registered_Box = dataGridViewBoxes.SelectedRows[0].Index;
-
-            dataGridViewBoxes.AllowUserToAddRows = true;
-            dataGridViewCurrentParts.AllowUserToAddRows = true;
-
-            dataGridViewBoxes.Rows.Clear();
             dataGridViewCurrentParts.Rows.Clear();
-
-
-
-            Clear_Highlight_All_Boxes();
+            dataGridViewCurrentParts.AllowUserToAddRows = true;
 
             foreach (var key in JSON_Firebase.Keys)
             {
@@ -712,43 +813,16 @@ namespace PartsHunter
                             newRow = new string[] { JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Quantity"] };
 
                             dataGridViewCurrentParts.Rows.Add(newRow);
-                            numberResults++;
-
-                            // Highlight_Selected_Drawer(JSON_Firebase[key][key2]["Drawer"], REGISTER);
-
                         }
                     }
                 }
-                else
-                {
-                    Send_UART("0");
-                    Highlight_Selected_Drawer("0", SEARCH, Color.WhiteSmoke);
-                    Highlight_Selected_Drawer("0", REGISTER, Color.WhiteSmoke);
-                    labelNumberResults.Text = "0" + " results found";
-                }
             }
-
-            if (numberResults == 1)
-            {
-                Last_Draw_Highlight = String.Empty;
-            }
-
 
             dataGridViewCurrentParts.AllowUserToAddRows = false;
-
-            labelNumberResults.Text = numberResults.ToString() + " results found";
-
-            Last_Selected_Registered_Box = dataGridViewBoxes.SelectedRows[0].Index;
-            */
         }
-
-
-       
-
-
+        
         void Highlight_Drawer_From_Box_Selection()
-        {
-            string Current_Selected_Box="0";//////////////////////////////////////////////////////////////////////////REMOVE
+        {            
             foreach (var key in JSON_Firebase.Keys)
             {
                 foreach (var key2 in JSON_Firebase[key].Keys)
@@ -757,15 +831,15 @@ namespace PartsHunter
                     {
                         switch (JSON_Firebase[key][key2]["Drawer"])
                         {
-                            case "1": if (btnSelected_Drawer_1.BackColor != Color.LightGreen) btnSelected_Drawer_1.BackColor = Color.LemonChiffon; break;
-                            case "2": if (btnSelected_Drawer_2.BackColor != Color.LightGreen) btnSelected_Drawer_2.BackColor = Color.LemonChiffon; break;
-                            case "3": if (btnSelected_Drawer_3.BackColor != Color.LightGreen) btnSelected_Drawer_3.BackColor = Color.LemonChiffon; break;
-                            case "4": if (btnSelected_Drawer_4.BackColor != Color.LightGreen) btnSelected_Drawer_4.BackColor = Color.LemonChiffon; break;
-                            case "5": if (btnSelected_Drawer_5.BackColor != Color.LightGreen) btnSelected_Drawer_5.BackColor = Color.LemonChiffon; break;
-                            case "6": if (btnSelected_Drawer_6.BackColor != Color.LightGreen) btnSelected_Drawer_6.BackColor = Color.LemonChiffon; break;
-                            case "7": if (btnSelected_Drawer_7.BackColor != Color.LightGreen) btnSelected_Drawer_7.BackColor = Color.LemonChiffon; break;
-                            case "8": if (btnSelected_Drawer_8.BackColor != Color.LightGreen) btnSelected_Drawer_8.BackColor = Color.LemonChiffon; break;
-                            case "9": if (btnSelected_Drawer_9.BackColor != Color.LightGreen) btnSelected_Drawer_9.BackColor = Color.LemonChiffon; break;
+                            case "1":  if (btnSelected_Drawer_1.BackColor  != Color.LightGreen) btnSelected_Drawer_1.BackColor  = Color.LemonChiffon; break;
+                            case "2":  if (btnSelected_Drawer_2.BackColor  != Color.LightGreen) btnSelected_Drawer_2.BackColor  = Color.LemonChiffon; break;
+                            case "3":  if (btnSelected_Drawer_3.BackColor  != Color.LightGreen) btnSelected_Drawer_3.BackColor  = Color.LemonChiffon; break;
+                            case "4":  if (btnSelected_Drawer_4.BackColor  != Color.LightGreen) btnSelected_Drawer_4.BackColor  = Color.LemonChiffon; break;
+                            case "5":  if (btnSelected_Drawer_5.BackColor  != Color.LightGreen) btnSelected_Drawer_5.BackColor  = Color.LemonChiffon; break;
+                            case "6":  if (btnSelected_Drawer_6.BackColor  != Color.LightGreen) btnSelected_Drawer_6.BackColor  = Color.LemonChiffon; break;
+                            case "7":  if (btnSelected_Drawer_7.BackColor  != Color.LightGreen) btnSelected_Drawer_7.BackColor  = Color.LemonChiffon; break;
+                            case "8":  if (btnSelected_Drawer_8.BackColor  != Color.LightGreen) btnSelected_Drawer_8.BackColor  = Color.LemonChiffon; break;
+                            case "9":  if (btnSelected_Drawer_9.BackColor  != Color.LightGreen) btnSelected_Drawer_9.BackColor  = Color.LemonChiffon; break;
                             case "10": if (btnSelected_Drawer_10.BackColor != Color.LightGreen) btnSelected_Drawer_10.BackColor = Color.LemonChiffon; break;
                             case "11": if (btnSelected_Drawer_11.BackColor != Color.LightGreen) btnSelected_Drawer_11.BackColor = Color.LemonChiffon; break;
                             case "12": if (btnSelected_Drawer_12.BackColor != Color.LightGreen) btnSelected_Drawer_12.BackColor = Color.LemonChiffon; break;
@@ -787,21 +861,24 @@ namespace PartsHunter
                 }
             }
         }
+       
         void Highlight_Drawer_From_Parts_Selection()
-
         {
             string Current_Selected_Component = String.Empty;
 
             if (dataGridViewCurrentParts.SelectedCells.Count > 0)
             {
-
                 Current_Selected_Component = dataGridViewCurrentParts.SelectedCells[0].Value.ToString();
 
+                try
+                {
+                    if (Last_Selected_Registered_Box != dataGridViewBoxes.SelectedRows[0].Index)
+                        Last_Draw_Highlight = String.Empty;
+                }
+                catch
+                {
 
-
-                if (Last_Selected_Registered_Box != dataGridViewBoxes.SelectedRows[0].Index)
-                    Last_Draw_Highlight = String.Empty;
-
+                }
             }
 
             foreach (var key in JSON_Firebase.Keys)
@@ -839,157 +916,110 @@ namespace PartsHunter
                                 case "22": btnSelected_Drawer_22.BackColor = Color.LemonChiffon; break;
                                 case "23": btnSelected_Drawer_23.BackColor = Color.LemonChiffon; break;
                                 case "24": btnSelected_Drawer_24.BackColor = Color.LemonChiffon; break;
-                            }
+                            }                           
 
-                            var _t = JSON_Firebase[key][key2]["Drawer"];
+                            var test = JSON_Firebase[key][key2]["Drawer"];
 
                             Highlight_Selected_Drawer(JSON_Firebase[key][key2]["Drawer"], REGISTER, Color.LightGreen);
                             Last_Draw_Highlight = JSON_Firebase[key][key2]["Drawer"];
-
-
-
                         }
                     }
                 }
             }
+            try
+            {
+                Last_Selected_Registered_Box = dataGridViewBoxes.SelectedRows[0].Index;
+            }
+            catch
+            {
 
+            }
         }     
-        void Clear_Highlight_All_Boxes()
+        
+        void Clear_Highlight_All_Boxes(int clear_level)
         {
-            btnSelected_Drawer_1.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_2.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_3.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_4.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_5.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_6.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_7.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_8.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_9.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_10.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_11.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_12.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_13.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_14.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_15.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_16.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_17.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_18.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_19.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_20.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_21.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_22.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_23.BackColor = Color.WhiteSmoke;
-            btnSelected_Drawer_24.BackColor = Color.WhiteSmoke;
+            switch (clear_level)
+            {
+                case CLEAR_ALL:
+                    btnSelected_Drawer_1.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_2.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_3.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_4.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_5.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_6.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_7.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_8.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_9.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_10.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_11.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_12.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_13.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_14.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_15.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_16.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_17.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_18.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_19.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_20.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_21.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_22.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_23.BackColor = Color.WhiteSmoke;
+                    btnSelected_Drawer_24.BackColor = Color.WhiteSmoke;
+                    break;
+            
+                case CLEAR_KEEPING_FILLED_DRAWERS:
+                    if (btnSelected_Drawer_1.BackColor  != Color.LightGreen) btnSelected_Drawer_1.BackColor  = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_2.BackColor  != Color.LightGreen) btnSelected_Drawer_2.BackColor  = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_3.BackColor  != Color.LightGreen) btnSelected_Drawer_3.BackColor  = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_4.BackColor  != Color.LightGreen) btnSelected_Drawer_4.BackColor  = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_5.BackColor  != Color.LightGreen) btnSelected_Drawer_5.BackColor  = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_6.BackColor  != Color.LightGreen) btnSelected_Drawer_6.BackColor  = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_7.BackColor  != Color.LightGreen) btnSelected_Drawer_7.BackColor  = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_8.BackColor  != Color.LightGreen) btnSelected_Drawer_8.BackColor  = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_9.BackColor  != Color.LightGreen) btnSelected_Drawer_9.BackColor  = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_10.BackColor != Color.LightGreen) btnSelected_Drawer_10.BackColor = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_11.BackColor != Color.LightGreen) btnSelected_Drawer_11.BackColor = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_12.BackColor != Color.LightGreen) btnSelected_Drawer_12.BackColor = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_13.BackColor != Color.LightGreen) btnSelected_Drawer_13.BackColor = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_14.BackColor != Color.LightGreen) btnSelected_Drawer_14.BackColor = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_15.BackColor != Color.LightGreen) btnSelected_Drawer_15.BackColor = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_16.BackColor != Color.LightGreen) btnSelected_Drawer_16.BackColor = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_17.BackColor != Color.LightGreen) btnSelected_Drawer_17.BackColor = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_18.BackColor != Color.LightGreen) btnSelected_Drawer_18.BackColor = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_19.BackColor != Color.LightGreen) btnSelected_Drawer_19.BackColor = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_20.BackColor != Color.LightGreen) btnSelected_Drawer_20.BackColor = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_21.BackColor != Color.LightGreen) btnSelected_Drawer_21.BackColor = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_22.BackColor != Color.LightGreen) btnSelected_Drawer_22.BackColor = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_23.BackColor != Color.LightGreen) btnSelected_Drawer_23.BackColor = Color.WhiteSmoke;
+                    if (btnSelected_Drawer_24.BackColor != Color.LightGreen) btnSelected_Drawer_24.BackColor = Color.WhiteSmoke;
+                    break;
+            }
+
         }
-
-
+       
         private void dataGridViewBoxes_SelectionChanged(object sender, EventArgs e)
         {
-            Highlight_Drawer_From_Box_Selection();
-        }
-        private void dataGridViewCurrentContent_SelectionChanged(object sender, EventArgs e)
+            string y = string.Empty;
+
+            if (dataGridViewBoxes.SelectedCells[0].Value != null)
+            {
+                y = dataGridViewBoxes.SelectedCells[0].Value.ToString();
+
+                Current_Selected_Box = y.Substring(y.IndexOf(" ") + 1);
+                int boxNumber = int.Parse(Current_Selected_Box);
+                Current_Selected_Box = boxNumber.ToString();
+
+                Fill_Parts_Datagrid();
+
+                Clear_Highlight_All_Boxes(CLEAR_KEEPING_FILLED_DRAWERS);
+
+                Highlight_Drawer_From_Box_Selection();
+            }
+        }     
+
+        private void dataGridViewCurrentParts_SelectionChanged(object sender, EventArgs e)
         {
             Highlight_Drawer_From_Parts_Selection();
-
         }
-
-        private void Get_Button_Click(object sender, EventArgs e)
-        {
-
-
-            if (Last_Button_Properties[0] != (sender as Button).Text && Last_Button_Properties[0] != String.Empty)
-                Highlight_Selected_Drawer(Last_Button_Properties[0], tabControl1.SelectedIndex, Last_Button_Properties[1]);
-            Last_Button_Properties[1] = (sender as Button).BackColor;
-
-            Highlight_Selected_Drawer((sender as Button).Text, tabControl1.SelectedIndex, Color.LightCoral);
-
-
-
-            Last_Button_Properties[0] = (sender as Button).Text;
-        }
-
-        private void buttonNewBox_Click(object sender, EventArgs e)
-        {
-            string[] newRow;
-
-            dataGridViewBoxes.AllowUserToAddRows = true;
-
-            int newBox = dataGridViewBoxes.RowCount;
-
-            newRow = new string[] { "BOX " + newBox };
-
-            dataGridViewBoxes.Rows.Add(newRow);
-
-            dataGridViewBoxes.AllowUserToAddRows = false;
-
-        }
-
-        private void comboBoxCategory_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(comboBoxCategory.Text) || comboBoxCategory.Text == comboBoxCategory.Items[0].ToString())
-            {               
-                validatedCategory = false;
-                errorProvider1.SetError(comboBoxCategory, "should not be left blank!");
-            }
-            else
-            {
-                e.Cancel = false;
-                validatedCategory = true;
-                errorProvider1.SetError(comboBoxCategory, "");
-            }
-        }
-
-        private void textBoxDescription_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(textBoxDescription.Text))
-            {              
-                validatedDescription = false;
-                errorProvider1.SetError(textBoxDescription, "should not be left blank!");
-            }
-            else
-            {
-                e.Cancel = false;
-                validatedDescription = true;
-                errorProvider1.SetError(textBoxDescription, "");
-            }
-        }
-
-        private void textBoxQuantity_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(textBoxQuantity.Text))
-            {              
-                validatedQuantity = false;
-                errorProvider1.SetError(textBoxQuantity, "should not be left blank!");
-            }
-            else
-            {
-                e.Cancel = false;
-                validatedQuantity = true;
-                errorProvider1.SetError(textBoxQuantity, "");
-            }
-        }
-
-        private void buttonSave_Click(object sender, EventArgs e)
-        {
-            if (validatedCategory && validatedDescription && validatedQuantity)
-            {
-                int index = dataGridViewBoxes.SelectedCells[0].RowIndex;
-                
-                string drawer = Last_Button_Properties[0];                
-                string box = dataGridViewBoxes.Rows[index].Cells[0].Value.ToString();
-                
-                string category = comboBoxCategory.Text.ToUpper();
-                string description = textBoxDescription.Text.ToUpper();
-                string quantity = textBoxQuantity.Text.ToUpper();
-                drawer = drawer.ToUpper();
-                box = box.ToUpper();
-
-                Push_New_Component(category, description, quantity, box, drawer);                
-            }
-            else
-                MessageBox.Show("Fill all fields");
-        }
-
-      
     }
 }

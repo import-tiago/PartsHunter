@@ -32,3 +32,11 @@ C:\Projects\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.csproj.Cor
 C:\Projects\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.csproj.CopyComplete
 C:\Projects\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.exe
 C:\Projects\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.pdb
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Configuration.ConfigurationManager.dll
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Security.AccessControl.dll
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Security.Permissions.dll
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Security.Principal.Windows.dll
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Configuration.ConfigurationManager.xml
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Security.AccessControl.xml
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Security.Permissions.xml
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Security.Principal.Windows.xml

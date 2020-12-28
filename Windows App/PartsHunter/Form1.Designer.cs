@@ -587,6 +587,7 @@ namespace PartsHunter
             this.Drawer});
             this.dataGridViewResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewResults.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewResults.MultiSelect = false;
             this.dataGridViewResults.Name = "dataGridViewResults";
             this.dataGridViewResults.ReadOnly = true;
             this.dataGridViewResults.RowHeadersVisible = false;
@@ -1081,6 +1082,7 @@ namespace PartsHunter
             this.dataGridViewTextBoxColumn3});
             this.dataGridViewBoxes.Dock = System.Windows.Forms.DockStyle.Top;
             this.dataGridViewBoxes.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewBoxes.MultiSelect = false;
             this.dataGridViewBoxes.Name = "dataGridViewBoxes";
             this.dataGridViewBoxes.ReadOnly = true;
             this.dataGridViewBoxes.RowHeadersVisible = false;
@@ -1116,13 +1118,14 @@ namespace PartsHunter
             this.dataGridViewTextBoxColumn2});
             this.dataGridViewCurrentParts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewCurrentParts.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewCurrentParts.MultiSelect = false;
             this.dataGridViewCurrentParts.Name = "dataGridViewCurrentParts";
             this.dataGridViewCurrentParts.ReadOnly = true;
             this.dataGridViewCurrentParts.RowHeadersVisible = false;
             this.dataGridViewCurrentParts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewCurrentParts.Size = new System.Drawing.Size(290, 429);
             this.dataGridViewCurrentParts.TabIndex = 1;
-            this.dataGridViewCurrentParts.SelectionChanged += new System.EventHandler(this.dataGridViewCurrentContent_SelectionChanged);
+            this.dataGridViewCurrentParts.SelectionChanged += new System.EventHandler(this.dataGridViewCurrentParts_SelectionChanged);
             // 
             // dataGridViewTextBoxColumn1
             // 
