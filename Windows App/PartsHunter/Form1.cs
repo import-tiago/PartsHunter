@@ -38,6 +38,7 @@ namespace PartsHunter
         private bool validatedDescription;
         private bool validatedQuantity;
         private string Current_Selected_Box = string.Empty;
+        private bool Manually_Manipulating_Datagrid = false;
 
         private readonly NameValueCollection configuration = ConfigurationManager.AppSettings;
         private readonly JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -633,13 +634,35 @@ namespace PartsHunter
 
         private void buttonNewBox_Click(object sender, EventArgs e)
         {
+            Manually_Manipulating_Datagrid = true;
             string[] newRow;
+            int newBox = dataGridViewBoxes.RowCount;
+            int index = 0;
+            bool get_small = false;
 
             dataGridViewBoxes.AllowUserToAddRows = true;
 
-            int newBox = dataGridViewBoxes.RowCount;
+            
+                        
+            //Checks the smallest non-existent box's number
+            for (int i = 0; i < newBox; i++)
+            {
+                int box = int.Parse(dataGridViewBoxes.Rows[i].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1).ToUpper());
 
-            if(newBox <= 9)
+                if (box > i + 1)
+                {
+                    newBox = i + 1;
+                    get_small = true;
+                    break;
+                }
+            }
+
+            if (get_small == false)
+                newBox += 1;
+
+            index = newBox - 1;
+
+            if (newBox <= 9)
                 newRow = new string[] { "BOX 0" + newBox };
             else
                 newRow = new string[] { "BOX " + newBox };
@@ -650,7 +673,11 @@ namespace PartsHunter
             dataGridViewBoxes.Rows[test].Selected = true;
 
             dataGridViewBoxes.AllowUserToAddRows = false;
+            
+            dataGridViewBoxes.Sort(dataGridViewBoxes.Columns[0], ListSortDirection.Ascending);
+            dataGridViewBoxes.Rows[index].Selected = true;
 
+            Manually_Manipulating_Datagrid = false;
         }
 
         private void comboBoxCategory_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1001,7 +1028,7 @@ namespace PartsHunter
         {
             string y = string.Empty;
 
-            if (dataGridViewBoxes.SelectedCells[0].Value != null)
+            if (Manually_Manipulating_Datagrid == false)
             {
                 y = dataGridViewBoxes.SelectedCells[0].Value.ToString();
 
@@ -1015,6 +1042,8 @@ namespace PartsHunter
 
                 Highlight_Drawer_From_Box_Selection();
             }
+            else
+                return;
         }     
 
         private void dataGridViewCurrentParts_SelectionChanged(object sender, EventArgs e)
