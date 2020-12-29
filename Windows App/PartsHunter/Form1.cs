@@ -677,7 +677,20 @@ namespace PartsHunter
             dataGridViewBoxes.Sort(dataGridViewBoxes.Columns[0], ListSortDirection.Ascending);
             dataGridViewBoxes.Rows[index].Selected = true;
 
+            //Current_Selected_Box = index;
+
+            Current_Selected_Box = dataGridViewBoxes.Rows[index].Cells[0].Value.ToString();            
+            Current_Selected_Box = int.Parse(Current_Selected_Box.Substring(Current_Selected_Box.IndexOf(" ") + 1)).ToString();            
+            
+
             Manually_Manipulating_Datagrid = false;
+
+            if (Fill_Parts_Datagrid() == 0)
+                Clear_Highlight_All_Boxes(CLEAR_ALL);
+            else
+                Clear_Highlight_All_Boxes(CLEAR_KEEPING_FILLED_DRAWERS);
+
+            Highlight_Drawer_From_Box_Selection();
         }
 
         private void comboBoxCategory_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -821,10 +834,11 @@ namespace PartsHunter
             dataGridViewBoxes.AllowUserToAddRows = false;
         }
         
-        void Fill_Parts_Datagrid()
+        int Fill_Parts_Datagrid()
         {
             string[] newRow;
             string value = string.Empty;
+            int results = 0;
 
             dataGridViewCurrentParts.Rows.Clear();
             dataGridViewCurrentParts.AllowUserToAddRows = true;
@@ -840,12 +854,16 @@ namespace PartsHunter
                             newRow = new string[] { JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Quantity"] };
 
                             dataGridViewCurrentParts.Rows.Add(newRow);
+
+                            results++;
                         }
                     }
                 }
             }
 
             dataGridViewCurrentParts.AllowUserToAddRows = false;
+
+            return results;
         }
         
         void Highlight_Drawer_From_Box_Selection()
@@ -1036,9 +1054,10 @@ namespace PartsHunter
                 int boxNumber = int.Parse(Current_Selected_Box);
                 Current_Selected_Box = boxNumber.ToString();
 
-                Fill_Parts_Datagrid();
-
-                Clear_Highlight_All_Boxes(CLEAR_KEEPING_FILLED_DRAWERS);
+                if (Fill_Parts_Datagrid() == 0)
+                    Clear_Highlight_All_Boxes(CLEAR_ALL);
+                else
+                    Clear_Highlight_All_Boxes(CLEAR_KEEPING_FILLED_DRAWERS);
 
                 Highlight_Drawer_From_Box_Selection();
             }
