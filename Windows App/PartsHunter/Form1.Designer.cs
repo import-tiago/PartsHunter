@@ -89,7 +89,6 @@ namespace PartsHunter
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.textBoxQuantity = new System.Windows.Forms.TextBox();
-            this.buttonSave = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnSelected_Drawer_14 = new System.Windows.Forms.Button();
             this.btnSelected_Drawer_13 = new System.Windows.Forms.Button();
@@ -123,10 +122,13 @@ namespace PartsHunter
             this.dataGridViewCurrentParts = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._Drawer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SerialPort = new System.IO.Ports.SerialPort(this.components);
             this.timerCOM = new System.Windows.Forms.Timer(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this._Drawer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.buttonSave = new System.Windows.Forms.Button();
+            this.buttonEdit = new System.Windows.Forms.Button();
+            this.buttonDelete = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -151,7 +153,7 @@ namespace PartsHunter
             this.tabControl1.Location = new System.Drawing.Point(0, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1105, 682);
+            this.tabControl1.Size = new System.Drawing.Size(1110, 680);
             this.tabControl1.TabIndex = 35;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -172,7 +174,7 @@ namespace PartsHunter
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1097, 656);
+            this.tabPage1.Size = new System.Drawing.Size(1102, 654);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Search";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -245,7 +247,6 @@ namespace PartsHunter
             this.textBoxSearch.Name = "textBoxSearch";
             this.textBoxSearch.Size = new System.Drawing.Size(251, 20);
             this.textBoxSearch.TabIndex = 56;
-            this.textBoxSearch.Text = "10k";
             this.textBoxSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxSearch_KeyDown);
             // 
             // btCOMConnect
@@ -632,16 +633,16 @@ namespace PartsHunter
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.buttonSave);
             this.tabPage2.Controls.Add(this.groupBoxCurrentLocation);
             this.tabPage2.Controls.Add(this.groupBox1);
-            this.tabPage2.Controls.Add(this.buttonSave);
             this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Controls.Add(this.groupBox3);
             this.tabPage2.Controls.Add(this.groupBoxParts);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1097, 656);
+            this.tabPage2.Size = new System.Drawing.Size(1102, 654);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Register";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -772,6 +773,7 @@ namespace PartsHunter
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.Size = new System.Drawing.Size(266, 20);
             this.textBoxDescription.TabIndex = 1;
+            this.textBoxDescription.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxDescription_KeyDown);
             this.textBoxDescription.Validating += new System.ComponentModel.CancelEventHandler(this.textBoxDescription_Validating);
             // 
             // label4
@@ -800,19 +802,6 @@ namespace PartsHunter
             this.textBoxQuantity.TabIndex = 3;
             this.textBoxQuantity.Validating += new System.ComponentModel.CancelEventHandler(this.textBoxQuantity_Validating);
             // 
-            // buttonSave
-            // 
-            this.buttonSave.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSave.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSave.Location = new System.Drawing.Point(9, 619);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(1076, 31);
-            this.buttonSave.TabIndex = 66;
-            this.buttonSave.Text = "SAVE";
-            this.buttonSave.UseVisualStyleBackColor = false;
-            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.btnSelected_Drawer_14);
@@ -839,7 +828,7 @@ namespace PartsHunter
             this.groupBox2.Controls.Add(this.btnSelected_Drawer_22);
             this.groupBox2.Controls.Add(this.btnSelected_Drawer_23);
             this.groupBox2.Controls.Add(this.btnSelected_Drawer_24);
-            this.groupBox2.Location = new System.Drawing.Point(140, 165);
+            this.groupBox2.Location = new System.Drawing.Point(143, 155);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(642, 448);
             this.groupBox2.TabIndex = 47;
@@ -1138,9 +1127,9 @@ namespace PartsHunter
             // 
             this.groupBox3.Controls.Add(this.buttonNewBox);
             this.groupBox3.Controls.Add(this.dataGridViewBoxes);
-            this.groupBox3.Location = new System.Drawing.Point(6, 164);
+            this.groupBox3.Location = new System.Drawing.Point(9, 154);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(125, 448);
+            this.groupBox3.Size = new System.Drawing.Size(125, 449);
             this.groupBox3.TabIndex = 38;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "EXISTING BOXES";
@@ -1148,7 +1137,7 @@ namespace PartsHunter
             // buttonNewBox
             // 
             this.buttonNewBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonNewBox.Location = new System.Drawing.Point(3, 417);
+            this.buttonNewBox.Location = new System.Drawing.Point(3, 419);
             this.buttonNewBox.Name = "buttonNewBox";
             this.buttonNewBox.Size = new System.Drawing.Size(119, 25);
             this.buttonNewBox.TabIndex = 67;
@@ -1171,7 +1160,7 @@ namespace PartsHunter
             this.dataGridViewBoxes.ReadOnly = true;
             this.dataGridViewBoxes.RowHeadersVisible = false;
             this.dataGridViewBoxes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewBoxes.Size = new System.Drawing.Size(119, 402);
+            this.dataGridViewBoxes.Size = new System.Drawing.Size(119, 404);
             this.dataGridViewBoxes.TabIndex = 1;
             this.dataGridViewBoxes.SelectionChanged += new System.EventHandler(this.dataGridViewBoxes_SelectionChanged);
             // 
@@ -1183,13 +1172,15 @@ namespace PartsHunter
             // 
             // groupBoxParts
             // 
+            this.groupBoxParts.Controls.Add(this.buttonDelete);
+            this.groupBoxParts.Controls.Add(this.buttonEdit);
             this.groupBoxParts.Controls.Add(this.dataGridViewCurrentParts);
-            this.groupBoxParts.Location = new System.Drawing.Point(792, 164);
+            this.groupBoxParts.Location = new System.Drawing.Point(795, 154);
             this.groupBoxParts.Name = "groupBoxParts";
             this.groupBoxParts.Size = new System.Drawing.Size(296, 448);
             this.groupBoxParts.TabIndex = 37;
             this.groupBoxParts.TabStop = false;
-            this.groupBoxParts.Text = "CURRENT PARTS";
+            this.groupBoxParts.Text = "CURRENT PARTS IN THE BOX";
             // 
             // dataGridViewCurrentParts
             // 
@@ -1201,14 +1192,14 @@ namespace PartsHunter
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2,
             this._Drawer});
-            this.dataGridViewCurrentParts.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewCurrentParts.Dock = System.Windows.Forms.DockStyle.Top;
             this.dataGridViewCurrentParts.Location = new System.Drawing.Point(3, 16);
             this.dataGridViewCurrentParts.MultiSelect = false;
             this.dataGridViewCurrentParts.Name = "dataGridViewCurrentParts";
             this.dataGridViewCurrentParts.ReadOnly = true;
             this.dataGridViewCurrentParts.RowHeadersVisible = false;
             this.dataGridViewCurrentParts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewCurrentParts.Size = new System.Drawing.Size(290, 429);
+            this.dataGridViewCurrentParts.Size = new System.Drawing.Size(290, 404);
             this.dataGridViewCurrentParts.TabIndex = 1;
             this.dataGridViewCurrentParts.SelectionChanged += new System.EventHandler(this.dataGridViewCurrentParts_SelectionChanged);
             // 
@@ -1223,6 +1214,12 @@ namespace PartsHunter
             this.dataGridViewTextBoxColumn2.HeaderText = "Qty";
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
+            // _Drawer
+            // 
+            this._Drawer.HeaderText = "Drawer";
+            this._Drawer.Name = "_Drawer";
+            this._Drawer.ReadOnly = true;
             // 
             // SerialPort
             // 
@@ -1239,17 +1236,44 @@ namespace PartsHunter
             this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider1.ContainerControl = this;
             // 
-            // _Drawer
+            // buttonSave
             // 
-            this._Drawer.HeaderText = "Drawer";
-            this._Drawer.Name = "_Drawer";
-            this._Drawer.ReadOnly = true;
+            this.buttonSave.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSave.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSave.Location = new System.Drawing.Point(12, 612);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(1076, 31);
+            this.buttonSave.TabIndex = 71;
+            this.buttonSave.Text = "SAVE";
+            this.buttonSave.UseVisualStyleBackColor = false;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click_1);
+            // 
+            // buttonEdit
+            // 
+            this.buttonEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonEdit.Location = new System.Drawing.Point(3, 419);
+            this.buttonEdit.Name = "buttonEdit";
+            this.buttonEdit.Size = new System.Drawing.Size(146, 25);
+            this.buttonEdit.TabIndex = 68;
+            this.buttonEdit.Text = "EDIT";
+            this.buttonEdit.UseVisualStyleBackColor = true;
+            // 
+            // buttonDelete
+            // 
+            this.buttonDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDelete.Location = new System.Drawing.Point(148, 419);
+            this.buttonDelete.Name = "buttonDelete";
+            this.buttonDelete.Size = new System.Drawing.Size(145, 25);
+            this.buttonDelete.TabIndex = 69;
+            this.buttonDelete.Text = "DELETE";
+            this.buttonDelete.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1100, 689);
+            this.ClientSize = new System.Drawing.Size(1106, 688);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -1361,7 +1385,6 @@ namespace PartsHunter
         private System.Windows.Forms.Button buttonListAll;
         private System.Windows.Forms.ComboBox comboBoxSearchCategory;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.DataGridView dataGridViewBoxes;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridView dataGridViewCurrentParts;
@@ -1379,6 +1402,9 @@ namespace PartsHunter
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.DataGridViewTextBoxColumn _Drawer;
+        private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.Button buttonDelete;
+        private System.Windows.Forms.Button buttonEdit;
     }
 }
 

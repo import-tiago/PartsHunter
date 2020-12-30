@@ -27,8 +27,7 @@ namespace PartsHunter
         private string String_UART;
         private bool Get_Number_Boxes_Okay = false;
         private int Number_Boxes = 0;
-        private int Last_Selected_Registered_Box = 0;
-        private int Current_Selected_Registered_Box = 0;
+        private int Last_Selected_Registered_Box = 0;        
         private bool Pre_Load_Done = false;
         private string Last_Draw_Highlight = "0";
         private string Current_Button_Click = String.Empty;
@@ -38,7 +37,7 @@ namespace PartsHunter
         private bool validatedDescription;
         private bool validatedQuantity;
         private string Current_Selected_Box = string.Empty;
-        private bool Manually_Manipulating_Datagrid = false;
+        private bool Manually_Manipulating_Datagrid = false;        
 
         private readonly NameValueCollection configuration = ConfigurationManager.AppSettings;
         private readonly JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -65,18 +64,17 @@ namespace PartsHunter
 
         private void timerCOM_Tick_1(object sender, EventArgs e)
         {
-            atualizaListaCOMs();
+            Update_COM_List();
         }
 
-        private void atualizaListaCOMs()
+        private void Update_COM_List()
         {
             int i;
-            bool quantDiferente;    //flag para sinalizar que a quantidade de portas mudou
+            bool quantDiferente;
 
             i = 0;
             quantDiferente = false;
-
-            //se a quantidade de portas mudou
+            
             if (comboBox1.Items.Count == SerialPort.GetPortNames().Length)
             {
                 foreach (string s in SerialPort.GetPortNames())
@@ -91,22 +89,19 @@ namespace PartsHunter
             {
                 quantDiferente = true;
             }
-
-            //Se não foi detectado diferença
+            
             if (quantDiferente == false)
             {
-                return;                     //retorna
+                return;
             }
 
-            //limpa comboBox
+            
             comboBox1.Items.Clear();
-
-            //adiciona todas as COM diponíveis na lista
+            
             foreach (string s in SerialPort.GetPortNames())
             {
                 comboBox1.Items.Add(s);
-            }
-            //seleciona a primeira posição da lista
+            }            
             comboBox1.SelectedIndex = 0;
         }
 
@@ -142,7 +137,7 @@ namespace PartsHunter
                 }
                 if (SerialPort.IsOpen)
                 {
-                    btCOMConnect.BackColor = Color.LightCoral;
+                    btCOMConnect.BackColor = Color.LightGreen;
                     btCOMConnect.Text = "Disconnect";
                     comboBox1.Enabled = false;
                 }
@@ -328,7 +323,7 @@ namespace PartsHunter
             }
             catch { MessageBox.Show("Error to open SerialPort"); }
 
-            btCOMConnect.BackColor = Color.LightCoral;
+            btCOMConnect.BackColor = Color.LightGreen;
             btCOMConnect.Text = "Disconnect";
             comboBox1.Enabled = false;
 
@@ -374,7 +369,7 @@ namespace PartsHunter
         void SearchByCategory()
         {
             string[] newRow;
-            GetFirebase(comboBoxSearchCategory.Text.ToUpper());
+            GetFirebase(comboBoxSearchCategory.Text);
             dataGridViewResults.AllowUserToAddRows = true;
             dataGridViewResults.Rows.Clear();
 
@@ -433,8 +428,8 @@ namespace PartsHunter
 
                         foreach (var w in words)
                         {
-
-                            if (s.Contains(w))
+                            
+                            if (String.Compare(s, w, StringComparison.OrdinalIgnoreCase) == 0)
                             {
                                 foreach (DataGridViewRow row in dataGridViewResults.Rows)
                                 {
@@ -469,7 +464,7 @@ namespace PartsHunter
 
         private void buttonSearch_Click(object sender, EventArgs e)
         {            
-            SearchByDescription(textBoxSearch.Text.ToUpper());
+            SearchByDescription(textBoxSearch.Text);
             labelNumberResults.Visible = true;
         }
 
@@ -477,11 +472,10 @@ namespace PartsHunter
         {
             if (e.KeyCode == Keys.Enter)
             {
-                SearchByDescription(textBoxSearch.Text.ToUpper());
+                SearchByDescription(textBoxSearch.Text);
                 labelNumberResults.Visible = true;
             }
         }
-
 
         private void dataGridViewResults_SelectionChanged(object sender, EventArgs e)
         {            
@@ -513,7 +507,6 @@ namespace PartsHunter
                 MessageBox.Show("Select a category");
             }
         }
-
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -560,8 +553,6 @@ namespace PartsHunter
             Send_UART("BOX?\r\n");
         }
 
-      
-
         void FindRegisteredComponent(string input)
         {
             string[] newRow;
@@ -581,12 +572,10 @@ namespace PartsHunter
 
                         string[] words = input.Split(' ');
 
-
-
                         foreach (var w in words)
                         {
 
-                            if (s.Contains(w))
+                            if (String.Compare(s, w, StringComparison.OrdinalIgnoreCase) == 0)
                             {
                                 foreach (DataGridViewRow row in dataGridViewRegisteredParts.Rows)
                                 {
@@ -617,23 +606,31 @@ namespace PartsHunter
             }
             dataGridViewRegisteredParts.AllowUserToAddRows = false;
             labelNumberResults2.Text = numberResults.ToString() + " results found";
+            
+            if(numberResults == 1)
+                Show_Location_Registered_Part(0);
+            else if (numberResults == 0)
+                groupBoxCurrentLocation.Visible = false;
+
         }
 
         private void Get_Button_Click(object sender, EventArgs e)
         {
+            if (Last_Button_Properties[0] != (sender as Button).Text)
+            {
+                firstClick = true;
 
+                if (Last_Button_Properties[0] != (sender as Button).Text && Last_Button_Properties[0] != String.Empty)
+                    Highlight_Selected_Drawer(Last_Button_Properties[0], tabControl1.SelectedIndex, Last_Button_Properties[1]);
 
-            if (Last_Button_Properties[0] != (sender as Button).Text && Last_Button_Properties[0] != String.Empty)
-                Highlight_Selected_Drawer(Last_Button_Properties[0], tabControl1.SelectedIndex, Last_Button_Properties[1]);
-            Last_Button_Properties[1] = (sender as Button).BackColor;
+                Last_Button_Properties[1] = (sender as Button).BackColor;
 
+                Highlight_Selected_Drawer((sender as Button).Text, tabControl1.SelectedIndex, Color.LightGreen);
 
-            
-            Highlight_Selected_Drawer((sender as Button).Text, tabControl1.SelectedIndex, Color.LightCoral);
+                Last_Button_Properties[0] = (sender as Button).Text;
 
-
-
-            Last_Button_Properties[0] = (sender as Button).Text;
+                firstClick = false;
+            }
         }
 
         private void buttonNewBox_Click(object sender, EventArgs e)
@@ -645,14 +642,12 @@ namespace PartsHunter
             int index = 0;
             bool get_small = false;
 
-            dataGridViewBoxes.AllowUserToAddRows = true;
-
-            
+            dataGridViewBoxes.AllowUserToAddRows = true;            
                         
             //Checks the smallest non-existent box's number
             for (int i = 0; i < newBox; i++)
             {
-                int box = int.Parse(dataGridViewBoxes.Rows[i].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1).ToUpper());
+                int box = int.Parse(dataGridViewBoxes.Rows[i].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1));
 
                 if (box > i + 1)
                 {
@@ -743,42 +738,25 @@ namespace PartsHunter
             }
         }
 
-        private void buttonSave_Click(object sender, EventArgs e)
-        {
-            groupBoxCurrentLocation.Visible = false;
-            if (validatedCategory && validatedDescription && validatedQuantity)
-            {
-                if (!string.IsNullOrWhiteSpace(Last_Button_Properties[0].ToString().ToUpper()))
-                {
-                    string category = comboBoxCategory.Text.ToUpper();
-                    string description = textBoxDescription.Text.ToUpper();
-                    string quantity = textBoxQuantity.Text.ToUpper();
-                    string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1).ToUpper()).ToString();
-                    string drawer = Last_Button_Properties[0].ToString().ToUpper();                    
-
-                    Push_New_Component(category, description, quantity, box, drawer);
-                    
-                    ReLoad_Fields();                    
-                }
-                else
-                    MessageBox.Show("Select a drawer!");
-            }
-            else
-                MessageBox.Show("Fill all fields!");
-        }
-
         void ReLoad_Fields()
-        {            
+        {
+            string lastDrawer = Last_Button_Properties[0].ToString();//////////////////////                       
+
             comboBoxCategory.Text = comboBoxCategory.Items[0].ToString();
             textBoxDescription.Text = string.Empty;
-            textBoxQuantity.Text = string.Empty;
-
-            //dataGridViewBoxes.Rows.Clear();
-            //dataGridViewCurrentParts.Rows.Clear();
+            textBoxQuantity.Text = string.Empty;     
             
             GetFirebase(String.Empty);
-
+         
             Fill_All_Fields_With_Firebase_Data();
+            
+            Set_BackColor_to_Button(lastDrawer, Color.Linen);
+
+            //Highlight_Selected_Drawer(lastDrawer, REGISTER, Color.Linen);
+            //Last_Draw_Highlight = lastDrawer;
+
+            Last_Button_Properties[0] = lastDrawer;
+            Last_Button_Properties[1] = Color.Linen;
         }
 
         void Fill_All_Fields_With_Firebase_Data()
@@ -1054,18 +1032,21 @@ namespace PartsHunter
 
             if (Manually_Manipulating_Datagrid == false)
             {
-                y = dataGridViewBoxes.SelectedCells[0].Value.ToString();
+                if (dataGridViewBoxes.SelectedCells.Count > 0)
+                {
+                    y = dataGridViewBoxes.SelectedCells[0].Value.ToString();
 
-                Current_Selected_Box = y.Substring(y.IndexOf(" ") + 1);
-                int boxNumber = int.Parse(Current_Selected_Box);
-                Current_Selected_Box = boxNumber.ToString();
+                    Current_Selected_Box = y.Substring(y.IndexOf(" ") + 1);
+                    int boxNumber = int.Parse(Current_Selected_Box);
+                    Current_Selected_Box = boxNumber.ToString();
 
-                if (Fill_Parts_Datagrid() == 0)
-                    Clear_Highlight_All_Boxes(CLEAR_ALL);
-                else
-                    Clear_Highlight_All_Boxes(CLEAR_KEEPING_FILLED_DRAWERS);
+                    if (Fill_Parts_Datagrid() == 0)
+                        Clear_Highlight_All_Boxes(CLEAR_ALL);
+                    else
+                        Clear_Highlight_All_Boxes(CLEAR_KEEPING_FILLED_DRAWERS);
 
-                Highlight_Drawer_From_Box_Selection();
+                    Highlight_Drawer_From_Box_Selection();
+                }
             }
             else
                 return;
@@ -1073,9 +1054,7 @@ namespace PartsHunter
 
         private void dataGridViewCurrentParts_SelectionChanged(object sender, EventArgs e)
         {
-            
-                Highlight_Drawer_From_Parts_Selection();
-            
+            Highlight_Drawer_From_Parts_Selection();            
         }
 
         private void buttonFindCurrentLocation_Click(object sender, EventArgs e)
@@ -1084,33 +1063,33 @@ namespace PartsHunter
             labelNumberResults2.Visible = true;
             FindRegisteredComponent(textBoxDescription.Text);
         }
-    
+
         private void dataGridViewRegisteredParts_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-          
-            int clicked_index = e.RowIndex;
+            Show_Location_Registered_Part(e.RowIndex); 
+        }
+
+        void Show_Location_Registered_Part(int clickIndex) {
+            int clicked_index = clickIndex;
             int box_index = 0;
             int drawer_index = 0;
             int box_number = int.Parse(dataGridViewRegisteredParts.Rows[clicked_index].Cells[1].Value.ToString());
             string box = string.Empty;
             string drawer = dataGridViewRegisteredParts.Rows[clicked_index].Cells[2].Value.ToString();
 
-            
             if (box_number <= 9)
-                box = "BOX 0" + box_number ;
+                box = "BOX 0" + box_number;
             else
                 box = "BOX " + box_number;
 
-
             foreach (DataGridViewRow rowBox in dataGridViewBoxes.Rows)
-            {                
+            {
                 if ((rowBox.Cells[0].Value.ToString() == box))
                 {
                     box_index = rowBox.Index;
                     break;
-                }                
+                }
             }
-
 
             dataGridViewBoxes.Rows[box_index].Selected = true;
 
@@ -1121,14 +1100,6 @@ namespace PartsHunter
 
             Fill_Parts_Datagrid();
 
-
-
-
-
-
-
-
-            
             foreach (DataGridViewRow rowDrawer in dataGridViewCurrentParts.Rows)
             {
                 if ((rowDrawer.Cells[2].Value.ToString() == drawer))
@@ -1139,24 +1110,52 @@ namespace PartsHunter
             }
 
             dataGridViewCurrentParts.Rows[drawer_index].Selected = true;
-            
+
             Highlight_Drawer_From_Parts_Selection();
-
-
-
-
 
             if (Last_Button_Properties[0] != drawer && Last_Button_Properties[0] != String.Empty)
                 Highlight_Selected_Drawer(Last_Button_Properties[0], tabControl1.SelectedIndex, Last_Button_Properties[1]);
-            
+
             Last_Button_Properties[1] = Get_BackColor_From_Button(drawer);
 
-            Highlight_Selected_Drawer(drawer, tabControl1.SelectedIndex, Color.LightCoral);
+            Highlight_Selected_Drawer(drawer, tabControl1.SelectedIndex, Color.LightGreen);
 
             Last_Button_Properties[0] = drawer;
-            
+
             groupBoxCurrentLocation.Visible = false;
-      
+
+            textBoxDescription.Text = dataGridViewRegisteredParts.Rows[clicked_index].Cells[0].Value.ToString();
+        }
+
+        void Set_BackColor_to_Button(string drawer, Color color)
+        {
+            switch (drawer)
+            {
+                case "1": btnSelected_Drawer_1.BackColor = color; break;
+                case "2": btnSelected_Drawer_2.BackColor = color; break;
+                case "3": btnSelected_Drawer_3.BackColor = color; break;
+                case "4": btnSelected_Drawer_4.BackColor = color; break;
+                case "5": btnSelected_Drawer_5.BackColor = color; break;
+                case "6": btnSelected_Drawer_6.BackColor = color; break;
+                case "7": btnSelected_Drawer_7.BackColor = color; break;
+                case "8": btnSelected_Drawer_8.BackColor = color; break;
+                case "9": btnSelected_Drawer_9.BackColor = color; break;
+                case "10": btnSelected_Drawer_10.BackColor = color; break;
+                case "11": btnSelected_Drawer_11.BackColor = color; break;
+                case "12": btnSelected_Drawer_12.BackColor = color; break;
+                case "13": btnSelected_Drawer_13.BackColor = color; break;
+                case "14": btnSelected_Drawer_14.BackColor = color; break;
+                case "15": btnSelected_Drawer_15.BackColor = color; break;
+                case "16": btnSelected_Drawer_16.BackColor = color; break;
+                case "17": btnSelected_Drawer_17.BackColor = color; break;
+                case "18": btnSelected_Drawer_18.BackColor = color; break;
+                case "19": btnSelected_Drawer_19.BackColor = color; break;
+                case "20": btnSelected_Drawer_20.BackColor = color; break;
+                case "21": btnSelected_Drawer_21.BackColor = color; break;
+                case "22": btnSelected_Drawer_22.BackColor = color; break;
+                case "23": btnSelected_Drawer_23.BackColor = color; break;
+                case "24": btnSelected_Drawer_24.BackColor = color; break;
+            }
         }
 
         Color Get_BackColor_From_Button(string button_name)
@@ -1193,6 +1192,40 @@ namespace PartsHunter
             }
 
             return colorName;
+        }
+
+        private void textBoxDescription_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                groupBoxCurrentLocation.Visible = true;
+                labelNumberResults2.Visible = true;
+                FindRegisteredComponent(textBoxDescription.Text); 
+            }
+        }
+
+        private void buttonSave_Click_1(object sender, EventArgs e)
+        {
+            groupBoxCurrentLocation.Visible = false;
+            if (validatedCategory && validatedDescription && validatedQuantity)
+            {
+                if (!string.IsNullOrWhiteSpace(Last_Button_Properties[0].ToString()))
+                {
+                    string category = comboBoxCategory.Text;
+                    string description = textBoxDescription.Text;
+                    string quantity = textBoxQuantity.Text;
+                    string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
+                    string drawer = Last_Button_Properties[0].ToString();
+
+                    Push_New_Component(category, description, quantity, box, drawer);
+
+                    ReLoad_Fields();
+                }
+                else
+                    MessageBox.Show("Select a drawer!");
+            }
+            else
+                MessageBox.Show("Fill all fields!");
         }
     }
 }
