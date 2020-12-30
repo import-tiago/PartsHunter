@@ -74,9 +74,16 @@ namespace PartsHunter
             this.Box = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Drawer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBoxCurrentLocation = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.dataGridViewRegisteredParts = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.labelNumberResults2 = new System.Windows.Forms.Label();
             this.comboBoxCategory = new System.Windows.Forms.ComboBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.buttonFindCurrentLocation = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -119,12 +126,15 @@ namespace PartsHunter
             this.SerialPort = new System.IO.Ports.SerialPort(this.components);
             this.timerCOM = new System.Windows.Forms.Timer(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this._Drawer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewResults)).BeginInit();
             this.tabPage2.SuspendLayout();
+            this.groupBoxCurrentLocation.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRegisteredParts)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -141,7 +151,7 @@ namespace PartsHunter
             this.tabControl1.Location = new System.Drawing.Point(0, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1105, 690);
+            this.tabControl1.Size = new System.Drawing.Size(1105, 682);
             this.tabControl1.TabIndex = 35;
             this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
@@ -162,7 +172,7 @@ namespace PartsHunter
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1097, 664);
+            this.tabPage1.Size = new System.Drawing.Size(1097, 656);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Search";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -293,9 +303,9 @@ namespace PartsHunter
             this.groupBox5.Controls.Add(this.btnDrawer_22);
             this.groupBox5.Controls.Add(this.btnDrawer_23);
             this.groupBox5.Controls.Add(this.btnDrawer_24);
-            this.groupBox5.Location = new System.Drawing.Point(444, 91);
+            this.groupBox5.Location = new System.Drawing.Point(447, 105);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(642, 448);
+            this.groupBox5.Size = new System.Drawing.Size(642, 545);
             this.groupBox5.TabIndex = 46;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "LOCATION";
@@ -304,7 +314,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_14.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_14.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_14.Location = new System.Drawing.Point(112, 125);
+            this.btnDrawer_14.Location = new System.Drawing.Point(112, 179);
             this.btnDrawer_14.Name = "btnDrawer_14";
             this.btnDrawer_14.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_14.TabIndex = 40;
@@ -315,7 +325,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_13.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_13.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_13.Location = new System.Drawing.Point(6, 125);
+            this.btnDrawer_13.Location = new System.Drawing.Point(6, 179);
             this.btnDrawer_13.Name = "btnDrawer_13";
             this.btnDrawer_13.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_13.TabIndex = 41;
@@ -326,7 +336,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_6.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_6.Location = new System.Drawing.Point(536, 337);
+            this.btnDrawer_6.Location = new System.Drawing.Point(536, 391);
             this.btnDrawer_6.Name = "btnDrawer_6";
             this.btnDrawer_6.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_6.TabIndex = 53;
@@ -337,7 +347,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_5.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_5.Location = new System.Drawing.Point(430, 337);
+            this.btnDrawer_5.Location = new System.Drawing.Point(430, 391);
             this.btnDrawer_5.Name = "btnDrawer_5";
             this.btnDrawer_5.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_5.TabIndex = 52;
@@ -348,7 +358,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_4.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_4.Location = new System.Drawing.Point(324, 337);
+            this.btnDrawer_4.Location = new System.Drawing.Point(324, 391);
             this.btnDrawer_4.Name = "btnDrawer_4";
             this.btnDrawer_4.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_4.TabIndex = 51;
@@ -359,7 +369,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_3.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_3.Location = new System.Drawing.Point(218, 337);
+            this.btnDrawer_3.Location = new System.Drawing.Point(218, 391);
             this.btnDrawer_3.Name = "btnDrawer_3";
             this.btnDrawer_3.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_3.TabIndex = 50;
@@ -370,7 +380,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_2.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_2.Location = new System.Drawing.Point(112, 337);
+            this.btnDrawer_2.Location = new System.Drawing.Point(112, 391);
             this.btnDrawer_2.Name = "btnDrawer_2";
             this.btnDrawer_2.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_2.TabIndex = 49;
@@ -381,7 +391,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_1.Location = new System.Drawing.Point(6, 337);
+            this.btnDrawer_1.Location = new System.Drawing.Point(6, 391);
             this.btnDrawer_1.Name = "btnDrawer_1";
             this.btnDrawer_1.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_1.TabIndex = 48;
@@ -392,7 +402,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_7.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_7.Location = new System.Drawing.Point(536, 231);
+            this.btnDrawer_7.Location = new System.Drawing.Point(536, 285);
             this.btnDrawer_7.Name = "btnDrawer_7";
             this.btnDrawer_7.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_7.TabIndex = 47;
@@ -403,7 +413,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_8.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_8.Location = new System.Drawing.Point(430, 231);
+            this.btnDrawer_8.Location = new System.Drawing.Point(430, 285);
             this.btnDrawer_8.Name = "btnDrawer_8";
             this.btnDrawer_8.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_8.TabIndex = 46;
@@ -414,7 +424,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_9.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_9.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_9.Location = new System.Drawing.Point(324, 231);
+            this.btnDrawer_9.Location = new System.Drawing.Point(324, 285);
             this.btnDrawer_9.Name = "btnDrawer_9";
             this.btnDrawer_9.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_9.TabIndex = 45;
@@ -425,7 +435,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_10.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_10.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_10.Location = new System.Drawing.Point(218, 231);
+            this.btnDrawer_10.Location = new System.Drawing.Point(218, 285);
             this.btnDrawer_10.Name = "btnDrawer_10";
             this.btnDrawer_10.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_10.TabIndex = 44;
@@ -436,7 +446,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_11.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_11.Location = new System.Drawing.Point(112, 231);
+            this.btnDrawer_11.Location = new System.Drawing.Point(112, 285);
             this.btnDrawer_11.Name = "btnDrawer_11";
             this.btnDrawer_11.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_11.TabIndex = 43;
@@ -447,7 +457,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_12.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_12.Location = new System.Drawing.Point(6, 231);
+            this.btnDrawer_12.Location = new System.Drawing.Point(6, 285);
             this.btnDrawer_12.Name = "btnDrawer_12";
             this.btnDrawer_12.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_12.TabIndex = 42;
@@ -458,7 +468,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_15.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_15.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_15.Location = new System.Drawing.Point(218, 125);
+            this.btnDrawer_15.Location = new System.Drawing.Point(218, 179);
             this.btnDrawer_15.Name = "btnDrawer_15";
             this.btnDrawer_15.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_15.TabIndex = 39;
@@ -469,7 +479,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_16.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_16.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_16.Location = new System.Drawing.Point(324, 125);
+            this.btnDrawer_16.Location = new System.Drawing.Point(324, 179);
             this.btnDrawer_16.Name = "btnDrawer_16";
             this.btnDrawer_16.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_16.TabIndex = 38;
@@ -480,7 +490,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_17.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_17.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_17.Location = new System.Drawing.Point(430, 125);
+            this.btnDrawer_17.Location = new System.Drawing.Point(430, 179);
             this.btnDrawer_17.Name = "btnDrawer_17";
             this.btnDrawer_17.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_17.TabIndex = 37;
@@ -491,7 +501,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_18.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_18.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_18.Location = new System.Drawing.Point(536, 125);
+            this.btnDrawer_18.Location = new System.Drawing.Point(536, 179);
             this.btnDrawer_18.Name = "btnDrawer_18";
             this.btnDrawer_18.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_18.TabIndex = 36;
@@ -502,7 +512,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_19.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_19.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_19.Location = new System.Drawing.Point(536, 19);
+            this.btnDrawer_19.Location = new System.Drawing.Point(536, 73);
             this.btnDrawer_19.Name = "btnDrawer_19";
             this.btnDrawer_19.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_19.TabIndex = 35;
@@ -513,7 +523,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_20.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_20.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_20.Location = new System.Drawing.Point(430, 19);
+            this.btnDrawer_20.Location = new System.Drawing.Point(430, 73);
             this.btnDrawer_20.Name = "btnDrawer_20";
             this.btnDrawer_20.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_20.TabIndex = 34;
@@ -524,7 +534,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_21.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_21.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_21.Location = new System.Drawing.Point(324, 19);
+            this.btnDrawer_21.Location = new System.Drawing.Point(324, 73);
             this.btnDrawer_21.Name = "btnDrawer_21";
             this.btnDrawer_21.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_21.TabIndex = 33;
@@ -535,7 +545,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_22.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_22.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_22.Location = new System.Drawing.Point(218, 19);
+            this.btnDrawer_22.Location = new System.Drawing.Point(218, 73);
             this.btnDrawer_22.Name = "btnDrawer_22";
             this.btnDrawer_22.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_22.TabIndex = 32;
@@ -546,7 +556,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_23.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_23.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_23.Location = new System.Drawing.Point(112, 19);
+            this.btnDrawer_23.Location = new System.Drawing.Point(112, 73);
             this.btnDrawer_23.Name = "btnDrawer_23";
             this.btnDrawer_23.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_23.TabIndex = 31;
@@ -557,7 +567,7 @@ namespace PartsHunter
             // 
             this.btnDrawer_24.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnDrawer_24.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDrawer_24.Location = new System.Drawing.Point(6, 19);
+            this.btnDrawer_24.Location = new System.Drawing.Point(6, 73);
             this.btnDrawer_24.Name = "btnDrawer_24";
             this.btnDrawer_24.Size = new System.Drawing.Size(100, 100);
             this.btnDrawer_24.TabIndex = 30;
@@ -567,9 +577,9 @@ namespace PartsHunter
             // groupBox6
             // 
             this.groupBox6.Controls.Add(this.dataGridViewResults);
-            this.groupBox6.Location = new System.Drawing.Point(8, 91);
+            this.groupBox6.Location = new System.Drawing.Point(11, 105);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(430, 448);
+            this.groupBox6.Size = new System.Drawing.Size(430, 545);
             this.groupBox6.TabIndex = 44;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "RESULTS";
@@ -592,7 +602,7 @@ namespace PartsHunter
             this.dataGridViewResults.ReadOnly = true;
             this.dataGridViewResults.RowHeadersVisible = false;
             this.dataGridViewResults.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewResults.Size = new System.Drawing.Size(424, 429);
+            this.dataGridViewResults.Size = new System.Drawing.Size(424, 526);
             this.dataGridViewResults.TabIndex = 0;
             this.dataGridViewResults.SelectionChanged += new System.EventHandler(this.dataGridViewResults_SelectionChanged);
             // 
@@ -622,6 +632,7 @@ namespace PartsHunter
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.groupBoxCurrentLocation);
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.buttonSave);
             this.tabPage2.Controls.Add(this.groupBox2);
@@ -630,15 +641,77 @@ namespace PartsHunter
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1097, 664);
+            this.tabPage2.Size = new System.Drawing.Size(1097, 656);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Register";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // groupBoxCurrentLocation
+            // 
+            this.groupBoxCurrentLocation.Controls.Add(this.label7);
+            this.groupBoxCurrentLocation.Controls.Add(this.dataGridViewRegisteredParts);
+            this.groupBoxCurrentLocation.Location = new System.Drawing.Point(515, 6);
+            this.groupBoxCurrentLocation.Name = "groupBoxCurrentLocation";
+            this.groupBoxCurrentLocation.Size = new System.Drawing.Size(573, 142);
+            this.groupBoxCurrentLocation.TabIndex = 68;
+            this.groupBoxCurrentLocation.TabStop = false;
+            this.groupBoxCurrentLocation.Text = "CURRENT LOCATION";
+            this.groupBoxCurrentLocation.Visible = false;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.Color.ForestGreen;
+            this.label7.Location = new System.Drawing.Point(206, 125);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(173, 13);
+            this.label7.TabIndex = 62;
+            this.label7.Text = "double-click on the item to highlight";
+            // 
+            // dataGridViewRegisteredParts
+            // 
+            this.dataGridViewRegisteredParts.AllowUserToResizeRows = false;
+            this.dataGridViewRegisteredParts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewRegisteredParts.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewRegisteredParts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewRegisteredParts.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn4,
+            this.dataGridViewTextBoxColumn6,
+            this.dataGridViewTextBoxColumn7});
+            this.dataGridViewRegisteredParts.Dock = System.Windows.Forms.DockStyle.Top;
+            this.dataGridViewRegisteredParts.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewRegisteredParts.MultiSelect = false;
+            this.dataGridViewRegisteredParts.Name = "dataGridViewRegisteredParts";
+            this.dataGridViewRegisteredParts.ReadOnly = true;
+            this.dataGridViewRegisteredParts.RowHeadersVisible = false;
+            this.dataGridViewRegisteredParts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewRegisteredParts.Size = new System.Drawing.Size(567, 107);
+            this.dataGridViewRegisteredParts.TabIndex = 0;
+            this.dataGridViewRegisteredParts.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewRegisteredParts_CellMouseDoubleClick);
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.HeaderText = "Description";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.HeaderText = "Box";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            this.dataGridViewTextBoxColumn6.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn7
+            // 
+            this.dataGridViewTextBoxColumn7.HeaderText = "Drawer";
+            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            this.dataGridViewTextBoxColumn7.ReadOnly = true;
+            // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.labelNumberResults2);
             this.groupBox1.Controls.Add(this.comboBoxCategory);
-            this.groupBox1.Controls.Add(this.button2);
+            this.groupBox1.Controls.Add(this.buttonFindCurrentLocation);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.textBoxDescription);
             this.groupBox1.Controls.Add(this.label4);
@@ -646,37 +719,48 @@ namespace PartsHunter
             this.groupBox1.Controls.Add(this.textBoxQuantity);
             this.groupBox1.Location = new System.Drawing.Point(9, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(497, 110);
+            this.groupBox1.Size = new System.Drawing.Size(500, 142);
             this.groupBox1.TabIndex = 67;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
+            this.groupBox1.Text = "PART INFORMATION";
+            // 
+            // labelNumberResults2
+            // 
+            this.labelNumberResults2.AutoSize = true;
+            this.labelNumberResults2.ForeColor = System.Drawing.Color.Red;
+            this.labelNumberResults2.Location = new System.Drawing.Point(368, 83);
+            this.labelNumberResults2.Name = "labelNumberResults2";
+            this.labelNumberResults2.Size = new System.Drawing.Size(126, 13);
+            this.labelNumberResults2.TabIndex = 61;
+            this.labelNumberResults2.Text = "<Number\'s results found>";
+            this.labelNumberResults2.Visible = false;
             // 
             // comboBoxCategory
             // 
             this.comboBoxCategory.FormattingEnabled = true;
             this.comboBoxCategory.Items.AddRange(new object[] {
             "<Select one or type a new one>"});
-            this.comboBoxCategory.Location = new System.Drawing.Point(75, 25);
+            this.comboBoxCategory.Location = new System.Drawing.Point(75, 20);
             this.comboBoxCategory.Name = "comboBoxCategory";
             this.comboBoxCategory.Size = new System.Drawing.Size(266, 21);
             this.comboBoxCategory.TabIndex = 0;
             this.comboBoxCategory.Validating += new System.ComponentModel.CancelEventHandler(this.comboBoxCategory_Validating);
             // 
-            // button2
+            // buttonFindCurrentLocation
             // 
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button2.Location = new System.Drawing.Point(361, 50);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(126, 23);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "Find Current Location";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.buttonFindCurrentLocation.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.buttonFindCurrentLocation.Location = new System.Drawing.Point(368, 57);
+            this.buttonFindCurrentLocation.Name = "buttonFindCurrentLocation";
+            this.buttonFindCurrentLocation.Size = new System.Drawing.Size(126, 23);
+            this.buttonFindCurrentLocation.TabIndex = 4;
+            this.buttonFindCurrentLocation.Text = "Find Current Location";
+            this.buttonFindCurrentLocation.UseVisualStyleBackColor = true;
+            this.buttonFindCurrentLocation.Click += new System.EventHandler(this.buttonFindCurrentLocation_Click);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(17, 28);
+            this.label3.Location = new System.Drawing.Point(17, 23);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(52, 13);
             this.label3.TabIndex = 54;
@@ -684,7 +768,7 @@ namespace PartsHunter
             // 
             // textBoxDescription
             // 
-            this.textBoxDescription.Location = new System.Drawing.Point(75, 52);
+            this.textBoxDescription.Location = new System.Drawing.Point(75, 59);
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.Size = new System.Drawing.Size(266, 20);
             this.textBoxDescription.TabIndex = 1;
@@ -693,7 +777,7 @@ namespace PartsHunter
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 55);
+            this.label4.Location = new System.Drawing.Point(6, 62);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(63, 13);
             this.label4.TabIndex = 58;
@@ -702,7 +786,7 @@ namespace PartsHunter
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(23, 81);
+            this.label5.Location = new System.Drawing.Point(23, 101);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(49, 13);
             this.label5.TabIndex = 60;
@@ -710,7 +794,7 @@ namespace PartsHunter
             // 
             // textBoxQuantity
             // 
-            this.textBoxQuantity.Location = new System.Drawing.Point(75, 78);
+            this.textBoxQuantity.Location = new System.Drawing.Point(75, 98);
             this.textBoxQuantity.Name = "textBoxQuantity";
             this.textBoxQuantity.Size = new System.Drawing.Size(266, 20);
             this.textBoxQuantity.TabIndex = 3;
@@ -721,7 +805,7 @@ namespace PartsHunter
             this.buttonSave.BackColor = System.Drawing.Color.PaleTurquoise;
             this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSave.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSave.Location = new System.Drawing.Point(9, 572);
+            this.buttonSave.Location = new System.Drawing.Point(9, 619);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(1076, 31);
             this.buttonSave.TabIndex = 66;
@@ -755,7 +839,7 @@ namespace PartsHunter
             this.groupBox2.Controls.Add(this.btnSelected_Drawer_22);
             this.groupBox2.Controls.Add(this.btnSelected_Drawer_23);
             this.groupBox2.Controls.Add(this.btnSelected_Drawer_24);
-            this.groupBox2.Location = new System.Drawing.Point(140, 118);
+            this.groupBox2.Location = new System.Drawing.Point(140, 165);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(642, 448);
             this.groupBox2.TabIndex = 47;
@@ -1054,7 +1138,7 @@ namespace PartsHunter
             // 
             this.groupBox3.Controls.Add(this.buttonNewBox);
             this.groupBox3.Controls.Add(this.dataGridViewBoxes);
-            this.groupBox3.Location = new System.Drawing.Point(6, 117);
+            this.groupBox3.Location = new System.Drawing.Point(6, 164);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(125, 448);
             this.groupBox3.TabIndex = 38;
@@ -1100,7 +1184,7 @@ namespace PartsHunter
             // groupBoxParts
             // 
             this.groupBoxParts.Controls.Add(this.dataGridViewCurrentParts);
-            this.groupBoxParts.Location = new System.Drawing.Point(792, 117);
+            this.groupBoxParts.Location = new System.Drawing.Point(792, 164);
             this.groupBoxParts.Name = "groupBoxParts";
             this.groupBoxParts.Size = new System.Drawing.Size(296, 448);
             this.groupBoxParts.TabIndex = 37;
@@ -1115,7 +1199,8 @@ namespace PartsHunter
             this.dataGridViewCurrentParts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewCurrentParts.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dataGridViewTextBoxColumn1,
-            this.dataGridViewTextBoxColumn2});
+            this.dataGridViewTextBoxColumn2,
+            this._Drawer});
             this.dataGridViewCurrentParts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewCurrentParts.Location = new System.Drawing.Point(3, 16);
             this.dataGridViewCurrentParts.MultiSelect = false;
@@ -1154,11 +1239,17 @@ namespace PartsHunter
             this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider1.ContainerControl = this;
             // 
+            // _Drawer
+            // 
+            this._Drawer.HeaderText = "Drawer";
+            this._Drawer.Name = "_Drawer";
+            this._Drawer.ReadOnly = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1100, 643);
+            this.ClientSize = new System.Drawing.Size(1100, 689);
             this.Controls.Add(this.tabControl1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -1174,6 +1265,9 @@ namespace PartsHunter
             this.groupBox6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewResults)).EndInit();
             this.tabPage2.ResumeLayout(false);
+            this.groupBoxCurrentLocation.ResumeLayout(false);
+            this.groupBoxCurrentLocation.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRegisteredParts)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -1271,12 +1365,20 @@ namespace PartsHunter
         private System.Windows.Forms.DataGridView dataGridViewBoxes;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
         private System.Windows.Forms.DataGridView dataGridViewCurrentParts;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.Button buttonFindCurrentLocation;
         private System.Windows.Forms.Button buttonNewBox;
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.GroupBox groupBoxCurrentLocation;
+        private System.Windows.Forms.DataGridView dataGridViewRegisteredParts;
+        private System.Windows.Forms.Label labelNumberResults2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn _Drawer;
     }
 }
 
