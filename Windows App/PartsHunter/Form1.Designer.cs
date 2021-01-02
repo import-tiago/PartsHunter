@@ -74,6 +74,7 @@ namespace PartsHunter
             this.Box = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Drawer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.buttonSave = new System.Windows.Forms.Button();
             this.groupBoxCurrentLocation = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
             this.dataGridViewRegisteredParts = new System.Windows.Forms.DataGridView();
@@ -119,6 +120,8 @@ namespace PartsHunter
             this.dataGridViewBoxes = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBoxParts = new System.Windows.Forms.GroupBox();
+            this.buttonDelete = new System.Windows.Forms.Button();
+            this.buttonEdit = new System.Windows.Forms.Button();
             this.dataGridViewCurrentParts = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -126,9 +129,6 @@ namespace PartsHunter
             this.SerialPort = new System.IO.Ports.SerialPort(this.components);
             this.timerCOM = new System.Windows.Forms.Timer(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.buttonSave = new System.Windows.Forms.Button();
-            this.buttonEdit = new System.Windows.Forms.Button();
-            this.buttonDelete = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -646,6 +646,19 @@ namespace PartsHunter
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Register";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSave.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSave.Location = new System.Drawing.Point(12, 612);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(1076, 31);
+            this.buttonSave.TabIndex = 71;
+            this.buttonSave.Text = "SAVE";
+            this.buttonSave.UseVisualStyleBackColor = false;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click_1);
             // 
             // groupBoxCurrentLocation
             // 
@@ -1182,6 +1195,27 @@ namespace PartsHunter
             this.groupBoxParts.TabStop = false;
             this.groupBoxParts.Text = "CURRENT PARTS IN THE BOX";
             // 
+            // buttonDelete
+            // 
+            this.buttonDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDelete.Location = new System.Drawing.Point(148, 419);
+            this.buttonDelete.Name = "buttonDelete";
+            this.buttonDelete.Size = new System.Drawing.Size(145, 25);
+            this.buttonDelete.TabIndex = 69;
+            this.buttonDelete.Text = "DELETE";
+            this.buttonDelete.UseVisualStyleBackColor = true;
+            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
+            // 
+            // buttonEdit
+            // 
+            this.buttonEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonEdit.Location = new System.Drawing.Point(3, 419);
+            this.buttonEdit.Name = "buttonEdit";
+            this.buttonEdit.Size = new System.Drawing.Size(146, 25);
+            this.buttonEdit.TabIndex = 68;
+            this.buttonEdit.Text = "EDIT";
+            this.buttonEdit.UseVisualStyleBackColor = true;
+            // 
             // dataGridViewCurrentParts
             // 
             this.dataGridViewCurrentParts.AllowUserToResizeRows = false;
@@ -1235,39 +1269,6 @@ namespace PartsHunter
             // 
             this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider1.ContainerControl = this;
-            // 
-            // buttonSave
-            // 
-            this.buttonSave.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSave.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSave.Location = new System.Drawing.Point(12, 612);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(1076, 31);
-            this.buttonSave.TabIndex = 71;
-            this.buttonSave.Text = "SAVE";
-            this.buttonSave.UseVisualStyleBackColor = false;
-            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click_1);
-            // 
-            // buttonEdit
-            // 
-            this.buttonEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonEdit.Location = new System.Drawing.Point(3, 419);
-            this.buttonEdit.Name = "buttonEdit";
-            this.buttonEdit.Size = new System.Drawing.Size(146, 25);
-            this.buttonEdit.TabIndex = 68;
-            this.buttonEdit.Text = "EDIT";
-            this.buttonEdit.UseVisualStyleBackColor = true;
-            // 
-            // buttonDelete
-            // 
-            this.buttonDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonDelete.Location = new System.Drawing.Point(148, 419);
-            this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(145, 25);
-            this.buttonDelete.TabIndex = 69;
-            this.buttonDelete.Text = "DELETE";
-            this.buttonDelete.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 

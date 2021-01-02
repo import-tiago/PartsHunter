@@ -1227,5 +1227,10 @@ namespace PartsHunter
             else
                 MessageBox.Show("Fill all fields!");
         }
+
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
