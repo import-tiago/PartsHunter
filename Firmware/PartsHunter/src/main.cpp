@@ -1,30 +1,28 @@
+//Arduino Libraries
 #include <Arduino.h>
+
+//External Libraries
 #include <FastLED.h>
 #include <Ticker.h> 
 
 //External Hardware Definitions
 #define LED_CONTROL_PIN 2
 
-//Internal Periphals Hardware Definitions
-#define UART_BUFFER_SIZE 20
-
 //Application Definitions
 #define DEFAULT_LED_STRIP_BRIGHTNESS_LEVEL 150
 #define TOTAL_NUMBER_LEDS_AT_SRIP 384
 #define NUMBER_LED_Strip_PER_BOX 24
-
+#define UART_BUFFER_SIZE 30
 
 //Global Variables
 String String_UART = "";
 uint16_t LED_Position = 0;
 char UART_Buffer[UART_BUFFER_SIZE + 1];
-
 uint8_t Box_Number;
 uint8_t Drawer_Number;
-uint32_t Color_HEX;
+CRGB Color_HEX;
 uint8_t Brightness_Level;
 uint16_t Blinky_Time;
-
 uint32_t Initial_Time = 0;
 uint32_t Last_Time = 0;
 bool Change_LED_State = true;
@@ -32,19 +30,17 @@ bool Change_LED_State = true;
 //Function Prototypes
 char* Extract_Parameter_Value(String input, char separator, int index);
 uint16_t Get_LED_Strip_Number(uint8_t box_number, uint8_t drawer_number);
-void SETUP_Highlight(uint16_t led_position, unsigned long hex_color, uint8_t brightness_level, uint16_t blinky_time);
+void SETUP_ISR_Highlight(uint16_t led_position, uint8_t red_color, uint8_t green_color, uint8_t blue_color, uint8_t brightness_level, uint16_t blinky_time);
 void ISR_Highlight_Drawer();
+uint32_t Get_HEX_from_RGB(uint8_t red_color, uint8_t green_color, uint8_t blue_color);
 
 //Global Objects
 CRGB LED_Strip[TOTAL_NUMBER_LEDS_AT_SRIP];
 Ticker timer1(ISR_Highlight_Drawer, 100);
 
-
- int number_bytes_received = 0;
-char r[50] = {0};
 void setup()
 {
-  FastLED.addLeds<WS2812B, LED_CONTROL_PIN, RGB>(LED_Strip, TOTAL_NUMBER_LEDS_AT_SRIP);
+  FastLED.addLeds<WS2812B, LED_CONTROL_PIN, GRB>(LED_Strip, TOTAL_NUMBER_LEDS_AT_SRIP);
   FastLED.setBrightness(DEFAULT_LED_STRIP_BRIGHTNESS_LEVEL);
   FastLED.clear();
   
@@ -56,6 +52,7 @@ void setup()
   {
     ;
   }
+
   Blinky_Time = 100;
   Initial_Time = millis();
   Brightness_Level = 128;
@@ -64,26 +61,31 @@ void setup()
 void loop()
 {
   timer1.update();
+
+  uint8_t number_bytes_received = 0;
   
   while (Serial.available())
   {
      number_bytes_received = Serial.readBytes(UART_Buffer, UART_BUFFER_SIZE);
   }
 
-  if (number_bytes_received > 0) {    
+  if (number_bytes_received > 0)
+  {    
+    UART_Buffer[number_bytes_received] = 0;   
 
-    static uint8_t box_number = atoi(Extract_Parameter_Value(UART_Buffer, ',', 0));
-    static uint8_t drawer_number = atoi(Extract_Parameter_Value(UART_Buffer, ',', 1));
-    static unsigned long hex_color = atol(Extract_Parameter_Value(UART_Buffer, ',', 2));
-    static uint8_t brightness_level = atoi(Extract_Parameter_Value(UART_Buffer, ',', 3));
-    static uint16_t blinky_time = atoi(Extract_Parameter_Value(UART_Buffer, ',', 4));
+    uint8_t box_number = atoi(Extract_Parameter_Value(UART_Buffer, ',', 0));
+    uint8_t drawer_number = atoi(Extract_Parameter_Value(UART_Buffer, ',', 1));
+
+    uint8_t red_color = atoi(Extract_Parameter_Value(UART_Buffer, ',', 2));
+    uint8_t green_color = atoi(Extract_Parameter_Value(UART_Buffer, ',', 3));
+    uint8_t blue_color = atoi(Extract_Parameter_Value(UART_Buffer, ',', 4));
+
+    uint8_t brightness_level = atoi(Extract_Parameter_Value(UART_Buffer, ',', 5));
+    uint16_t blinky_time = atoi(Extract_Parameter_Value(UART_Buffer, ',', 6));
     
-    uint16_t led = Get_LED_Strip_Number(box_number, drawer_number);
-    SETUP_Highlight(led, hex_color, brightness_level, blinky_time);
+    uint16_t led_position = Get_LED_Strip_Number(box_number, drawer_number);
 
-     
-    sprintf(r, "%d, %lu, %d, %d", led, hex_color, brightness_level, blinky_time) ;
-    Serial.println(r);
+    SETUP_ISR_Highlight(led_position, red_color, green_color, blue_color, brightness_level, blinky_time);
   }
 }
 
@@ -114,22 +116,22 @@ uint16_t Get_LED_Strip_Number(uint8_t box_number, uint8_t drawer_number)
     return ((box_number * NUMBER_LED_Strip_PER_BOX) - NUMBER_LED_Strip_PER_BOX) + drawer_number - 1;  
 }
 
-void SETUP_Highlight(uint16_t led_position, unsigned long hex_color, uint8_t brightness_level, uint16_t blinky_time)
+void SETUP_ISR_Highlight(uint16_t led_position, uint8_t red_color, uint8_t green_color, uint8_t blue_color, uint8_t brightness_level, uint16_t blinky_time)
 {
-  LED_Position = led_position;
-  Color_HEX = hex_color;
+  LED_Position = led_position;  
+  Color_HEX = CRGB(red_color, green_color, blue_color);
   Brightness_Level = brightness_level;
   Blinky_Time = blinky_time;
-  Initial_Time = millis();
-
- 
+  FastLED.clear();
+  FastLED.show();
+  Initial_Time = millis(); 
 }
 
 void ISR_Highlight_Drawer()
 {  
   if(Change_LED_State == true)
   {   
-    LED_Strip[LED_Position] = CRGB::Red;//CRGB(Color_HEX);
+    LED_Strip[LED_Position] = Color_HEX;
     FastLED.setBrightness(Brightness_Level);
     FastLED.show();
   }
