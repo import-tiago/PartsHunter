@@ -12,6 +12,12 @@ using System.Configuration;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
+using System.IO;
+using System.Collections;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
+
+
 namespace PartsHunter
 {
     public partial class Form1 : Form
@@ -37,7 +43,10 @@ namespace PartsHunter
         private bool validatedDescription;
         private bool validatedQuantity;
         private string Current_Selected_Box = string.Empty;
-        private bool Manually_Manipulating_Datagrid = false;        
+        private bool Manually_Manipulating_Datagrid = false;
+        private Color LED_Highlight_Color;
+        private int LED_Highlight_Time;
+        private int LED_Highlight_Brightness;
 
         private readonly NameValueCollection configuration = ConfigurationManager.AppSettings;
         private readonly JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -306,7 +315,7 @@ namespace PartsHunter
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            LoadData();
             dataGridViewResults.Columns[0].Width = 280;
             dataGridViewRegisteredParts.Columns[0].Width = 470;
             dataGridViewCurrentParts.Columns[0].Width = 190;
@@ -482,11 +491,14 @@ namespace PartsHunter
             try
             {
                 int x = dataGridViewResults.SelectedCells[0].RowIndex;
-                
-                var y = dataGridViewResults[3, x].Value.ToString();
 
-                if (Send_UART(y.ToString()))
-                    Highlight_Selected_Drawer(y.ToString(), tabControl1.SelectedIndex, Color.LemonChiffon);
+                var box = dataGridViewResults[2, x].Value.ToString();
+                var drawer = dataGridViewResults[3, x].Value.ToString();
+
+                string UART_command = box + ',' + drawer + ',' + LED_Highlight_Color.R + ',' + LED_Highlight_Color.G + ',' + LED_Highlight_Color.B + ',' + LED_Highlight_Brightness + ',' + LED_Highlight_Time + '\n';
+
+                if (Send_UART(UART_command))
+                    Highlight_Selected_Drawer(drawer.ToString(), tabControl1.SelectedIndex, Color.LemonChiffon);
             }
             catch
             {
@@ -618,7 +630,7 @@ namespace PartsHunter
         {
             if (Last_Button_Properties[0] != (sender as Button).Text)
             {
-                firstClick = true;
+                //firstClick = true;
 
                 if (Last_Button_Properties[0] != (sender as Button).Text && Last_Button_Properties[0] != String.Empty)
                     Highlight_Selected_Drawer(Last_Button_Properties[0], tabControl1.SelectedIndex, Last_Button_Properties[1]);
@@ -629,7 +641,7 @@ namespace PartsHunter
 
                 Last_Button_Properties[0] = (sender as Button).Text;
 
-                firstClick = false;
+               // firstClick = false;
             }
         }
 
@@ -1232,5 +1244,128 @@ namespace PartsHunter
         {
 
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (buttonSettings.Text == "Config Highlight")
+            {
+                groupBoxSettings.Visible = true;
+                buttonSettings.Text = "Save";
+
+            }
+            else if (buttonSettings.Text == "Save")
+            {
+                buttonSettings.Text = "Config Highlight";
+                groupBoxSettings.Visible = false;
+                SaveData();
+            }
+        }
+
+        private void buttonColor_Click(object sender, EventArgs e)
+        {
+            
+            colorDialog1.AllowFullOpen = false;            
+            colorDialog1.ShowHelp = true;            
+            colorDialog1.Color = buttonSettings.ForeColor;
+
+          
+
+
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                LED_Highlight_Color = colorDialog1.Color;
+                buttonColor.BackColor = LED_Highlight_Color;
+            }
+        }
+
+        private void trackBarTime_Scroll(object sender, EventArgs e)
+        {
+            LED_Highlight_Time = trackBarTime.Value;
+
+            if (trackBarTime.Value < 1000)
+                labelTime.Text = trackBarTime.Value + "ms blinky";
+            else            
+                labelTime.Text = "1s blinky";
+            
+        }
+
+        private void trackBarBright_Scroll(object sender, EventArgs e)
+        {
+            LED_Highlight_Brightness = trackBarBright.Value;
+
+            int x = (trackBarBright.Value * 100) / 255;
+            labelBright.Text = x + "% brightness";
+        }
+
+        void SaveData()
+        {            
+            Hashtable variables = new Hashtable();
+
+            variables.Add("Color", LED_Highlight_Color);
+            variables.Add("Time", LED_Highlight_Time);
+            variables.Add("Brightness", LED_Highlight_Brightness);
+
+            FileStream fs = new FileStream("DataFile.dat", FileMode.Create);
+
+            
+            BinaryFormatter formatter = new BinaryFormatter();
+
+            try
+            {
+                formatter.Serialize(fs, variables);
+            }
+            catch (SerializationException e)
+            {
+                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                throw;
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
+
+
+        void LoadData()
+        {            
+            Hashtable variables = null;
+
+            FileStream fs = new FileStream("DataFile.dat", FileMode.OpenOrCreate);
+            
+            try
+            {
+
+                BinaryFormatter formatter = new BinaryFormatter();
+                variables = (Hashtable)formatter.Deserialize(fs);
+                LED_Highlight_Color = (Color)variables["Color"];
+                LED_Highlight_Time = (int)variables["Time"];
+                LED_Highlight_Brightness = (int)variables["Brightness"];
+
+
+                buttonColor.BackColor = LED_Highlight_Color;
+
+                trackBarTime.Value = LED_Highlight_Time;
+                if (LED_Highlight_Time < 1000)
+                    labelTime.Text = LED_Highlight_Time + "ms blinky";
+                else
+                    labelTime.Text = "1s blinky";
+
+                trackBarBright.Value = LED_Highlight_Brightness;
+                int x = (LED_Highlight_Brightness * 100) / 255;
+                labelBright.Text = x + "% brightness";
+
+
+            }
+            catch (SerializationException e)
+            {
+             
+            }
+            finally
+            {
+                fs.Close();
+            }           
+        }
+
+    
     }
 }

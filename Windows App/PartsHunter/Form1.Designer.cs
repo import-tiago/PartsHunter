@@ -43,6 +43,13 @@ namespace PartsHunter
             this.label6 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.groupBoxSettings = new System.Windows.Forms.GroupBox();
+            this.labelBright = new System.Windows.Forms.Label();
+            this.trackBarBright = new System.Windows.Forms.TrackBar();
+            this.labelTime = new System.Windows.Forms.Label();
+            this.trackBarTime = new System.Windows.Forms.TrackBar();
+            this.buttonColor = new System.Windows.Forms.Button();
+            this.buttonSettings = new System.Windows.Forms.Button();
             this.btnDrawer_14 = new System.Windows.Forms.Button();
             this.btnDrawer_13 = new System.Windows.Forms.Button();
             this.btnDrawer_6 = new System.Windows.Forms.Button();
@@ -129,9 +136,13 @@ namespace PartsHunter
             this.SerialPort = new System.IO.Ports.SerialPort(this.components);
             this.timerCOM = new System.Windows.Forms.Timer(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.groupBoxSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarBright)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTime)).BeginInit();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewResults)).BeginInit();
             this.tabPage2.SuspendLayout();
@@ -280,6 +291,8 @@ namespace PartsHunter
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.groupBoxSettings);
+            this.groupBox5.Controls.Add(this.buttonSettings);
             this.groupBox5.Controls.Add(this.btnDrawer_14);
             this.groupBox5.Controls.Add(this.btnDrawer_13);
             this.groupBox5.Controls.Add(this.btnDrawer_6);
@@ -310,6 +323,85 @@ namespace PartsHunter
             this.groupBox5.TabIndex = 46;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "LOCATION";
+            // 
+            // groupBoxSettings
+            // 
+            this.groupBoxSettings.Controls.Add(this.labelBright);
+            this.groupBoxSettings.Controls.Add(this.trackBarBright);
+            this.groupBoxSettings.Controls.Add(this.labelTime);
+            this.groupBoxSettings.Controls.Add(this.trackBarTime);
+            this.groupBoxSettings.Controls.Add(this.buttonColor);
+            this.groupBoxSettings.Location = new System.Drawing.Point(6, 19);
+            this.groupBoxSettings.Name = "groupBoxSettings";
+            this.groupBoxSettings.Size = new System.Drawing.Size(533, 48);
+            this.groupBoxSettings.TabIndex = 54;
+            this.groupBoxSettings.TabStop = false;
+            this.groupBoxSettings.Text = "Settings";
+            this.groupBoxSettings.Visible = false;
+            // 
+            // labelBright
+            // 
+            this.labelBright.AutoSize = true;
+            this.labelBright.Location = new System.Drawing.Point(441, 25);
+            this.labelBright.Name = "labelBright";
+            this.labelBright.Size = new System.Drawing.Size(66, 13);
+            this.labelBright.TabIndex = 60;
+            this.labelBright.Text = "% brightness";
+            // 
+            // trackBarBright
+            // 
+            this.trackBarBright.AutoSize = false;
+            this.trackBarBright.BackColor = System.Drawing.SystemColors.Window;
+            this.trackBarBright.Location = new System.Drawing.Point(335, 18);
+            this.trackBarBright.Maximum = 255;
+            this.trackBarBright.Name = "trackBarBright";
+            this.trackBarBright.Size = new System.Drawing.Size(100, 25);
+            this.trackBarBright.TabIndex = 59;
+            this.trackBarBright.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarBright.Scroll += new System.EventHandler(this.trackBarBright_Scroll);
+            // 
+            // labelTime
+            // 
+            this.labelTime.AutoSize = true;
+            this.labelTime.Location = new System.Drawing.Point(249, 24);
+            this.labelTime.Name = "labelTime";
+            this.labelTime.Size = new System.Drawing.Size(50, 13);
+            this.labelTime.TabIndex = 58;
+            this.labelTime.Text = "ms blinky";
+            // 
+            // trackBarTime
+            // 
+            this.trackBarTime.AutoSize = false;
+            this.trackBarTime.BackColor = System.Drawing.SystemColors.Window;
+            this.trackBarTime.Location = new System.Drawing.Point(143, 17);
+            this.trackBarTime.Maximum = 1000;
+            this.trackBarTime.Name = "trackBarTime";
+            this.trackBarTime.Size = new System.Drawing.Size(100, 25);
+            this.trackBarTime.TabIndex = 57;
+            this.trackBarTime.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarTime.Scroll += new System.EventHandler(this.trackBarTime_Scroll);
+            // 
+            // buttonColor
+            // 
+            this.buttonColor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonColor.Location = new System.Drawing.Point(9, 19);
+            this.buttonColor.Name = "buttonColor";
+            this.buttonColor.Size = new System.Drawing.Size(91, 23);
+            this.buttonColor.TabIndex = 55;
+            this.buttonColor.Text = "COLOR";
+            this.buttonColor.UseVisualStyleBackColor = true;
+            this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
+            // 
+            // buttonSettings
+            // 
+            this.buttonSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSettings.Location = new System.Drawing.Point(545, 34);
+            this.buttonSettings.Name = "buttonSettings";
+            this.buttonSettings.Size = new System.Drawing.Size(91, 23);
+            this.buttonSettings.TabIndex = 36;
+            this.buttonSettings.Text = "Config Highlight";
+            this.buttonSettings.UseVisualStyleBackColor = true;
+            this.buttonSettings.Click += new System.EventHandler(this.button1_Click);
             // 
             // btnDrawer_14
             // 
@@ -1257,6 +1349,7 @@ namespace PartsHunter
             // 
             // SerialPort
             // 
+            this.SerialPort.BaudRate = 115200;
             this.SerialPort.PortName = "COM5";
             this.SerialPort.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.SerialPort_DataReceived);
             // 
@@ -1287,6 +1380,10 @@ namespace PartsHunter
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.groupBox5.ResumeLayout(false);
+            this.groupBoxSettings.ResumeLayout(false);
+            this.groupBoxSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarBright)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarTime)).EndInit();
             this.groupBox6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewResults)).EndInit();
             this.tabPage2.ResumeLayout(false);
@@ -1406,6 +1503,14 @@ namespace PartsHunter
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.Button buttonDelete;
         private System.Windows.Forms.Button buttonEdit;
+        private System.Windows.Forms.Button buttonSettings;
+        private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.GroupBox groupBoxSettings;
+        private System.Windows.Forms.Label labelBright;
+        private System.Windows.Forms.TrackBar trackBarBright;
+        private System.Windows.Forms.Label labelTime;
+        private System.Windows.Forms.TrackBar trackBarTime;
+        private System.Windows.Forms.Button buttonColor;
     }
 }
 
