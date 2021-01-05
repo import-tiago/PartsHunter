@@ -23,7 +23,6 @@ uint8_t Drawer_Number;
 CRGB Color_HEX;
 uint8_t Brightness_Level;
 uint16_t Blinky_Time;
-uint32_t Initial_Time = 0;
 uint32_t Last_Time = 0;
 bool Change_LED_State = true;
 
@@ -36,7 +35,7 @@ uint32_t Get_HEX_from_RGB(uint8_t red_color, uint8_t green_color, uint8_t blue_c
 
 //Global Objects
 CRGB LED_Strip[TOTAL_NUMBER_LEDS_AT_SRIP];
-Ticker timer1(ISR_Highlight_Drawer, 100);
+Ticker timer1(ISR_Highlight_Drawer, 50); //50 mili-seconds overflow
 
 void setup()
 {
@@ -54,7 +53,7 @@ void setup()
   }
 
   Blinky_Time = 100;
-  Initial_Time = millis();
+  Last_Time = millis();
   Brightness_Level = 128;
 }
 
@@ -124,7 +123,7 @@ void SETUP_ISR_Highlight(uint16_t led_position, uint8_t red_color, uint8_t green
   Blinky_Time = blinky_time;
   FastLED.clear();
   FastLED.show();
-  Initial_Time = millis(); 
+  Last_Time = millis(); 
 }
 
 void ISR_Highlight_Drawer()
@@ -136,14 +135,17 @@ void ISR_Highlight_Drawer()
     FastLED.show();
   }
   else
-  {  
-    LED_Strip[LED_Position]  = CRGB::Black;
-    FastLED.show();
+  {
+    if(Blinky_Time >= 100)
+    {
+      FastLED.clear();
+      FastLED.show();
+    }
   }
 
-  if ( (millis() - Initial_Time) >= Blinky_Time)
+  if ( (millis() - Last_Time) >= Blinky_Time)
   {     
-  Initial_Time = millis();
+  Last_Time = millis();
   
   if(Change_LED_State)
     Change_LED_State = false;
