@@ -16,7 +16,7 @@ using System.IO;
 using System.Collections;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
-
+using System.Globalization;
 
 namespace PartsHunter
 {
@@ -47,6 +47,7 @@ namespace PartsHunter
         private Color LED_Highlight_Color;
         private int LED_Highlight_Time;
         private int LED_Highlight_Brightness;
+        private CultureInfo culture = new CultureInfo("es-ES", false);
 
         private readonly NameValueCollection configuration = ConfigurationManager.AppSettings;
         private readonly JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -297,9 +298,14 @@ namespace PartsHunter
         {
             if (SerialPort.IsOpen)
             {
-                if (tabControl1.SelectedIndex == 1 && !Pre_Load_Done)
+                if(Pre_Load_Done == false)
                 {
                     Pre_Load_Done = true;
+                    GetFirebase(String.Empty);
+                }
+
+                if (tabControl1.SelectedIndex == 1)
+                {                    
                     Fill_All_Fields_With_Firebase_Data();
                 }
             }
@@ -338,7 +344,10 @@ namespace PartsHunter
 
 
             Get_Number_Registered_Box();
-            GetFirebase(String.Empty);
+            
+            
+            GetFirebase(String.Empty); 
+            Pre_Load_Done = true;
 
             foreach (var key in JSON_Firebase.Keys)
             {
@@ -437,8 +446,9 @@ namespace PartsHunter
 
                         foreach (var w in words)
                         {
-                            
-                            if (String.Compare(s, w, StringComparison.OrdinalIgnoreCase) == 0)
+
+                            //if (String.Compare(s, w, StringComparison.OrdinalIgnoreCase) == 0)
+                            if(culture.CompareInfo.IndexOf(s, w, CompareOptions.IgnoreCase) >= 0)
                             {
                                 foreach (DataGridViewRow row in dataGridViewResults.Rows)
                                 {
@@ -474,6 +484,7 @@ namespace PartsHunter
         private void buttonSearch_Click(object sender, EventArgs e)
         {            
             SearchByDescription(textBoxSearch.Text);
+            Pre_Load_Done = false;
             labelNumberResults.Visible = true;
         }
 
@@ -512,6 +523,7 @@ namespace PartsHunter
             if (comboBoxSearchCategory.SelectedIndex != 0)
             {
                 SearchByCategory();
+                Pre_Load_Done = false;
                 labelNumberResults.Visible = true;
             }
             else
@@ -587,7 +599,8 @@ namespace PartsHunter
                         foreach (var w in words)
                         {
 
-                            if (String.Compare(s, w, StringComparison.OrdinalIgnoreCase) == 0)
+                            //if (String.Compare(s, w, StringComparison.OrdinalIgnoreCase) == 0)
+                            if (culture.CompareInfo.IndexOf(s, w, CompareOptions.IgnoreCase) >= 0)
                             {
                                 foreach (DataGridViewRow row in dataGridViewRegisteredParts.Rows)
                                 {
@@ -1066,11 +1079,29 @@ namespace PartsHunter
 
         private void dataGridViewCurrentParts_SelectionChanged(object sender, EventArgs e)
         {
-            Highlight_Drawer_From_Parts_Selection();            
+            Highlight_Drawer_From_Parts_Selection();
+
+           
+
+
+            string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();            
+
+            string drawer = "";
+            if(dataGridViewCurrentParts.SelectedCells.Count > 0)               
+                 drawer = dataGridViewCurrentParts.SelectedCells[2].Value.ToString();
+
+  
+
+
+
+                string UART_command = box + ',' + drawer + ',' + LED_Highlight_Color.R + ',' + LED_Highlight_Color.G + ',' + LED_Highlight_Color.B + ',' + LED_Highlight_Brightness + ',' + LED_Highlight_Time + '\n';
+
+            Send_UART(UART_command);
         }
 
         private void buttonFindCurrentLocation_Click(object sender, EventArgs e)
         {
+            
             groupBoxCurrentLocation.Visible = true;
             labelNumberResults2.Visible = true;
             FindRegisteredComponent(textBoxDescription.Text);
@@ -1283,8 +1314,14 @@ namespace PartsHunter
             LED_Highlight_Time = trackBarTime.Value;
 
             if (trackBarTime.Value < 1000)
-                labelTime.Text = trackBarTime.Value + "ms blinky";
-            else            
+            {
+                if (trackBarTime.Value < 100)
+                    labelTime.Text = "always on";
+                else
+                    labelTime.Text = trackBarTime.Value + "ms blinky";
+            }
+
+            else
                 labelTime.Text = "1s blinky";
             
         }
@@ -1346,7 +1383,13 @@ namespace PartsHunter
 
                 trackBarTime.Value = LED_Highlight_Time;
                 if (LED_Highlight_Time < 1000)
-                    labelTime.Text = LED_Highlight_Time + "ms blinky";
+                {
+                    if (LED_Highlight_Time < 100)
+                        labelTime.Text = "always on";
+                    else
+                        labelTime.Text = LED_Highlight_Time + "ms blinky";
+                }
+
                 else
                     labelTime.Text = "1s blinky";
 

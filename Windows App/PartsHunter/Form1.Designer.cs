@@ -373,10 +373,12 @@ namespace PartsHunter
             // 
             this.trackBarTime.AutoSize = false;
             this.trackBarTime.BackColor = System.Drawing.SystemColors.Window;
+            this.trackBarTime.LargeChange = 50;
             this.trackBarTime.Location = new System.Drawing.Point(143, 17);
             this.trackBarTime.Maximum = 1000;
             this.trackBarTime.Name = "trackBarTime";
             this.trackBarTime.Size = new System.Drawing.Size(100, 25);
+            this.trackBarTime.SmallChange = 50;
             this.trackBarTime.TabIndex = 57;
             this.trackBarTime.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarTime.Scroll += new System.EventHandler(this.trackBarTime_Scroll);
