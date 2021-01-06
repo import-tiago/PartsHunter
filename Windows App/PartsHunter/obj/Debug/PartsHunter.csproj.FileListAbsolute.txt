@@ -40,3 +40,4 @@ C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Configuration.C
 C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Security.AccessControl.xml
 C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Security.Permissions.xml
 C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Security.Principal.Windows.xml
+C:\Projects\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.Form2.resources

@@ -184,19 +184,46 @@ namespace PartsHunter
                 SerialPort.Close();
         }
 
-        private bool Send_UART(string number)
+        private bool Send_UART(string command)
         {
-            bool r;
-            if (SerialPort.IsOpen == true)
+            string UART_command = String.Empty;
+            bool cancel = false;
+            if (command != "0")
             {
-                SerialPort.Write(number);
-                r = true;
+                try
+                {
+                    string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
+
+                    string drawer = "";
+                    if (dataGridViewCurrentParts.SelectedCells.Count > 0)
+                        drawer = dataGridViewCurrentParts.SelectedCells[2].Value.ToString();
+
+                    UART_command = box + ',' + drawer + ',' + LED_Highlight_Color.R + ',' + LED_Highlight_Color.G + ',' + LED_Highlight_Color.B + ',' + LED_Highlight_Brightness + ',' + LED_Highlight_Time + "\r\n";
+                }
+                catch
+                {
+                    cancel = true;
+                }
             }
             else
+                UART_command = "0";
+            
+            
+            bool r = false;
+            if (cancel == false)
             {
-                if (Form_Closing == false)
-                    MessageBox.Show("Connect first...");
-                r = false;
+                
+                if (SerialPort.IsOpen == true)
+                {
+                    SerialPort.Write(UART_command);
+                    r = true;
+                }
+                else
+                {
+                    if (Form_Closing == false)
+                        MessageBox.Show("Connect first...");
+                    r = false;
+                }
             }
 
             return r;
@@ -321,6 +348,7 @@ namespace PartsHunter
 
         private void Form1_Load(object sender, EventArgs e)
         {
+           
             LoadData();
             dataGridViewResults.Columns[0].Width = 280;
             dataGridViewRegisteredParts.Columns[0].Width = 470;
@@ -335,6 +363,7 @@ namespace PartsHunter
             try
             {
                 SerialPort.Open();
+                Send_UART("0");
             }
             catch { MessageBox.Show("Error to open SerialPort"); }
 
@@ -666,7 +695,7 @@ namespace PartsHunter
             int newBox = dataGridViewBoxes.RowCount;
             int index = 0;
             bool get_small = false;
-
+            comboBoxCategory.Text = comboBoxCategory.Items[0].ToString();
             dataGridViewBoxes.AllowUserToAddRows = true;            
                         
             //Checks the smallest non-existent box's number
@@ -715,7 +744,8 @@ namespace PartsHunter
             else
                 Clear_Highlight_All_Boxes(CLEAR_KEEPING_FILLED_DRAWERS);
 
-            Highlight_Drawer_From_Box_Selection();
+            if(dataGridViewBoxes.RowCount>1)
+                Highlight_Drawer_From_Box_Selection();
         }
 
         private void comboBoxCategory_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -943,7 +973,8 @@ namespace PartsHunter
                     {
                         if (JSON_Firebase[key][key2]["Description"] == Current_Selected_Component)
                         {
-
+                            comboBoxCategory.Text = key;
+                            
                             switch (Last_Draw_Highlight)
                             {
                                 case "1": btnSelected_Drawer_1.BackColor = Color.Linen; break;
@@ -980,6 +1011,7 @@ namespace PartsHunter
                     }
                 }
             }
+            
             try
             {
                 Last_Selected_Registered_Box = dataGridViewBoxes.SelectedRows[0].Index;
@@ -1065,8 +1097,16 @@ namespace PartsHunter
                     int boxNumber = int.Parse(Current_Selected_Box);
                     Current_Selected_Box = boxNumber.ToString();
 
-                    if (Fill_Parts_Datagrid() == 0)
+                    int n = Fill_Parts_Datagrid();
+                    if (n == 0)
+                    {
                         Clear_Highlight_All_Boxes(CLEAR_ALL);
+                        comboBoxCategory.Text = comboBoxCategory.Items[0].ToString();
+                    }
+                    //else if(n==1){
+                    //    Send_UART("1");
+                    //    Clear_Highlight_All_Boxes(CLEAR_KEEPING_FILLED_DRAWERS);
+                    //}
                     else
                         Clear_Highlight_All_Boxes(CLEAR_KEEPING_FILLED_DRAWERS);
 
@@ -1081,22 +1121,9 @@ namespace PartsHunter
         {
             Highlight_Drawer_From_Parts_Selection();
 
-           
-
-
-            string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();            
-
-            string drawer = "";
-            if(dataGridViewCurrentParts.SelectedCells.Count > 0)               
-                 drawer = dataGridViewCurrentParts.SelectedCells[2].Value.ToString();
-
-  
-
-
-
-                string UART_command = box + ',' + drawer + ',' + LED_Highlight_Color.R + ',' + LED_Highlight_Color.G + ',' + LED_Highlight_Color.B + ',' + LED_Highlight_Brightness + ',' + LED_Highlight_Time + '\n';
-
-            Send_UART(UART_command);
+            int x = JSON_Firebase.Count;
+            if (dataGridViewCurrentParts.Rows.Count == x+1)
+                Send_UART("1");
         }
 
         private void buttonFindCurrentLocation_Click(object sender, EventArgs e)
@@ -1271,10 +1298,7 @@ namespace PartsHunter
                 MessageBox.Show("Fill all fields!");
         }
 
-        private void buttonDelete_Click(object sender, EventArgs e)
-        {
-
-        }
+      
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -1409,6 +1433,90 @@ namespace PartsHunter
             }           
         }
 
-    
+        private void buttonEdit_Click(object sender, EventArgs e)
+        {
+            string category = comboBoxCategory.SelectedItem.ToString();
+
+            string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
+
+            string drawer = "";
+            if (dataGridViewCurrentParts.SelectedCells.Count > 0)
+                drawer = dataGridViewCurrentParts.SelectedCells[2].Value.ToString();
+
+            string description = "";
+            if (dataGridViewCurrentParts.SelectedCells.Count > 0)
+                description = dataGridViewCurrentParts.SelectedCells[0].Value.ToString();
+
+            string qty = "";
+            if (dataGridViewCurrentParts.SelectedCells.Count > 0)
+                qty = dataGridViewCurrentParts.SelectedCells[1].Value.ToString();
+
+            //Form2 f2 = new Form2(category, box, drawer, description, qty);
+            Form2 f2 = new Form2(category, box, drawer, description, qty);
+            f2.ShowDialog();
+        }
+
+        void Edit_Firebase(string category, string description, string quantity, string box, string drawer)
+        {
+            /*
+            var todo = new
+            {
+                Description = description,
+                Quantity = quantity,
+                Box = box,
+                Drawer = drawer
+            };
+
+            PushResponse response = Client.Update("", todo);
+
+            string retorno = JsonConvert.SerializeObject(response).ToString();
+            */
+        }
+
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+            string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
+
+            string drawer = "";
+            if (dataGridViewCurrentParts.SelectedCells.Count > 0)
+                drawer = dataGridViewCurrentParts.SelectedCells[2].Value.ToString();
+
+            Delete_Firebase(box, drawer);
+            ReLoad_Fields();
+
+            if (dataGridViewBoxes.RowCount == 0)
+            {
+                Clear_Highlight_All_Boxes(CLEAR_ALL);
+                Last_Button_Properties[1] = Color.WhiteSmoke;
+            }
+                        
+        }
+
+        void Delete_Firebase(string box, string drawer)
+        {
+
+
+            String todo = String.Empty;
+
+
+            foreach (var key in JSON_Firebase.Keys)
+            {
+                if (key != "void")
+                {
+                    foreach (var key2 in JSON_Firebase[key].Keys)
+                    {
+                        if (JSON_Firebase[key][key2]["Box"] == box && JSON_Firebase[key][key2]["Drawer"] == drawer)
+                        {
+                            todo = key + "/" + key2;
+                        }
+                    }
+                }
+            }
+                       
+
+           DeleteResponse response = Client.Delete(todo);
+
+           string retorno = JsonConvert.SerializeObject(response).ToString();
+        }
     }
 }

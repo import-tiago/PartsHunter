@@ -1309,6 +1309,7 @@ namespace PartsHunter
             this.buttonEdit.TabIndex = 68;
             this.buttonEdit.Text = "EDIT";
             this.buttonEdit.UseVisualStyleBackColor = true;
+            this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
             // 
             // dataGridViewCurrentParts
             // 
