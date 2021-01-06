@@ -157,7 +157,7 @@ namespace PartsHunter
 
                 try
                 {
-                    Send_UART("0");
+                    Send_UART("-1");
                     Highlight_Selected_Drawer("0", SEARCH, Color.WhiteSmoke);
                     Highlight_Selected_Drawer("0", REGISTER, Color.WhiteSmoke);
                     SerialPort.Close();
@@ -178,7 +178,7 @@ namespace PartsHunter
         {
             Form_Closing = true;
 
-            Send_UART("0");
+            Send_UART("-1");
 
             if (SerialPort.IsOpen == true)
                 SerialPort.Close();
@@ -188,7 +188,7 @@ namespace PartsHunter
         {
             string UART_command = String.Empty;
             bool cancel = false;
-            if (command != "0")
+            if (command != "-1")
             {
                 try
                 {
@@ -206,7 +206,7 @@ namespace PartsHunter
                 }
             }
             else
-                UART_command = "0";
+                UART_command = "-1,0,0,0,0,0,0";
             
             
             bool r = false;
@@ -363,7 +363,7 @@ namespace PartsHunter
             try
             {
                 SerialPort.Open();
-                Send_UART("0");
+                Send_UART("-1");
             }
             catch { MessageBox.Show("Error to open SerialPort"); }
 
@@ -387,17 +387,24 @@ namespace PartsHunter
 
         void Push_New_Component(string category, string description, string quantity, string box, string drawer)
         {
-            var todo = new
+            try
             {
-                Description = description,
-                Quantity = quantity,
-                Box = box,
-                Drawer = drawer
-            };
+                var todo = new
+                {
+                    Description = description,
+                    Quantity = quantity,
+                    Box = box,
+                    Drawer = drawer
+                };
 
-            PushResponse response = Client.Push(category, todo);
+                PushResponse response = Client.Push(category, todo);
 
-            string retorno = JsonConvert.SerializeObject(response).ToString();
+                string retorno = JsonConvert.SerializeObject(response).ToString();
+            }
+            catch
+            {
+
+            }
         }
 
         void GetFirebase(string input)
@@ -440,7 +447,7 @@ namespace PartsHunter
                 }
                 else
                 {
-                    Send_UART("0");
+                    Send_UART("-1");
                     Highlight_Selected_Drawer("0", SEARCH, Color.WhiteSmoke);
                     Highlight_Selected_Drawer("0", REGISTER, Color.WhiteSmoke);
                     labelNumberResults.Text = "0" + " results found";
@@ -500,7 +507,7 @@ namespace PartsHunter
                 }
                 else
                 {
-                    Send_UART("0");
+                    Send_UART("-1");
                     Highlight_Selected_Drawer("0", SEARCH, Color.WhiteSmoke);
                     Highlight_Selected_Drawer("0", REGISTER, Color.WhiteSmoke);
                     labelNumberResults.Text = "0" + " results found";
@@ -652,7 +659,7 @@ namespace PartsHunter
                 }
                 else
                 {
-                    Send_UART("0");
+                    Send_UART("-1");
                     Highlight_Selected_Drawer("0", SEARCH, Color.WhiteSmoke);
                     Highlight_Selected_Drawer("0", REGISTER, Color.WhiteSmoke);
                     labelNumberResults2.Text = "0" + " results found";

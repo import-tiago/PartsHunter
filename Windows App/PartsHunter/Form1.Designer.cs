@@ -727,7 +727,6 @@ namespace PartsHunter
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.buttonSave);
             this.tabPage2.Controls.Add(this.groupBoxCurrentLocation);
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Controls.Add(this.groupBox2);
@@ -746,9 +745,9 @@ namespace PartsHunter
             this.buttonSave.BackColor = System.Drawing.Color.PaleTurquoise;
             this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSave.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSave.Location = new System.Drawing.Point(12, 612);
+            this.buttonSave.Location = new System.Drawing.Point(258, 125);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(1076, 31);
+            this.buttonSave.Size = new System.Drawing.Size(83, 27);
             this.buttonSave.TabIndex = 71;
             this.buttonSave.Text = "SAVE";
             this.buttonSave.UseVisualStyleBackColor = false;
@@ -760,7 +759,7 @@ namespace PartsHunter
             this.groupBoxCurrentLocation.Controls.Add(this.dataGridViewRegisteredParts);
             this.groupBoxCurrentLocation.Location = new System.Drawing.Point(515, 6);
             this.groupBoxCurrentLocation.Name = "groupBoxCurrentLocation";
-            this.groupBoxCurrentLocation.Size = new System.Drawing.Size(573, 142);
+            this.groupBoxCurrentLocation.Size = new System.Drawing.Size(573, 164);
             this.groupBoxCurrentLocation.TabIndex = 68;
             this.groupBoxCurrentLocation.TabStop = false;
             this.groupBoxCurrentLocation.Text = "CURRENT LOCATION";
@@ -770,7 +769,7 @@ namespace PartsHunter
             // 
             this.label7.AutoSize = true;
             this.label7.ForeColor = System.Drawing.Color.ForestGreen;
-            this.label7.Location = new System.Drawing.Point(206, 125);
+            this.label7.Location = new System.Drawing.Point(206, 148);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(173, 13);
             this.label7.TabIndex = 62;
@@ -793,7 +792,7 @@ namespace PartsHunter
             this.dataGridViewRegisteredParts.ReadOnly = true;
             this.dataGridViewRegisteredParts.RowHeadersVisible = false;
             this.dataGridViewRegisteredParts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRegisteredParts.Size = new System.Drawing.Size(567, 107);
+            this.dataGridViewRegisteredParts.Size = new System.Drawing.Size(567, 129);
             this.dataGridViewRegisteredParts.TabIndex = 0;
             this.dataGridViewRegisteredParts.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewRegisteredParts_CellMouseDoubleClick);
             // 
@@ -817,6 +816,7 @@ namespace PartsHunter
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.buttonSave);
             this.groupBox1.Controls.Add(this.labelNumberResults2);
             this.groupBox1.Controls.Add(this.comboBoxCategory);
             this.groupBox1.Controls.Add(this.buttonFindCurrentLocation);
@@ -827,7 +827,7 @@ namespace PartsHunter
             this.groupBox1.Controls.Add(this.textBoxQuantity);
             this.groupBox1.Location = new System.Drawing.Point(9, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(500, 142);
+            this.groupBox1.Size = new System.Drawing.Size(500, 164);
             this.groupBox1.TabIndex = 67;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "PART INFORMATION";
@@ -935,7 +935,7 @@ namespace PartsHunter
             this.groupBox2.Controls.Add(this.btnSelected_Drawer_22);
             this.groupBox2.Controls.Add(this.btnSelected_Drawer_23);
             this.groupBox2.Controls.Add(this.btnSelected_Drawer_24);
-            this.groupBox2.Location = new System.Drawing.Point(143, 155);
+            this.groupBox2.Location = new System.Drawing.Point(143, 191);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(642, 448);
             this.groupBox2.TabIndex = 47;
@@ -1234,7 +1234,7 @@ namespace PartsHunter
             // 
             this.groupBox3.Controls.Add(this.buttonNewBox);
             this.groupBox3.Controls.Add(this.dataGridViewBoxes);
-            this.groupBox3.Location = new System.Drawing.Point(9, 154);
+            this.groupBox3.Location = new System.Drawing.Point(9, 190);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(125, 449);
             this.groupBox3.TabIndex = 38;
@@ -1282,7 +1282,7 @@ namespace PartsHunter
             this.groupBoxParts.Controls.Add(this.buttonDelete);
             this.groupBoxParts.Controls.Add(this.buttonEdit);
             this.groupBoxParts.Controls.Add(this.dataGridViewCurrentParts);
-            this.groupBoxParts.Location = new System.Drawing.Point(795, 154);
+            this.groupBoxParts.Location = new System.Drawing.Point(795, 190);
             this.groupBoxParts.Name = "groupBoxParts";
             this.groupBoxParts.Size = new System.Drawing.Size(296, 448);
             this.groupBoxParts.TabIndex = 37;
