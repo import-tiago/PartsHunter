@@ -12,13 +12,14 @@ namespace PartsHunter
 {
     public partial class Form2 : Form
     {
-        private string category;
-        private string box;
-        private string drawer;
-        private string description;
-        private string quantity;
+        public string category { get; set; }
+        public string box { get; set; }
+        public string drawer { get; set; }
+        public string description { get; set; }
+        public string quantity { get; set; }
 
-        public Form2(string _category, string _box, string _drawer, string _description, string _quantity)
+
+        public Form2( string _category, string _box, string _drawer, string _description, string _quantity)
         {
             InitializeComponent();
             category = _category;
@@ -26,6 +27,7 @@ namespace PartsHunter
             drawer = _drawer;
             description = _description;
             quantity = _quantity;
+           
         }     
 
         private void Form2_Load(object sender, EventArgs e)
@@ -43,5 +45,19 @@ namespace PartsHunter
             dataGridView.Columns[3].ReadOnly = false;
             dataGridView.Columns[4].ReadOnly = false;
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {            
+            this.category = dataGridView.Rows[0].Cells[0].Value.ToString();
+            this.box = dataGridView.Rows[0].Cells[1].Value.ToString();
+            this.drawer = dataGridView.Rows[0].Cells[2].Value.ToString();
+            this.description = dataGridView.Rows[0].Cells[3].Value.ToString();
+            this.quantity = dataGridView.Rows[0].Cells[4].Value.ToString();
+
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+        }
+         
+
     }
 }

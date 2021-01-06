@@ -48,6 +48,7 @@ namespace PartsHunter
         private int LED_Highlight_Time;
         private int LED_Highlight_Brightness;
         private CultureInfo culture = new CultureInfo("es-ES", false);
+        private string Current_Category = String.Empty;
 
         private readonly NameValueCollection configuration = ConfigurationManager.AppSettings;
         private readonly JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -378,11 +379,35 @@ namespace PartsHunter
             GetFirebase(String.Empty); 
             Pre_Load_Done = true;
 
+            Full_ComboBox_Category();
+        }
+
+        void Full_ComboBox_Category()
+        {
+            comboBoxCategory.Items.Clear();
+            comboBoxCategory.Items.Add("<Select one or type a new one>");
+            int items = comboBoxCategory.Items.Count;
+            string value = string.Empty;
+            bool AlreadyExist = false;
+
+            
+
             foreach (var key in JSON_Firebase.Keys)
             {
-                comboBoxCategory.Items.Add(key);
-                comboBoxSearchCategory.Items.Add(key);
+                for(int i = 0; i < items; i++) {
+                    
+                    value = comboBoxCategory.Items[i].ToString();
+
+                    if (key == value)                    
+                        AlreadyExist = true;                    
+                }
+                if (AlreadyExist == false)
+                {
+                    comboBoxCategory.Items.Add(key);
+                    comboBoxSearchCategory.Items.Add(key);
+                }
             }
+            comboBoxCategory.Text = comboBoxCategory.Items[0].ToString();
         }
 
         void Push_New_Component(string category, string description, string quantity, string box, string drawer)
@@ -677,6 +702,7 @@ namespace PartsHunter
 
         private void Get_Button_Click(object sender, EventArgs e)
         {
+            labelNumberResults2.Visible = false;
             if (Last_Button_Properties[0] != (sender as Button).Text)
             {
                 //firstClick = true;
@@ -697,6 +723,7 @@ namespace PartsHunter
         private void buttonNewBox_Click(object sender, EventArgs e)
         {
             Manually_Manipulating_Datagrid = true;
+            labelNumberResults2.Visible = false;
             groupBoxCurrentLocation.Visible = false;
             string[] newRow;
             int newBox = dataGridViewBoxes.RowCount;
@@ -824,7 +851,8 @@ namespace PartsHunter
         void Fill_All_Fields_With_Firebase_Data()
         {
             Fill_Boxes_Datagrid();
-            Fill_Parts_Datagrid();           
+            Fill_Parts_Datagrid();
+            Full_ComboBox_Category();
         }
 
         void Fill_Boxes_Datagrid()
@@ -980,7 +1008,7 @@ namespace PartsHunter
                     {
                         if (JSON_Firebase[key][key2]["Description"] == Current_Selected_Component)
                         {
-                            comboBoxCategory.Text = key;
+                            Current_Category = key;
                             
                             switch (Last_Draw_Highlight)
                             {
@@ -1284,6 +1312,7 @@ namespace PartsHunter
         private void buttonSave_Click_1(object sender, EventArgs e)
         {
             groupBoxCurrentLocation.Visible = false;
+            labelNumberResults2.Visible = false;
             if (validatedCategory && validatedDescription && validatedQuantity)
             {
                 if (!string.IsNullOrWhiteSpace(Last_Button_Properties[0].ToString()))
@@ -1442,30 +1471,67 @@ namespace PartsHunter
 
         private void buttonEdit_Click(object sender, EventArgs e)
         {
-            string category = comboBoxCategory.SelectedItem.ToString();
+            string category = string.Empty;
+            string box = string.Empty;
+            string drawer = string.Empty;
+            string description = string.Empty;
+            string qty = string.Empty;
 
-            string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
+            try
+            {
+                labelNumberResults2.Visible = false;
+                 category = Current_Category;
 
-            string drawer = "";
-            if (dataGridViewCurrentParts.SelectedCells.Count > 0)
-                drawer = dataGridViewCurrentParts.SelectedCells[2].Value.ToString();
+                 box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
 
-            string description = "";
-            if (dataGridViewCurrentParts.SelectedCells.Count > 0)
-                description = dataGridViewCurrentParts.SelectedCells[0].Value.ToString();
+                 drawer = "";
+                if (dataGridViewCurrentParts.SelectedCells.Count > 0)
+                    drawer = dataGridViewCurrentParts.SelectedCells[2].Value.ToString();
 
-            string qty = "";
-            if (dataGridViewCurrentParts.SelectedCells.Count > 0)
-                qty = dataGridViewCurrentParts.SelectedCells[1].Value.ToString();
+                 description = "";
+                if (dataGridViewCurrentParts.SelectedCells.Count > 0)
+                    description = dataGridViewCurrentParts.SelectedCells[0].Value.ToString();
 
-            //Form2 f2 = new Form2(category, box, drawer, description, qty);
-            Form2 f2 = new Form2(category, box, drawer, description, qty);
-            f2.ShowDialog();
+                 qty = "";
+                if (dataGridViewCurrentParts.SelectedCells.Count > 0)
+                    qty = dataGridViewCurrentParts.SelectedCells[1].Value.ToString();
+
+                
+
+                //Form2 f2 = new Form2(category, box, drawer, description, qty);
+                Form2 f2 = new Form2(category, box, drawer, description, qty);
+                var result = f2.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    string _category = f2.category;
+                    string _box = f2.box;
+                    string _drawer = f2.drawer;
+                    string _description = f2.description;
+                    string _qty = f2.quantity;
+
+                    if(category != _category || box != _box || drawer != _drawer)
+                    {
+                        Delete_Firebase(box, drawer);
+                        Push_New_Component(_category, _description, _qty, _box, _drawer);
+                    }
+                    else
+                        Update_Firebase(_box, _drawer, _description, _qty);
+                    
+                    ReLoad_Fields();
+                }
+            }
+            catch
+            {
+
+            }
         }
 
-        void Edit_Firebase(string category, string description, string quantity, string box, string drawer)
+
+        void Update_Firebase(string box, string drawer, string description, string quantity)
         {
-            /*
+            string address = Get_Firebase_Address(box, drawer);
+
             var todo = new
             {
                 Description = description,
@@ -1474,35 +1540,42 @@ namespace PartsHunter
                 Drawer = drawer
             };
 
-            PushResponse response = Client.Update("", todo);
+
+            FirebaseResponse response = Client.Update(address, todo);
 
             string retorno = JsonConvert.SerializeObject(response).ToString();
-            */
         }
+
 
         private void buttonDelete_Click(object sender, EventArgs e)
         {
-            string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
-
-            string drawer = "";
-            if (dataGridViewCurrentParts.SelectedCells.Count > 0)
-                drawer = dataGridViewCurrentParts.SelectedCells[2].Value.ToString();
-
-            Delete_Firebase(box, drawer);
-            ReLoad_Fields();
-
-            if (dataGridViewBoxes.RowCount == 0)
+            try
             {
-                Clear_Highlight_All_Boxes(CLEAR_ALL);
-                Last_Button_Properties[1] = Color.WhiteSmoke;
+                labelNumberResults2.Visible = false;
+                string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
+
+                string drawer = "";
+                if (dataGridViewCurrentParts.SelectedCells.Count > 0)
+                    drawer = dataGridViewCurrentParts.SelectedCells[2].Value.ToString();
+
+                Delete_Firebase(box, drawer);
+                ReLoad_Fields();
+
+                if (dataGridViewBoxes.RowCount == 0)
+                {
+                    Clear_Highlight_All_Boxes(CLEAR_ALL);
+                    Last_Button_Properties[1] = Color.WhiteSmoke;
+                }
             }
-                        
+            catch
+            {
+
+            }
+
         }
 
         void Delete_Firebase(string box, string drawer)
         {
-
-
             String todo = String.Empty;
 
 
@@ -1524,6 +1597,27 @@ namespace PartsHunter
            DeleteResponse response = Client.Delete(todo);
 
            string retorno = JsonConvert.SerializeObject(response).ToString();
+        }
+
+        string Get_Firebase_Address(string box, string drawer)
+        {
+            string r = string.Empty;
+
+            foreach (var key in JSON_Firebase.Keys)
+            {
+                if (key != "void")
+                {
+                    foreach (var key2 in JSON_Firebase[key].Keys)
+                    {
+                        if (JSON_Firebase[key][key2]["Box"] == box && JSON_Firebase[key][key2]["Drawer"] == drawer)
+                        {
+                           r = key + "/" + key2;
+                        }
+                    }
+                }
+            }
+
+            return r;
         }
     }
 }
