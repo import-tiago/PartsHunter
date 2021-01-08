@@ -81,7 +81,6 @@ namespace PartsHunter
             this.Box = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Drawer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.buttonSave = new System.Windows.Forms.Button();
             this.groupBoxCurrentLocation = new System.Windows.Forms.GroupBox();
             this.label7 = new System.Windows.Forms.Label();
             this.dataGridViewRegisteredParts = new System.Windows.Forms.DataGridView();
@@ -89,6 +88,7 @@ namespace PartsHunter
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonSave = new System.Windows.Forms.Button();
             this.labelNumberResults2 = new System.Windows.Forms.Label();
             this.comboBoxCategory = new System.Windows.Forms.ComboBox();
             this.buttonFindCurrentLocation = new System.Windows.Forms.Button();
@@ -137,6 +137,7 @@ namespace PartsHunter
             this.timerCOM = new System.Windows.Forms.Timer(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.buttonClear = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -291,6 +292,7 @@ namespace PartsHunter
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.buttonClear);
             this.groupBox5.Controls.Add(this.groupBoxSettings);
             this.groupBox5.Controls.Add(this.buttonSettings);
             this.groupBox5.Controls.Add(this.btnDrawer_14);
@@ -333,7 +335,7 @@ namespace PartsHunter
             this.groupBoxSettings.Controls.Add(this.buttonColor);
             this.groupBoxSettings.Location = new System.Drawing.Point(6, 19);
             this.groupBoxSettings.Name = "groupBoxSettings";
-            this.groupBoxSettings.Size = new System.Drawing.Size(533, 48);
+            this.groupBoxSettings.Size = new System.Drawing.Size(524, 48);
             this.groupBoxSettings.TabIndex = 54;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
@@ -342,7 +344,7 @@ namespace PartsHunter
             // labelBright
             // 
             this.labelBright.AutoSize = true;
-            this.labelBright.Location = new System.Drawing.Point(441, 25);
+            this.labelBright.Location = new System.Drawing.Point(435, 25);
             this.labelBright.Name = "labelBright";
             this.labelBright.Size = new System.Drawing.Size(66, 13);
             this.labelBright.TabIndex = 60;
@@ -352,7 +354,7 @@ namespace PartsHunter
             // 
             this.trackBarBright.AutoSize = false;
             this.trackBarBright.BackColor = System.Drawing.SystemColors.Window;
-            this.trackBarBright.Location = new System.Drawing.Point(335, 18);
+            this.trackBarBright.Location = new System.Drawing.Point(329, 18);
             this.trackBarBright.Maximum = 255;
             this.trackBarBright.Name = "trackBarBright";
             this.trackBarBright.Size = new System.Drawing.Size(100, 25);
@@ -397,9 +399,9 @@ namespace PartsHunter
             // buttonSettings
             // 
             this.buttonSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSettings.Location = new System.Drawing.Point(545, 34);
+            this.buttonSettings.Location = new System.Drawing.Point(536, 34);
             this.buttonSettings.Name = "buttonSettings";
-            this.buttonSettings.Size = new System.Drawing.Size(91, 23);
+            this.buttonSettings.Size = new System.Drawing.Size(100, 23);
             this.buttonSettings.TabIndex = 36;
             this.buttonSettings.Text = "Config Highlight";
             this.buttonSettings.UseVisualStyleBackColor = true;
@@ -740,19 +742,6 @@ namespace PartsHunter
             this.tabPage2.Text = "Register";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // buttonSave
-            // 
-            this.buttonSave.BackColor = System.Drawing.Color.PaleTurquoise;
-            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSave.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSave.Location = new System.Drawing.Point(258, 125);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(83, 27);
-            this.buttonSave.TabIndex = 71;
-            this.buttonSave.Text = "SAVE";
-            this.buttonSave.UseVisualStyleBackColor = false;
-            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click_1);
-            // 
             // groupBoxCurrentLocation
             // 
             this.groupBoxCurrentLocation.Controls.Add(this.label7);
@@ -831,6 +820,19 @@ namespace PartsHunter
             this.groupBox1.TabIndex = 67;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "PART INFORMATION";
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSave.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSave.Location = new System.Drawing.Point(258, 125);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(83, 27);
+            this.buttonSave.TabIndex = 71;
+            this.buttonSave.Text = "SAVE";
+            this.buttonSave.UseVisualStyleBackColor = false;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click_1);
             // 
             // labelNumberResults2
             // 
@@ -1366,6 +1368,18 @@ namespace PartsHunter
             this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider1.ContainerControl = this;
             // 
+            // buttonClear
+            // 
+            this.buttonClear.Enabled = false;
+            this.buttonClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonClear.Location = new System.Drawing.Point(536, 497);
+            this.buttonClear.Name = "buttonClear";
+            this.buttonClear.Size = new System.Drawing.Size(100, 23);
+            this.buttonClear.TabIndex = 55;
+            this.buttonClear.Text = "Clear All";
+            this.buttonClear.UseVisualStyleBackColor = true;
+            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1514,6 +1528,7 @@ namespace PartsHunter
         private System.Windows.Forms.Label labelTime;
         private System.Windows.Forms.TrackBar trackBarTime;
         private System.Windows.Forms.Button buttonColor;
+        private System.Windows.Forms.Button buttonClear;
     }
 }
 

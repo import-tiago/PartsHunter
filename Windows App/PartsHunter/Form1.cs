@@ -148,9 +148,11 @@ namespace PartsHunter
                 }
                 if (SerialPort.IsOpen)
                 {
-                    btCOMConnect.BackColor = Color.LightGreen;
+                    Send_UART("-1");
+                    btCOMConnect.BackColor = Color.LightCoral;
                     btCOMConnect.Text = "Disconnect";
-                    comboBox1.Enabled = false;
+                    comboBox1.Enabled = false;                   
+                    buttonClear.Enabled = true;
                 }
             }
             else
@@ -164,8 +166,8 @@ namespace PartsHunter
                     SerialPort.Close();
                     comboBox1.Enabled = true;
                     btCOMConnect.BackColor = Color.LemonChiffon;
-                    btCOMConnect.Text = "Connect";
-
+                    btCOMConnect.Text = "Connect";                   
+                    buttonClear.Enabled = false;
                 }
                 catch
                 {
@@ -180,6 +182,7 @@ namespace PartsHunter
             Form_Closing = true;
 
             Send_UART("-1");
+        
 
             if (SerialPort.IsOpen == true)
                 SerialPort.Close();
@@ -193,13 +196,16 @@ namespace PartsHunter
             {
                 try
                 {
-                    string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
+                    if (tabControl1.SelectedIndex == 1)
+                    {
+                        string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
 
-                    string drawer = "";
-                    if (dataGridViewCurrentParts.SelectedCells.Count > 0)
-                        drawer = dataGridViewCurrentParts.SelectedCells[2].Value.ToString();
+                        string drawer = "";
+                        if (dataGridViewCurrentParts.SelectedCells.Count > 0)
+                            drawer = dataGridViewCurrentParts.SelectedCells[2].Value.ToString();
 
-                    UART_command = box + ',' + drawer + ',' + LED_Highlight_Color.R + ',' + LED_Highlight_Color.G + ',' + LED_Highlight_Color.B + ',' + LED_Highlight_Brightness + ',' + LED_Highlight_Time + "\r\n";
+                        UART_command = box + ',' + drawer + ',' + LED_Highlight_Color.R + ',' + LED_Highlight_Color.G + ',' + LED_Highlight_Color.B + ',' + LED_Highlight_Brightness + ',' + LED_Highlight_Time + "\r\n";
+                    }
                 }
                 catch
                 {
@@ -216,7 +222,11 @@ namespace PartsHunter
                 
                 if (SerialPort.IsOpen == true)
                 {
-                    SerialPort.Write(UART_command);
+                    if (tabControl1.SelectedIndex == 0)
+                        SerialPort.Write(command);
+                    else
+                        SerialPort.Write(UART_command);
+
                     r = true;
                 }
                 else
@@ -326,15 +336,25 @@ namespace PartsHunter
         {
             if (SerialPort.IsOpen)
             {
-                if(Pre_Load_Done == false)
+                if (Pre_Load_Done == false)
                 {
                     Pre_Load_Done = true;
                     GetFirebase(String.Empty);
+
+
+                    
+                }
+                if (tabControl1.SelectedIndex == 1)
+                {
+                    Fill_All_Fields_With_Firebase_Data();
                 }
 
-                if (tabControl1.SelectedIndex == 1)
-                {                    
-                    Fill_All_Fields_With_Firebase_Data();
+                
+                if (tabControl1.SelectedIndex == 0 && dataGridViewResults.CurrentRow == null)
+                    Send_UART("-1");
+                else if (tabControl1.SelectedIndex == 0 && dataGridViewResults.CurrentRow != null)
+                {
+                    Highligth_From_Results();
                 }
             }
             else
@@ -360,6 +380,8 @@ namespace PartsHunter
             labelNumberResults.Visible = false;
             comboBoxSearchCategory.Text = comboBoxSearchCategory.Items[0].ToString();
             comboBoxCategory.Text = comboBoxCategory.Items[0].ToString();
+            
+            /*
             SerialPort.PortName = "COM5";
             try
             {
@@ -371,9 +393,9 @@ namespace PartsHunter
             btCOMConnect.BackColor = Color.LightGreen;
             btCOMConnect.Text = "Disconnect";
             comboBox1.Enabled = false;
+            */
 
-
-            Get_Number_Registered_Box();
+            //Get_Number_Registered_Box();
             
             
             GetFirebase(String.Empty); 
@@ -543,23 +565,37 @@ namespace PartsHunter
         }
 
         private void buttonSearch_Click(object sender, EventArgs e)
-        {            
-            SearchByDescription(textBoxSearch.Text);
-            Pre_Load_Done = false;
-            labelNumberResults.Visible = true;
+        {
+            if (SerialPort.IsOpen)
+            {
+                SearchByDescription(textBoxSearch.Text);
+                Pre_Load_Done = false;
+                labelNumberResults.Visible = true;
+            }
+            else
+            {
+                MessageBox.Show("Connect first...");
+            }            
         }
 
         private void textBoxSearch_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
+            if (SerialPort.IsOpen)
             {
-                SearchByDescription(textBoxSearch.Text);
-                labelNumberResults.Visible = true;
+                if (e.KeyCode == Keys.Enter)
+                {
+                    SearchByDescription(textBoxSearch.Text);
+                    labelNumberResults.Visible = true;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Connect first...");
             }
         }
 
-        private void dataGridViewResults_SelectionChanged(object sender, EventArgs e)
-        {            
+        void Highligth_From_Results()
+        {
             try
             {
                 int x = dataGridViewResults.SelectedCells[0].RowIndex;
@@ -576,6 +612,12 @@ namespace PartsHunter
             {
 
             }
+        }
+
+        private void dataGridViewResults_SelectionChanged(object sender, EventArgs e)
+        {
+            Highligth_From_Results();
+            
         }
 
         private void buttonListAll_Click(object sender, EventArgs e)
@@ -1618,6 +1660,11 @@ namespace PartsHunter
             }
 
             return r;
+        }
+
+        private void buttonClear_Click(object sender, EventArgs e)
+        {
+            Send_UART("-1");
         }
     }
 }
