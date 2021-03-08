@@ -41,3 +41,15 @@ C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Security.Access
 C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Security.Permissions.xml
 C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Security.Principal.Windows.xml
 C:\Projects\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.Form2.resources
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\Microsoft.Threading.Tasks.dll
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.dll
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\Microsoft.Threading.Tasks.Extensions.dll
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\SimpleWifi.dll
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Net.Http.Extensions.dll
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Net.Http.Primitives.dll
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\Microsoft.Threading.Tasks.xml
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\Microsoft.Threading.Tasks.Extensions.xml
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\Microsoft.Threading.Tasks.Extensions.Desktop.xml
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Net.Http.Extensions.xml
+C:\Projects\PartsHunter\Windows App\PartsHunter\bin\Debug\System.Net.Http.Primitives.xml
+C:\Projects\PartsHunter\Windows App\PartsHunter\obj\Debug\PartsHunter.csproj.App.config

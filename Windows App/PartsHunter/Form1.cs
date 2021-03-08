@@ -17,6 +17,11 @@ using System.Collections;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using System.Globalization;
+using System.Threading;
+using SimpleWifi;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 
 namespace PartsHunter
 {
@@ -41,7 +46,7 @@ namespace PartsHunter
         private dynamic[] Last_Button_Properties = { "", Color.Transparent };
         private bool validatedCategory;
         private bool validatedDescription;
-        private bool validatedQuantity;
+        private bool validatedDrawer;
         private string Current_Selected_Box = string.Empty;
         private bool Manually_Manipulating_Datagrid = false;
         private Color LED_Highlight_Color;
@@ -54,6 +59,10 @@ namespace PartsHunter
         private readonly JavaScriptSerializer serializer = new JavaScriptSerializer();
         private readonly IFirebaseConfig Config = new FirebaseConfig();
         private readonly IFirebaseClient Client;
+        private Wifi wifi;
+        private List<AccessPoint> aps;
+
+        private static ManualResetEvent sendDone =        new ManualResetEvent(false);
 
         ApplicationMethods _extern = new ApplicationMethods();
 
@@ -139,7 +148,7 @@ namespace PartsHunter
                     }
                     catch { MessageBox.Show("Error to open SerialPort"); }
 
-                    Get_Number_Registered_Box();
+                   // Get_Number_Registered_Box();
                 }
                 catch
                 {
@@ -161,8 +170,8 @@ namespace PartsHunter
                 try
                 {
                     Send_UART("-1");
-                    Highlight_Selected_Drawer("0", SEARCH, Color.WhiteSmoke);
-                    Highlight_Selected_Drawer("0", REGISTER, Color.WhiteSmoke);
+                    //Highlight_Selected_Drawer("0", SEARCH, Color.WhiteSmoke);
+                    //Highlight_Selected_Drawer("0", REGISTER, Color.WhiteSmoke);
                     SerialPort.Close();
                     comboBox1.Enabled = true;
                     btCOMConnect.BackColor = Color.LemonChiffon;
@@ -192,29 +201,7 @@ namespace PartsHunter
         {
             string UART_command = String.Empty;
             bool cancel = false;
-            if (command != "-1")
-            {
-                try
-                {
-                    if (tabControl1.SelectedIndex == 1)
-                    {
-                        string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
 
-                        string drawer = "";
-                        if (dataGridViewCurrentParts.SelectedCells.Count > 0)
-                            drawer = dataGridViewCurrentParts.SelectedCells[2].Value.ToString();
-
-                        UART_command = box + ',' + drawer + ',' + LED_Highlight_Color.R + ',' + LED_Highlight_Color.G + ',' + LED_Highlight_Color.B + ',' + LED_Highlight_Brightness + ',' + LED_Highlight_Time + "\r\n";
-                    }
-                }
-                catch
-                {
-                    cancel = true;
-                }
-            }
-            else
-                UART_command = "-1,0,0,0,0,0,0";
-            
             
             bool r = false;
             if (cancel == false)
@@ -222,10 +209,12 @@ namespace PartsHunter
                 
                 if (SerialPort.IsOpen == true)
                 {
-                    if (tabControl1.SelectedIndex == 0)
-                        SerialPort.Write(command);
-                    else
-                        SerialPort.Write(UART_command);
+                    //if (tabControl1.SelectedIndex == 1)
+                       SerialPort.Write(command);
+   
+
+                    // else
+                    //  SerialPort.Write(UART_command);
 
                     r = true;
                 }
@@ -238,98 +227,6 @@ namespace PartsHunter
             }
 
             return r;
-        }
-
-        void Highlight_Selected_Drawer(string number, int action, Color color)
-        {
-
-            if (action == SEARCH)
-            {
-                btnDrawer_1.BackColor = Color.WhiteSmoke;
-                btnDrawer_2.BackColor = Color.WhiteSmoke;
-                btnDrawer_3.BackColor = Color.WhiteSmoke;
-                btnDrawer_4.BackColor = Color.WhiteSmoke;
-                btnDrawer_5.BackColor = Color.WhiteSmoke;
-                btnDrawer_6.BackColor = Color.WhiteSmoke;
-                btnDrawer_7.BackColor = Color.WhiteSmoke;
-                btnDrawer_8.BackColor = Color.WhiteSmoke;
-                btnDrawer_9.BackColor = Color.WhiteSmoke;
-                btnDrawer_10.BackColor = Color.WhiteSmoke;
-                btnDrawer_11.BackColor = Color.WhiteSmoke;
-                btnDrawer_12.BackColor = Color.WhiteSmoke;
-                btnDrawer_13.BackColor = Color.WhiteSmoke;
-                btnDrawer_14.BackColor = Color.WhiteSmoke;
-                btnDrawer_15.BackColor = Color.WhiteSmoke;
-                btnDrawer_16.BackColor = Color.WhiteSmoke;
-                btnDrawer_17.BackColor = Color.WhiteSmoke;
-                btnDrawer_18.BackColor = Color.WhiteSmoke;
-                btnDrawer_19.BackColor = Color.WhiteSmoke;
-                btnDrawer_20.BackColor = Color.WhiteSmoke;
-                btnDrawer_21.BackColor = Color.WhiteSmoke;
-                btnDrawer_22.BackColor = Color.WhiteSmoke;
-                btnDrawer_23.BackColor = Color.WhiteSmoke;
-                btnDrawer_24.BackColor = Color.WhiteSmoke;
-
-                switch (number)
-                {
-                    case "1": btnDrawer_1.BackColor = color; break;
-                    case "2": btnDrawer_2.BackColor = color; break;
-                    case "3": btnDrawer_3.BackColor = color; break;
-                    case "4": btnDrawer_4.BackColor = color; break;
-                    case "5": btnDrawer_5.BackColor = color; break;
-                    case "6": btnDrawer_6.BackColor = color; break;
-                    case "7": btnDrawer_7.BackColor = color; break;
-                    case "8": btnDrawer_8.BackColor = color; break;
-                    case "9": btnDrawer_9.BackColor = color; break;
-                    case "10": btnDrawer_10.BackColor = color; break;
-                    case "11": btnDrawer_11.BackColor = color; break;
-                    case "12": btnDrawer_12.BackColor = color; break;
-                    case "13": btnDrawer_13.BackColor = color; break;
-                    case "14": btnDrawer_14.BackColor = color; break;
-                    case "15": btnDrawer_15.BackColor = color; break;
-                    case "16": btnDrawer_16.BackColor = color; break;
-                    case "17": btnDrawer_17.BackColor = color; break;
-                    case "18": btnDrawer_18.BackColor = color; break;
-                    case "19": btnDrawer_19.BackColor = color; break;
-                    case "20": btnDrawer_20.BackColor = color; break;
-                    case "21": btnDrawer_21.BackColor = color; break;
-                    case "22": btnDrawer_22.BackColor = color; break;
-                    case "23": btnDrawer_23.BackColor = color; break;
-                    case "24": btnDrawer_24.BackColor = color; break;
-                }
-            }
-            else if (action == REGISTER)
-            {
-                Selected_Drawer = number;
-
-                switch (number)
-                {
-                    case "1": btnSelected_Drawer_1.BackColor = color; break;
-                    case "2": btnSelected_Drawer_2.BackColor = color; break;
-                    case "3": btnSelected_Drawer_3.BackColor = color; break;
-                    case "4": btnSelected_Drawer_4.BackColor = color; break;
-                    case "5": btnSelected_Drawer_5.BackColor = color; break;
-                    case "6": btnSelected_Drawer_6.BackColor = color; break;
-                    case "7": btnSelected_Drawer_7.BackColor = color; break;
-                    case "8": btnSelected_Drawer_8.BackColor = color; break;
-                    case "9": btnSelected_Drawer_9.BackColor = color; break;
-                    case "10": btnSelected_Drawer_10.BackColor = color; break;
-                    case "11": btnSelected_Drawer_11.BackColor = color; break;
-                    case "12": btnSelected_Drawer_12.BackColor = color; break;
-                    case "13": btnSelected_Drawer_13.BackColor = color; break;
-                    case "14": btnSelected_Drawer_14.BackColor = color; break;
-                    case "15": btnSelected_Drawer_15.BackColor = color; break;
-                    case "16": btnSelected_Drawer_16.BackColor = color; break;
-                    case "17": btnSelected_Drawer_17.BackColor = color; break;
-                    case "18": btnSelected_Drawer_18.BackColor = color; break;
-                    case "19": btnSelected_Drawer_19.BackColor = color; break;
-                    case "20": btnSelected_Drawer_20.BackColor = color; break;
-                    case "21": btnSelected_Drawer_21.BackColor = color; break;
-                    case "22": btnSelected_Drawer_22.BackColor = color; break;
-                    case "23": btnSelected_Drawer_23.BackColor = color; break;
-                    case "24": btnSelected_Drawer_24.BackColor = color; break;
-                }
-            }
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
@@ -369,7 +266,17 @@ namespace PartsHunter
 
         private void Form1_Load(object sender, EventArgs e)
         {
-           
+            wifi = new Wifi();
+
+            aps = wifi.GetAccessPoints();
+            int milliseconds = 1000;
+            Thread.Sleep(milliseconds);
+
+            foreach (AccessPoint ap in aps)
+            {
+                comboBoxSSID.Items.Add(ap.Name.ToString());
+            }
+
             LoadData();
             dataGridViewResults.Columns[0].Width = 280;
             dataGridViewRegisteredParts.Columns[0].Width = 470;
@@ -432,15 +339,13 @@ namespace PartsHunter
             comboBoxCategory.Text = comboBoxCategory.Items[0].ToString();
         }
 
-        void Push_New_Component(string category, string description, string quantity, string box, string drawer)
+        void Push_New_Component(string category, string description, string drawer)
         {
             try
             {
                 var todo = new
                 {
-                    Description = description,
-                    Quantity = quantity,
-                    Box = box,
+                    Description = description,                  
                     Drawer = drawer
                 };
 
@@ -483,7 +388,7 @@ namespace PartsHunter
 
                     foreach (DataGridViewRow row in dataGridViewResults.Rows)
                     {
-                        newRow = new string[] { JSON_Firebase[key]["Description"], JSON_Firebase[key]["Quantity"], JSON_Firebase[key]["Box"], JSON_Firebase[key]["Drawer"] };
+                        newRow = new string[] { JSON_Firebase[key]["Description"], JSON_Firebase[key]["Drawer"] };
 
                         if (row.Cells[0].Value != JSON_Firebase[key]["Description"])
                         {
@@ -495,8 +400,8 @@ namespace PartsHunter
                 else
                 {
                     Send_UART("-1");
-                    Highlight_Selected_Drawer("0", SEARCH, Color.WhiteSmoke);
-                    Highlight_Selected_Drawer("0", REGISTER, Color.WhiteSmoke);
+                    //Highlight_Selected_Drawer("0", SEARCH, Color.WhiteSmoke);
+                    //Highlight_Selected_Drawer("0", REGISTER, Color.WhiteSmoke);
                     labelNumberResults.Text = "0" + " results found";
                 }
             }
@@ -535,7 +440,7 @@ namespace PartsHunter
                             {
                                 foreach (DataGridViewRow row in dataGridViewResults.Rows)
                                 {
-                                    newRow = new string[] { JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Quantity"], JSON_Firebase[key][key2]["Box"], JSON_Firebase[key][key2]["Drawer"] };
+                                    newRow = new string[] { JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Drawer"] };
 
                                     if (row.Cells[0].Value != JSON_Firebase[key][key2]["Description"])
                                     {
@@ -555,8 +460,8 @@ namespace PartsHunter
                 else
                 {
                     Send_UART("-1");
-                    Highlight_Selected_Drawer("0", SEARCH, Color.WhiteSmoke);
-                    Highlight_Selected_Drawer("0", REGISTER, Color.WhiteSmoke);
+                    //Highlight_Selected_Drawer("0", SEARCH, Color.WhiteSmoke);
+                    //ighlight_Selected_Drawer("0", REGISTER, Color.WhiteSmoke);
                     labelNumberResults.Text = "0" + " results found";
                 }
             }
@@ -600,19 +505,22 @@ namespace PartsHunter
             {
                 int x = dataGridViewResults.SelectedCells[0].RowIndex;
 
-                var box = dataGridViewResults[2, x].Value.ToString();
-                var drawer = dataGridViewResults[3, x].Value.ToString();
+         
+                var drawer = dataGridViewResults[1, x].Value.ToString();
 
-                string UART_command = box + ',' + drawer + ',' + LED_Highlight_Color.R + ',' + LED_Highlight_Color.G + ',' + LED_Highlight_Color.B + ',' + LED_Highlight_Brightness + ',' + LED_Highlight_Time + '\n';
+                string UART_command = drawer + ',' + LED_Highlight_Color.R + ',' + LED_Highlight_Color.G + ',' + LED_Highlight_Color.B + ',' + LED_Highlight_Brightness + ',' + LED_Highlight_Time + '\n';
 
-                if (Send_UART(UART_command))
-                    Highlight_Selected_Drawer(drawer.ToString(), tabControl1.SelectedIndex, Color.LemonChiffon);
+
+                Send_UART(UART_command);
+                //if ()
+                //Highlight_Selected_Drawer(drawer.ToString(), tabControl1.SelectedIndex, Color.LemonChiffon);
             }
             catch
             {
 
             }
         }
+
 
         private void dataGridViewResults_SelectionChanged(object sender, EventArgs e)
         {
@@ -649,10 +557,11 @@ namespace PartsHunter
                 string stringJson = String_UART.Substring(String_UART.IndexOf("{"), 50);
                 stringJson = stringJson.Substring(0, stringJson.IndexOf("}") + 1);
                 JSON_UART = serializer.DeserializeObject(stringJson);
-                s = JSON_UART["Number Boxes"];
+                //s = JSON_UART["Number Boxes"];
 
-                if (int.Parse(s) > 0)
-                {
+                //if (int.Parse(s) > 0)
+                //{ 
+/*
                     Number_Boxes = int.Parse(s);
                     Send_UART("OK\r\n");
                     Send_UART("OK\r\n");
@@ -661,12 +570,13 @@ namespace PartsHunter
                     Send_UART("OK\r\n");
                     Send_UART("OK\r\n");
                     Get_Number_Boxes_Okay = true;
-                }
-                else
-                {
-                    if (Get_Number_Boxes_Okay == false)
-                        Get_Number_Registered_Box();
-                }
+                */
+                //}
+                //else
+                //{
+                  //  if (Get_Number_Boxes_Okay == false)
+                    //    Get_Number_Registered_Box();
+                //}
             }
             catch
             {
@@ -675,10 +585,12 @@ namespace PartsHunter
 
         }
 
+        /*
         void Get_Number_Registered_Box()
         {
             Send_UART("BOX?\r\n");
         }
+        */
 
         void FindRegisteredComponent(string input)
         {
@@ -707,7 +619,7 @@ namespace PartsHunter
                             {
                                 foreach (DataGridViewRow row in dataGridViewRegisteredParts.Rows)
                                 {
-                                    newRow = new string[] { JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Box"], JSON_Firebase[key][key2]["Drawer"] };
+                                    newRow = new string[] { JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Drawer"] };
 
                                     if (row.Cells[0].Value != JSON_Firebase[key][key2]["Description"])
                                     {
@@ -727,8 +639,8 @@ namespace PartsHunter
                 else
                 {
                     Send_UART("-1");
-                    Highlight_Selected_Drawer("0", SEARCH, Color.WhiteSmoke);
-                    Highlight_Selected_Drawer("0", REGISTER, Color.WhiteSmoke);
+                    //Highlight_Selected_Drawer("0", SEARCH, Color.WhiteSmoke);
+                    //Highlight_Selected_Drawer("0", REGISTER, Color.WhiteSmoke);
                     labelNumberResults2.Text = "0" + " results found";
                 }
             }
@@ -749,12 +661,12 @@ namespace PartsHunter
             {
                 //firstClick = true;
 
-                if (Last_Button_Properties[0] != (sender as Button).Text && Last_Button_Properties[0] != String.Empty)
-                    Highlight_Selected_Drawer(Last_Button_Properties[0], tabControl1.SelectedIndex, Last_Button_Properties[1]);
+                //if (Last_Button_Properties[0] != (sender as Button).Text && Last_Button_Properties[0] != String.Empty)
+                 //   Highlight_Selected_Drawer(Last_Button_Properties[0], tabControl1.SelectedIndex, Last_Button_Properties[1]);
 
                 Last_Button_Properties[1] = (sender as Button).BackColor;
 
-                Highlight_Selected_Drawer((sender as Button).Text, tabControl1.SelectedIndex, Color.LightGreen);
+                //Highlight_Selected_Drawer((sender as Button).Text, tabControl1.SelectedIndex, Color.LightGreen);
 
                 Last_Button_Properties[0] = (sender as Button).Text;
 
@@ -768,14 +680,15 @@ namespace PartsHunter
             labelNumberResults2.Visible = false;
             groupBoxCurrentLocation.Visible = false;
             string[] newRow;
-            int newBox = dataGridViewBoxes.RowCount;
+           // int newBox = dataGridViewBoxes.RowCount;
             int index = 0;
             bool get_small = false;
             comboBoxCategory.Text = comboBoxCategory.Items[0].ToString();
-            dataGridViewBoxes.AllowUserToAddRows = true;            
+         //   dataGridViewBoxes.AllowUserToAddRows = true;            
                         
             //Checks the smallest non-existent box's number
-            for (int i = 0; i < newBox; i++)
+        /*
+         * for (int i = 0; i < newBox; i++)
             {
                 int box = int.Parse(dataGridViewBoxes.Rows[i].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1));
 
@@ -786,7 +699,10 @@ namespace PartsHunter
                     break;
                 }
             }
+            */
 
+
+            /*
             if (get_small == false)
                 newBox += 1;
 
@@ -806,22 +722,26 @@ namespace PartsHunter
             
             dataGridViewBoxes.Sort(dataGridViewBoxes.Columns[0], ListSortDirection.Ascending);
             dataGridViewBoxes.Rows[index].Selected = true;
-
+            */
             //Current_Selected_Box = index;
 
+
+            /*
             Current_Selected_Box = dataGridViewBoxes.Rows[index].Cells[0].Value.ToString();            
             Current_Selected_Box = int.Parse(Current_Selected_Box.Substring(Current_Selected_Box.IndexOf(" ") + 1)).ToString();
-            
+            */
 
             Manually_Manipulating_Datagrid = false;
-
+            /*
             if (Fill_Parts_Datagrid() == 0)
                 Clear_Highlight_All_Boxes(CLEAR_ALL);
             else
                 Clear_Highlight_All_Boxes(CLEAR_KEEPING_FILLED_DRAWERS);
-
+            */
+            /*
             if(dataGridViewBoxes.RowCount>1)
                 Highlight_Drawer_From_Box_Selection();
+            */
         }
 
         private void comboBoxCategory_Validating(object sender, System.ComponentModel.CancelEventArgs e)
@@ -856,16 +776,16 @@ namespace PartsHunter
 
         private void textBoxQuantity_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(textBoxQuantity.Text))
+            if (string.IsNullOrWhiteSpace(textBoxDrawer.Text))
             {
-                validatedQuantity = false;
-                errorProvider1.SetError(textBoxQuantity, "should not be left blank!");
+                validatedDrawer = false;
+                errorProvider1.SetError(textBoxDrawer, "should not be left blank!");
             }
             else
             {
                 e.Cancel = false;
-                validatedQuantity = true;
-                errorProvider1.SetError(textBoxQuantity, "");
+                validatedDrawer = true;
+                errorProvider1.SetError(textBoxDrawer, "");
             }
         }
 
@@ -875,13 +795,13 @@ namespace PartsHunter
 
             comboBoxCategory.Text = comboBoxCategory.Items[0].ToString();
             textBoxDescription.Text = string.Empty;
-            textBoxQuantity.Text = string.Empty;     
+            textBoxDrawer.Text = string.Empty;     
             
             GetFirebase(String.Empty);
          
             Fill_All_Fields_With_Firebase_Data();
             
-            Set_BackColor_to_Button(lastDrawer, Color.Linen);
+            //Set_BackColor_to_Button(lastDrawer, Color.Linen);
 
             //Highlight_Selected_Drawer(lastDrawer, REGISTER, Color.Linen);
             //Last_Draw_Highlight = lastDrawer;
@@ -902,8 +822,8 @@ namespace PartsHunter
             string[] newRow;
             string value = string.Empty;
 
-            dataGridViewBoxes.Rows.Clear();
-            dataGridViewBoxes.AllowUserToAddRows = true;
+           // dataGridViewBoxes.Rows.Clear();
+            //dataGridViewBoxes.AllowUserToAddRows = true;
 
             foreach (var key in JSON_Firebase.Keys)
             {
@@ -911,6 +831,7 @@ namespace PartsHunter
                 {
                     foreach (var key2 in JSON_Firebase[key].Keys)
                     {
+                        /*
                         if (int.Parse(JSON_Firebase[key][key2]["Box"]) <= 9)
                             value = "0" + JSON_Firebase[key][key2]["Box"];
                         else
@@ -919,7 +840,10 @@ namespace PartsHunter
                         newRow = new string[] { "BOX " + value };
 
                         int totalRows = 0;
+                        */
                         int rowCheck = 0;
+
+                        /*
                         foreach (DataGridViewRow existingRow in dataGridViewBoxes.Rows)
                         {
                             if (dataGridViewBoxes.Rows.Count > 1)
@@ -942,12 +866,13 @@ namespace PartsHunter
                         }
                         if ((totalRows == rowCheck) && (totalRows != 0))
                             dataGridViewBoxes.Rows.Add(newRow);
+                        */
                     }
                 }
             }
 
-            dataGridViewBoxes.Sort(dataGridViewBoxes.Columns[0], ListSortDirection.Ascending);
-            dataGridViewBoxes.AllowUserToAddRows = false;
+            //dataGridViewBoxes.Sort(dataGridViewBoxes.Columns[0], ListSortDirection.Ascending);
+            //dataGridViewBoxes.AllowUserToAddRows = false;
         }
         
         int Fill_Parts_Datagrid()
@@ -965,14 +890,15 @@ namespace PartsHunter
                 {
                     foreach (var key2 in JSON_Firebase[key].Keys)
                     {
-                        if (JSON_Firebase[key][key2]["Box"] == Current_Selected_Box)
-                        {                            
-                            newRow = new string[] { JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Quantity"], JSON_Firebase[key][key2]["Drawer"] };
+
+                        //var category = JSON_Firebase[key][];
+
+                            newRow = new string[] { key, JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Drawer"] };
                          
                             dataGridViewCurrentParts.Rows.Add(newRow);
 
                             results++;
-                        }
+
                     }
                 }
             }
@@ -992,6 +918,7 @@ namespace PartsHunter
                     {
                         switch (JSON_Firebase[key][key2]["Drawer"])
                         {
+                            /*
                             case "1":  if (btnSelected_Drawer_1.BackColor  != Color.LemonChiffon) btnSelected_Drawer_1.BackColor  = Color.Linen; break;
                             case "2":  if (btnSelected_Drawer_2.BackColor  != Color.LemonChiffon) btnSelected_Drawer_2.BackColor  = Color.Linen; break;
                             case "3":  if (btnSelected_Drawer_3.BackColor  != Color.LemonChiffon) btnSelected_Drawer_3.BackColor  = Color.Linen; break;
@@ -1016,6 +943,7 @@ namespace PartsHunter
                             case "22": if (btnSelected_Drawer_22.BackColor != Color.LemonChiffon) btnSelected_Drawer_22.BackColor = Color.Linen; break;
                             case "23": if (btnSelected_Drawer_23.BackColor != Color.LemonChiffon) btnSelected_Drawer_23.BackColor = Color.Linen; break;
                             case "24": if (btnSelected_Drawer_24.BackColor != Color.LemonChiffon) btnSelected_Drawer_24.BackColor = Color.Linen; break;
+                                */
                         }
 
                     }
@@ -1025,80 +953,30 @@ namespace PartsHunter
        
         void Highlight_Drawer_From_Parts_Selection()
         {
-            string Current_Selected_Component = String.Empty;
 
-            if (dataGridViewCurrentParts.SelectedCells.Count > 0)
-            {
-                Current_Selected_Component = dataGridViewCurrentParts.SelectedCells[0].Value.ToString();
-
-                try
-                {
-                    if (Last_Selected_Registered_Box != dataGridViewBoxes.SelectedRows[0].Index)
-                        Last_Draw_Highlight = String.Empty;
-                }
-                catch
-                {
-
-                }
-            }
-
-            foreach (var key in JSON_Firebase.Keys)
-            {
-                if (key != "void")
-                {
-                    foreach (var key2 in JSON_Firebase[key].Keys)
-                    {
-                        if (JSON_Firebase[key][key2]["Description"] == Current_Selected_Component)
-                        {
-                            Current_Category = key;
-                            
-                            switch (Last_Draw_Highlight)
-                            {
-                                case "1": btnSelected_Drawer_1.BackColor = Color.Linen; break;
-                                case "2": btnSelected_Drawer_2.BackColor = Color.Linen; break;
-                                case "3": btnSelected_Drawer_3.BackColor = Color.Linen; break;
-                                case "4": btnSelected_Drawer_4.BackColor = Color.Linen; break;
-                                case "5": btnSelected_Drawer_5.BackColor = Color.Linen; break;
-                                case "6": btnSelected_Drawer_6.BackColor = Color.Linen; break;
-                                case "7": btnSelected_Drawer_7.BackColor = Color.Linen; break;
-                                case "8": btnSelected_Drawer_8.BackColor = Color.Linen; break;
-                                case "9": btnSelected_Drawer_9.BackColor = Color.Linen; break;
-                                case "10": btnSelected_Drawer_10.BackColor = Color.Linen; break;
-                                case "11": btnSelected_Drawer_11.BackColor = Color.Linen; break;
-                                case "12": btnSelected_Drawer_12.BackColor = Color.Linen; break;
-                                case "13": btnSelected_Drawer_13.BackColor = Color.Linen; break;
-                                case "14": btnSelected_Drawer_14.BackColor = Color.Linen; break;
-                                case "15": btnSelected_Drawer_15.BackColor = Color.Linen; break;
-                                case "16": btnSelected_Drawer_16.BackColor = Color.Linen; break;
-                                case "17": btnSelected_Drawer_17.BackColor = Color.Linen; break;
-                                case "18": btnSelected_Drawer_18.BackColor = Color.Linen; break;
-                                case "19": btnSelected_Drawer_19.BackColor = Color.Linen; break;
-                                case "20": btnSelected_Drawer_20.BackColor = Color.Linen; break;
-                                case "21": btnSelected_Drawer_21.BackColor = Color.Linen; break;
-                                case "22": btnSelected_Drawer_22.BackColor = Color.Linen; break;
-                                case "23": btnSelected_Drawer_23.BackColor = Color.Linen; break;
-                                case "24": btnSelected_Drawer_24.BackColor = Color.Linen; break;
-                            }                           
-
-                            var test = JSON_Firebase[key][key2]["Drawer"];
-
-                            Highlight_Selected_Drawer(JSON_Firebase[key][key2]["Drawer"], REGISTER, Color.LemonChiffon);
-                            Last_Draw_Highlight = JSON_Firebase[key][key2]["Drawer"];
-                        }
-                    }
-                }
-            }
-            
             try
             {
-                Last_Selected_Registered_Box = dataGridViewBoxes.SelectedRows[0].Index;
+                int x = dataGridViewCurrentParts.SelectedCells[0].RowIndex;
+
+
+                var drawer = dataGridViewCurrentParts[2, x].Value.ToString();
+
+                string UART_command = drawer + ',' + LED_Highlight_Color.R + ',' + LED_Highlight_Color.G + ',' + LED_Highlight_Color.B + ',' + LED_Highlight_Brightness + ',' + LED_Highlight_Time + '\n';
+
+
+                Send_UART(UART_command);
+                //if ()
+                //Highlight_Selected_Drawer(drawer.ToString(), tabControl1.SelectedIndex, Color.LemonChiffon);
             }
             catch
             {
 
             }
+
+
         }     
         
+        /*
         void Clear_Highlight_All_Boxes(int clear_level)
         {
             switch (clear_level)
@@ -1159,7 +1037,10 @@ namespace PartsHunter
             }
 
         }
-       
+       */
+        
+        
+        /*
         private void dataGridViewBoxes_SelectionChanged(object sender, EventArgs e)
         {
             string y = string.Empty;
@@ -1192,7 +1073,8 @@ namespace PartsHunter
             }
             else
                 return;
-        }     
+        }  
+        */
 
         private void dataGridViewCurrentParts_SelectionChanged(object sender, EventArgs e)
         {
@@ -1218,34 +1100,26 @@ namespace PartsHunter
 
         void Show_Location_Registered_Part(int clickIndex) {
             int clicked_index = clickIndex;
-            int box_index = 0;
+            
             int drawer_index = 0;
-            int box_number = int.Parse(dataGridViewRegisteredParts.Rows[clicked_index].Cells[1].Value.ToString());
-            string box = string.Empty;
-            string drawer = dataGridViewRegisteredParts.Rows[clicked_index].Cells[2].Value.ToString();
+            
+            string drawer = dataGridViewRegisteredParts.Rows[clicked_index].Cells[1].Value.ToString();
 
-            if (box_number <= 9)
-                box = "BOX 0" + box_number;
-            else
-                box = "BOX " + box_number;
-
-            foreach (DataGridViewRow rowBox in dataGridViewBoxes.Rows)
+            try
             {
-                if ((rowBox.Cells[0].Value.ToString() == box))
-                {
-                    box_index = rowBox.Index;
-                    break;
-                }
+                string UART_command = drawer + ',' + LED_Highlight_Color.R + ',' + LED_Highlight_Color.G + ',' + LED_Highlight_Color.B + ',' + LED_Highlight_Brightness + ',' + LED_Highlight_Time + '\n';
+                Send_UART(UART_command);
+                int milliseconds = 1000;
+                Thread.Sleep(milliseconds);
+                
+            }
+            catch
+            {
+
             }
 
-            dataGridViewBoxes.Rows[box_index].Selected = true;
 
-            Current_Selected_Box = box_index.ToString();
-
-            Current_Selected_Box = dataGridViewBoxes.Rows[box_index].Cells[0].Value.ToString();
-            Current_Selected_Box = int.Parse(Current_Selected_Box.Substring(Current_Selected_Box.IndexOf(" ") + 1)).ToString();
-
-            Fill_Parts_Datagrid();
+           // Fill_Parts_Datagrid();
 
             foreach (DataGridViewRow rowDrawer in dataGridViewCurrentParts.Rows)
             {
@@ -1258,87 +1132,21 @@ namespace PartsHunter
 
             dataGridViewCurrentParts.Rows[drawer_index].Selected = true;
 
-            Highlight_Drawer_From_Parts_Selection();
+            //Highlight_Drawer_From_Parts_Selection();
 
+            /*
             if (Last_Button_Properties[0] != drawer && Last_Button_Properties[0] != String.Empty)
                 Highlight_Selected_Drawer(Last_Button_Properties[0], tabControl1.SelectedIndex, Last_Button_Properties[1]);
+            */
+          //  Last_Button_Properties[1] = Get_BackColor_From_Button(drawer);
 
-            Last_Button_Properties[1] = Get_BackColor_From_Button(drawer);
-
-            Highlight_Selected_Drawer(drawer, tabControl1.SelectedIndex, Color.LightGreen);
+           // Highlight_Selected_Drawer(drawer, tabControl1.SelectedIndex, Color.LightGreen);
 
             Last_Button_Properties[0] = drawer;
 
             groupBoxCurrentLocation.Visible = false;
 
             textBoxDescription.Text = dataGridViewRegisteredParts.Rows[clicked_index].Cells[0].Value.ToString();
-        }
-
-        void Set_BackColor_to_Button(string drawer, Color color)
-        {
-            switch (drawer)
-            {
-                case "1": btnSelected_Drawer_1.BackColor = color; break;
-                case "2": btnSelected_Drawer_2.BackColor = color; break;
-                case "3": btnSelected_Drawer_3.BackColor = color; break;
-                case "4": btnSelected_Drawer_4.BackColor = color; break;
-                case "5": btnSelected_Drawer_5.BackColor = color; break;
-                case "6": btnSelected_Drawer_6.BackColor = color; break;
-                case "7": btnSelected_Drawer_7.BackColor = color; break;
-                case "8": btnSelected_Drawer_8.BackColor = color; break;
-                case "9": btnSelected_Drawer_9.BackColor = color; break;
-                case "10": btnSelected_Drawer_10.BackColor = color; break;
-                case "11": btnSelected_Drawer_11.BackColor = color; break;
-                case "12": btnSelected_Drawer_12.BackColor = color; break;
-                case "13": btnSelected_Drawer_13.BackColor = color; break;
-                case "14": btnSelected_Drawer_14.BackColor = color; break;
-                case "15": btnSelected_Drawer_15.BackColor = color; break;
-                case "16": btnSelected_Drawer_16.BackColor = color; break;
-                case "17": btnSelected_Drawer_17.BackColor = color; break;
-                case "18": btnSelected_Drawer_18.BackColor = color; break;
-                case "19": btnSelected_Drawer_19.BackColor = color; break;
-                case "20": btnSelected_Drawer_20.BackColor = color; break;
-                case "21": btnSelected_Drawer_21.BackColor = color; break;
-                case "22": btnSelected_Drawer_22.BackColor = color; break;
-                case "23": btnSelected_Drawer_23.BackColor = color; break;
-                case "24": btnSelected_Drawer_24.BackColor = color; break;
-            }
-        }
-
-        Color Get_BackColor_From_Button(string button_name)
-        {
-            Color colorName = Color.Transparent;
-
-            switch (button_name) {
-                case "1": colorName = btnSelected_Drawer_1.BackColor; break;
-                case "2": colorName = btnSelected_Drawer_2.BackColor; break;
-                case "3": colorName = btnSelected_Drawer_3.BackColor; break;
-                case "4": colorName = btnSelected_Drawer_4.BackColor; break;
-                case "5": colorName = btnSelected_Drawer_5.BackColor; break;
-                case "6": colorName = btnSelected_Drawer_6.BackColor; break;
-                case "7": colorName = btnSelected_Drawer_7.BackColor; break;
-                case "8": colorName = btnSelected_Drawer_8.BackColor; break;
-                case "9": colorName = btnSelected_Drawer_9.BackColor; break;
-                case "10": colorName = btnSelected_Drawer_10.BackColor; break;
-                case "11": colorName = btnSelected_Drawer_11.BackColor; break;
-                case "12": colorName = btnSelected_Drawer_12.BackColor; break;
-                case "13": colorName = btnSelected_Drawer_13.BackColor; break;
-                case "14": colorName = btnSelected_Drawer_14.BackColor; break;
-                case "15": colorName = btnSelected_Drawer_15.BackColor; break;
-                case "16": colorName = btnSelected_Drawer_16.BackColor; break;
-                case "17": colorName = btnSelected_Drawer_17.BackColor; break;
-                case "18": colorName = btnSelected_Drawer_18.BackColor; break;
-                case "19": colorName = btnSelected_Drawer_19.BackColor; break;
-                case "20": colorName = btnSelected_Drawer_20.BackColor; break;
-                case "21": colorName = btnSelected_Drawer_21.BackColor; break;
-                case "22": colorName = btnSelected_Drawer_22.BackColor; break;
-                case "23": colorName = btnSelected_Drawer_23.BackColor; break;
-                case "24": colorName = btnSelected_Drawer_24.BackColor; break;
-
-
-            }
-
-            return colorName;
         }
 
         private void textBoxDescription_KeyDown(object sender, KeyEventArgs e)
@@ -1355,22 +1163,14 @@ namespace PartsHunter
         {
             groupBoxCurrentLocation.Visible = false;
             labelNumberResults2.Visible = false;
-            if (validatedCategory && validatedDescription && validatedQuantity)
-            {
-                if (!string.IsNullOrWhiteSpace(Last_Button_Properties[0].ToString()))
-                {
+
+            if (validatedCategory && validatedDescription && validatedDrawer)
+            {                
                     string category = comboBoxCategory.Text;
-                    string description = textBoxDescription.Text;
-                    string quantity = textBoxQuantity.Text;
-                    string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
-                    string drawer = Last_Button_Properties[0].ToString();
-
-                    Push_New_Component(category, description, quantity, box, drawer);
-
-                    ReLoad_Fields();
-                }
-                else
-                    MessageBox.Show("Select a drawer!");
+                    string description = textBoxDescription.Text;                  
+                    string drawer = textBoxDrawer.Text;
+                    Push_New_Component(category, description, drawer);
+                ReLoad_Fields();                
             }
             else
                 MessageBox.Show("Fill all fields!");
@@ -1514,51 +1314,50 @@ namespace PartsHunter
         private void buttonEdit_Click(object sender, EventArgs e)
         {
             string category = string.Empty;
-            string box = string.Empty;
+           // string box = string.Empty;
             string drawer = string.Empty;
             string description = string.Empty;
-            string qty = string.Empty;
+            //string qty = string.Empty;
 
             try
             {
                 labelNumberResults2.Visible = false;
-                 category = Current_Category;
 
-                 box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
 
-                 drawer = "";
+                category = "";
+                if (dataGridViewCurrentParts.SelectedCells.Count > 0)
+                    category = dataGridViewCurrentParts.SelectedCells[0].Value.ToString();
+
+                drawer = "";
                 if (dataGridViewCurrentParts.SelectedCells.Count > 0)
                     drawer = dataGridViewCurrentParts.SelectedCells[2].Value.ToString();
 
                  description = "";
                 if (dataGridViewCurrentParts.SelectedCells.Count > 0)
-                    description = dataGridViewCurrentParts.SelectedCells[0].Value.ToString();
+                    description = dataGridViewCurrentParts.SelectedCells[1].Value.ToString();
 
-                 qty = "";
-                if (dataGridViewCurrentParts.SelectedCells.Count > 0)
-                    qty = dataGridViewCurrentParts.SelectedCells[1].Value.ToString();
+       
 
                 
 
-                //Form2 f2 = new Form2(category, box, drawer, description, qty);
-                Form2 f2 = new Form2(category, box, drawer, description, qty);
+                Form2 f2 = new Form2(category, drawer, description);
+                //Form2 f2 = new Form2( drawer, description);
                 var result = f2.ShowDialog();
 
                 if (result == DialogResult.OK)
                 {
-                    string _category = f2.category;
-                    string _box = f2.box;
+                    string _category = f2.category;                    
                     string _drawer = f2.drawer;
                     string _description = f2.description;
-                    string _qty = f2.quantity;
+                   
 
-                    if(category != _category || box != _box || drawer != _drawer)
+                    if(category != _category || drawer != _drawer)
                     {
-                        Delete_Firebase(box, drawer);
-                        Push_New_Component(_category, _description, _qty, _box, _drawer);
+                        Delete_Firebase( drawer);
+                        Push_New_Component(_category, _description, _drawer);
                     }
                     else
-                        Update_Firebase(_box, _drawer, _description, _qty);
+                        Update_Firebase(_drawer, _description);
                     
                     ReLoad_Fields();
                 }
@@ -1570,15 +1369,13 @@ namespace PartsHunter
         }
 
 
-        void Update_Firebase(string box, string drawer, string description, string quantity)
+        void Update_Firebase(string drawer, string description )
         {
-            string address = Get_Firebase_Address(box, drawer);
+            string address = Get_Firebase_Address(drawer);
 
             var todo = new
             {
-                Description = description,
-                Quantity = quantity,
-                Box = box,
+                Description = description,              
                 Drawer = drawer
             };
 
@@ -1594,20 +1391,21 @@ namespace PartsHunter
             try
             {
                 labelNumberResults2.Visible = false;
-                string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
+               // string box = int.Parse(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().Substring(dataGridViewBoxes.Rows[dataGridViewBoxes.SelectedCells[0].RowIndex].Cells[0].Value.ToString().IndexOf(" ") + 1)).ToString();
 
                 string drawer = "";
                 if (dataGridViewCurrentParts.SelectedCells.Count > 0)
                     drawer = dataGridViewCurrentParts.SelectedCells[2].Value.ToString();
 
-                Delete_Firebase(box, drawer);
+                Delete_Firebase(drawer);
                 ReLoad_Fields();
-
+                /*
                 if (dataGridViewBoxes.RowCount == 0)
                 {
                     Clear_Highlight_All_Boxes(CLEAR_ALL);
                     Last_Button_Properties[1] = Color.WhiteSmoke;
                 }
+                */
             }
             catch
             {
@@ -1616,7 +1414,7 @@ namespace PartsHunter
 
         }
 
-        void Delete_Firebase(string box, string drawer)
+        void Delete_Firebase( string drawer)
         {
             String todo = String.Empty;
 
@@ -1627,7 +1425,7 @@ namespace PartsHunter
                 {
                     foreach (var key2 in JSON_Firebase[key].Keys)
                     {
-                        if (JSON_Firebase[key][key2]["Box"] == box && JSON_Firebase[key][key2]["Drawer"] == drawer)
+                        if (JSON_Firebase[key][key2]["Drawer"] == drawer)
                         {
                             todo = key + "/" + key2;
                         }
@@ -1636,12 +1434,12 @@ namespace PartsHunter
             }
                        
 
-           DeleteResponse response = Client.Delete(todo);
+           var response = Client.Delete(todo);
 
            string retorno = JsonConvert.SerializeObject(response).ToString();
         }
 
-        string Get_Firebase_Address(string box, string drawer)
+        string Get_Firebase_Address(string drawer)
         {
             string r = string.Empty;
 
@@ -1651,7 +1449,7 @@ namespace PartsHunter
                 {
                     foreach (var key2 in JSON_Firebase[key].Keys)
                     {
-                        if (JSON_Firebase[key][key2]["Box"] == box && JSON_Firebase[key][key2]["Drawer"] == drawer)
+                        if (JSON_Firebase[key][key2]["Drawer"] == drawer)
                         {
                            r = key + "/" + key2;
                         }
@@ -1666,5 +1464,238 @@ namespace PartsHunter
         {
             Send_UART("-1");
         }
-    }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonSettings_Click(object sender, EventArgs e)
+        {
+            if (buttonSettings.Text == "Config Highlight")
+            {
+                groupBoxSettings.Visible = true;
+                buttonSettings.Text = "Save";
+
+            }
+            else if (buttonSettings.Text == "Save")
+            {
+                buttonSettings.Text = "Config Highlight";
+                groupBoxSettings.Visible = false;
+                SaveData();
+            }
+        }
+
+        private void buttonColor_Click_1(object sender, EventArgs e)
+        {
+            colorDialog1.AllowFullOpen = false;
+            colorDialog1.ShowHelp = true;
+            colorDialog1.Color = buttonSettings.ForeColor;
+
+
+
+
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                LED_Highlight_Color = colorDialog1.Color;
+                buttonColor.BackColor = LED_Highlight_Color;
+            }
+        }
+
+        private void trackBarTime_Scroll_1(object sender, EventArgs e)
+        {
+            LED_Highlight_Time = trackBarTime.Value;
+
+            if (trackBarTime.Value < 1000)
+            {
+                if (trackBarTime.Value < 100)
+                    labelTime.Text = "always on";
+                else
+                    labelTime.Text = trackBarTime.Value + "ms blinky";
+            }
+
+            else
+                labelTime.Text = "1s blinky";
+        }
+
+        private void trackBarBright_Scroll_1(object sender, EventArgs e)
+        {
+            LED_Highlight_Brightness = trackBarBright.Value;
+
+            int x = (trackBarBright.Value * 100) / 255;
+            labelBright.Text = x + "% brightness";
+        }
+
+        private void buttonClear_Click_1(object sender, EventArgs e)
+        {
+            Send_UART("-1");
+        }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonConnectWiFi_Click(object sender, EventArgs e)
+        {
+            if (buttonConnectWiFi.Text == "Connect")
+            {
+                string ssid = comboBoxSSID.SelectedItem.ToString();
+                AccessPoint SelectedAP;
+
+
+
+                foreach (AccessPoint ap in aps)
+                {
+                    if(ap.Name == ssid)
+                    {
+                        
+
+                        if (Connect_WiFi(ap, textBoxPassword.Text))
+                        {
+                            Send_UART("-1");
+                            buttonConnectWiFi.BackColor = Color.LightCoral;
+                            buttonConnectWiFi.Text = "Disconnect";
+                            comboBox1.Enabled = false;
+                            buttonClear.Enabled = true;
+                            TCP_Connect("192.168.1.111", 80);
+
+
+
+                            break;
+                        }
+                    }
+                }
+
+                
+            }
+            else
+            {
+                Send_UART("-1");                
+                SerialPort.Close();
+                comboBox1.Enabled = true;
+                buttonConnectWiFi.BackColor = Color.LemonChiffon;
+                buttonConnectWiFi.Text = "Connect";
+                buttonClear.Enabled = false;
+            }
+        }
+
+        private bool Connect_WiFi(AccessPoint ap, string password)
+        {
+            AuthRequest authRequest = new AuthRequest(ap)
+            {
+                Password = password
+            };
+
+            return ap.Connect(authRequest);
+        }
+
+
+        public static void TCP_Connect(string host, int port)
+        {
+            IPAddress[] IPs = Dns.GetHostAddresses(host);
+
+            Socket client  = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            Console.WriteLine("Establishing Connection to {0}", host);
+            client.Connect(IPs[0], port);
+
+            Send(client, "This is a test<EOF>");
+            Console.WriteLine("Connection established");
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Send(client, "This is a test<EOF>");
+        }
+
+
+        private static void Send(Socket client, String data)
+        {
+            try
+            {
+                // Convert the string data to byte data using ASCII encoding.  
+                byte[] byteData = Encoding.ASCII.GetBytes(data);
+
+                // Begin sending the data to the remote device.  
+                client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
+            }
+            catch
+            {
+
+            }
+        }
+
+        private static void SendCallback(IAsyncResult ar)
+        {
+            try
+            {
+                // Retrieve the socket from the state object.  
+                Socket client = (Socket)ar.AsyncState;
+
+                // Complete sending the data to the remote device.  
+                int bytesSent = client.EndSend(ar);
+                Console.WriteLine("Sent {0} bytes to server.", bytesSent);
+
+                // Signal that all bytes have been sent.  
+                sendDone.Set();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }
 }

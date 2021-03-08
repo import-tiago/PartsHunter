@@ -10,8 +10,7 @@
 
 //Application Definitions
 #define DEFAULT_LED_STRIP_BRIGHTNESS_LEVEL 150
-#define TOTAL_NUMBER_LEDS_AT_SRIP 384
-#define NUMBER_LED_Strip_PER_BOX 24
+#define TOTAL_NUMBER_LEDS_AT_SRIP 600
 #define UART_BUFFER_SIZE 30
 
 //Global Variables
@@ -72,46 +71,31 @@ void loop()
   if (number_bytes_received > 0)
   {
     UART_Buffer[number_bytes_received] = 0;
-
-    int8_t box_number = atoi(Extract_Parameter_Value(UART_Buffer, ',', 0));
-    uint8_t drawer_number = atoi(Extract_Parameter_Value(UART_Buffer, ',', 1));
-
-    uint8_t red_color = atoi(Extract_Parameter_Value(UART_Buffer, ',', 2));
-    uint8_t green_color = atoi(Extract_Parameter_Value(UART_Buffer, ',', 3));
-    uint8_t blue_color = atoi(Extract_Parameter_Value(UART_Buffer, ',', 4));
-
-    uint8_t brightness_level = atoi(Extract_Parameter_Value(UART_Buffer, ',', 5));
-    uint16_t blinky_time = atoi(Extract_Parameter_Value(UART_Buffer, ',', 6));
-
     
+    int16_t drawer_number = atoi(Extract_Parameter_Value(UART_Buffer, ',', 0));
+    uint8_t red_color = atoi(Extract_Parameter_Value(UART_Buffer, ',', 1));
+    uint8_t green_color = atoi(Extract_Parameter_Value(UART_Buffer, ',', 2));
+    uint8_t blue_color = atoi(Extract_Parameter_Value(UART_Buffer, ',', 3));
+    uint8_t brightness_level = atoi(Extract_Parameter_Value(UART_Buffer, ',', 4));
+    uint16_t blinky_time = atoi(Extract_Parameter_Value(UART_Buffer, ',', 5));   
 
-    if (box_number < 0) // Turn-off all LEDs and boxes
+    if (drawer_number < 0) // Turn-off all LEDs
     {
       red_color = 0;
       green_color = 0;
       blue_color = 0;
 
-      //DEBUG
-      //sprintf(array, "%d,%d,%d,%d,%d,%d,%d", box_number, drawer_number, red_color, green_color, blue_color, brightness_level, blinky_time);
-      //Serial.println(array);
-      //--------------------
-
       SETUP_ISR_Highlight(1, red_color, green_color, blue_color, brightness_level, blinky_time);
     }
     else if (
-        (drawer_number >= 1) && (drawer_number <= 24) &&
+        (drawer_number >= 0) && (drawer_number <= TOTAL_NUMBER_LEDS_AT_SRIP) &&
         (red_color >= 0) && (red_color <= 255) &&
         (green_color >= 0) && (green_color <= 255) &&
         (blue_color >= 0) && (blue_color <= 255) &&
         (brightness_level >= 0) && (brightness_level <= 255) &&
         (blinky_time >= 100) && (blinky_time <= 1000))
     {
-      uint16_t led_position = Get_LED_Strip_Number(box_number, drawer_number);
-      
-      //DEBUG
-      //sprintf(array, "%d,%d,%d,%d,%d,%d,%d", box_number, drawer_number, red_color, green_color, blue_color, brightness_level, blinky_time);
-      //Serial.println(array);
-      //--------------------
+      uint16_t led_position = drawer_number;
       
       SETUP_ISR_Highlight(led_position, red_color, green_color, blue_color, brightness_level, blinky_time);
     }
@@ -139,11 +123,6 @@ char *Extract_Parameter_Value(String input, char separator, int index)
   String s = input.substring(strIndex[0], strIndex[1]);
   s.toCharArray(buf, s.length() + 1);
   return (found > index) ? buf : buf2;
-}
-
-uint16_t Get_LED_Strip_Number(uint8_t box_number, uint8_t drawer_number)
-{  
-    return ((box_number * NUMBER_LED_Strip_PER_BOX) - NUMBER_LED_Strip_PER_BOX) + drawer_number - 1;
 }
 
 void SETUP_ISR_Highlight(uint16_t led_position, uint8_t red_color, uint8_t green_color, uint8_t blue_color, uint8_t brightness_level, uint16_t blinky_time)
