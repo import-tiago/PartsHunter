@@ -82,8 +82,8 @@ void setup() {
 
   timer1.attach(0.05, ISR_Highlight_Drawer);  //50 mili-seconds overflow
 
-  //WiFi_Connect(WIFI_SSID, WIFI_PASSWORD);
-  WiFi_Connect("Tiago", "tiago1234");
+  WiFi_Connect(WIFI_SSID, WIFI_PASSWORD);
+  //WiFi_Connect("Tiago", "tiago1234");
 
   Firebase_Connect(FIREBASE_HOST, API_KEY, USER_EMAIL, USER_PASSWORD);
 
@@ -242,6 +242,8 @@ String WiFi_Connect(String SSID, String Password) {
     digitalWrite(2, !digitalRead(2));
     delay(300);
   }
+  digitalWrite(2, 1);
+  
   Serial.println();
   Serial.println(WiFi.localIP());
 }
