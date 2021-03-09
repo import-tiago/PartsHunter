@@ -235,8 +235,11 @@ String WiFi_Connect(String SSID, String Password) {
 
   Serial.println("WiFi Connecting");
 
+  pinMode(2, OUTPUT);
+  
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
+    digitalWrite(2, !digitalRead(2));
     delay(300);
   }
   Serial.println();

@@ -32,6 +32,10 @@ namespace PartsHunter
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btCOMConnect = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.buttonClear = new System.Windows.Forms.Button();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
             this.labelBright = new System.Windows.Forms.Label();
@@ -47,9 +51,6 @@ namespace PartsHunter
             this.buttonSearch = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxSearch = new System.Windows.Forms.TextBox();
-            this.btCOMConnect = new System.Windows.Forms.Button();
-            this.label6 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.dataGridViewResults = new System.Windows.Forms.DataGridView();
             this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -81,15 +82,9 @@ namespace PartsHunter
             this.timerCOM = new System.Windows.Forms.Timer(this.components);
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.buttonConnectWiFi = new System.Windows.Forms.Button();
-            this.label8 = new System.Windows.Forms.Label();
-            this.comboBoxSSID = new System.Windows.Forms.ComboBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.textBoxPassword = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.groupBoxSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBright)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarTime)).BeginInit();
@@ -102,7 +97,6 @@ namespace PartsHunter
             this.groupBoxParts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCurrentParts)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
-            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -140,9 +134,53 @@ namespace PartsHunter
             this.tabPage1.Text = "Search";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.btCOMConnect);
+            this.groupBox2.Controls.Add(this.comboBox1);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Location = new System.Drawing.Point(1142, 7);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(318, 72);
+            this.groupBox2.TabIndex = 1;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Connection";
+            // 
+            // btCOMConnect
+            // 
+            this.btCOMConnect.BackColor = System.Drawing.Color.LightGreen;
+            this.btCOMConnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btCOMConnect.Location = new System.Drawing.Point(196, 22);
+            this.btCOMConnect.Margin = new System.Windows.Forms.Padding(4);
+            this.btCOMConnect.Name = "btCOMConnect";
+            this.btCOMConnect.Size = new System.Drawing.Size(107, 28);
+            this.btCOMConnect.TabIndex = 55;
+            this.btCOMConnect.Text = "Connect";
+            this.btCOMConnect.UseVisualStyleBackColor = false;
+            this.btCOMConnect.Click += new System.EventHandler(this.btConectar_Click);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(104, 24);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(84, 24);
+            this.comboBox1.TabIndex = 53;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(12, 28);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(81, 17);
+            this.label6.TabIndex = 54;
+            this.label6.Text = "Porta COM:";
+            // 
             // buttonClear
             // 
-            this.buttonClear.Enabled = false;
             this.buttonClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonClear.Location = new System.Drawing.Point(1303, 745);
             this.buttonClear.Margin = new System.Windows.Forms.Padding(4);
@@ -318,39 +356,6 @@ namespace PartsHunter
             this.textBoxSearch.Size = new System.Drawing.Size(489, 22);
             this.textBoxSearch.TabIndex = 56;
             this.textBoxSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxSearch_KeyDown);
-            // 
-            // btCOMConnect
-            // 
-            this.btCOMConnect.BackColor = System.Drawing.Color.LightGreen;
-            this.btCOMConnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btCOMConnect.Location = new System.Drawing.Point(196, 22);
-            this.btCOMConnect.Margin = new System.Windows.Forms.Padding(4);
-            this.btCOMConnect.Name = "btCOMConnect";
-            this.btCOMConnect.Size = new System.Drawing.Size(107, 28);
-            this.btCOMConnect.TabIndex = 55;
-            this.btCOMConnect.Text = "Connect";
-            this.btCOMConnect.UseVisualStyleBackColor = false;
-            this.btCOMConnect.Click += new System.EventHandler(this.btConectar_Click);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 28);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(81, 17);
-            this.label6.TabIndex = 54;
-            this.label6.Text = "Porta COM:";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(104, 24);
-            this.comboBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(84, 24);
-            this.comboBox1.TabIndex = 53;
             // 
             // groupBox6
             // 
@@ -693,86 +698,6 @@ namespace PartsHunter
             this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider1.ContainerControl = this;
             // 
-            // buttonConnectWiFi
-            // 
-            this.buttonConnectWiFi.BackColor = System.Drawing.Color.LightGreen;
-            this.buttonConnectWiFi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonConnectWiFi.Location = new System.Drawing.Point(599, 64);
-            this.buttonConnectWiFi.Margin = new System.Windows.Forms.Padding(4);
-            this.buttonConnectWiFi.Name = "buttonConnectWiFi";
-            this.buttonConnectWiFi.Size = new System.Drawing.Size(94, 28);
-            this.buttonConnectWiFi.TabIndex = 73;
-            this.buttonConnectWiFi.Text = "Connect";
-            this.buttonConnectWiFi.UseVisualStyleBackColor = false;
-            this.buttonConnectWiFi.Click += new System.EventHandler(this.buttonConnectWiFi_Click);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(49, 70);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(44, 17);
-            this.label8.TabIndex = 72;
-            this.label8.Text = "Wi-Fi:";
-            // 
-            // comboBoxSSID
-            // 
-            this.comboBoxSSID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxSSID.FormattingEnabled = true;
-            this.comboBoxSSID.Location = new System.Drawing.Point(104, 67);
-            this.comboBoxSSID.Margin = new System.Windows.Forms.Padding(4);
-            this.comboBoxSSID.Name = "comboBoxSSID";
-            this.comboBoxSSID.Size = new System.Drawing.Size(244, 24);
-            this.comboBoxSSID.TabIndex = 71;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.button1);
-            this.groupBox2.Controls.Add(this.label9);
-            this.groupBox2.Controls.Add(this.textBoxPassword);
-            this.groupBox2.Controls.Add(this.buttonConnectWiFi);
-            this.groupBox2.Controls.Add(this.label8);
-            this.groupBox2.Controls.Add(this.btCOMConnect);
-            this.groupBox2.Controls.Add(this.comboBoxSSID);
-            this.groupBox2.Controls.Add(this.comboBox1);
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Location = new System.Drawing.Point(743, 7);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(717, 110);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Connection";
-            // 
-            // textBoxPassword
-            // 
-            this.textBoxPassword.Location = new System.Drawing.Point(436, 67);
-            this.textBoxPassword.Name = "textBoxPassword";
-            this.textBoxPassword.Size = new System.Drawing.Size(156, 22);
-            this.textBoxPassword.TabIndex = 71;
-            this.textBoxPassword.Text = "Higgs1664";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(356, 70);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(73, 17);
-            this.label9.TabIndex = 74;
-            this.label9.Text = "Password:";
-            this.label9.Click += new System.EventHandler(this.label9_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(599, 21);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 75;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -790,6 +715,8 @@ namespace PartsHunter
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.groupBoxSettings.ResumeLayout(false);
             this.groupBoxSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBright)).EndInit();
@@ -805,8 +732,6 @@ namespace PartsHunter
             this.groupBoxParts.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCurrentParts)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -865,12 +790,6 @@ namespace PartsHunter
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn _Drawer;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox textBoxPassword;
-        private System.Windows.Forms.Button buttonConnectWiFi;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ComboBox comboBoxSSID;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Button button1;
     }
 }
 
