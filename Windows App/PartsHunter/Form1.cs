@@ -22,6 +22,8 @@ using SimpleWifi;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Reflection;
+using System.Deployment.Application;
 
 namespace PartsHunter
 {
@@ -126,12 +128,24 @@ namespace PartsHunter
                 Highligth_From_Results();
             }
 
+            if(tabControl1.SelectedIndex == 2)
+            {
+                if (Firebase_Database_KEY == "" && Firebase_Database_URL == "")
+                {
+                    button1.Visible = false;
+                }
+                else
+                    button1.Visible = true;
+            }
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             
             Load_Local_File_Configs();
+
+            
 
             dataGridViewSearch.Columns[0].Width = (int)(dataGridViewSearch.Width * 0.3);
             dataGridViewSearch.Columns[1].Width = (int)(dataGridViewSearch.Width * 0.6);
@@ -398,17 +412,24 @@ namespace PartsHunter
 
         void Set_Firebase_HardwareDevice(string command_setup)
         {
-            string address = "/";
-
-            var todo = new
+            try
             {
-                HardwareDevice = command_setup
-            };
+                string address = "/";
+
+                var todo = new
+                {
+                    HardwareDevice = command_setup
+                };
 
 
-            FirebaseResponse response = Client.Update(address, todo);
+                FirebaseResponse response = Client.Update(address, todo);
 
-            string retorno = JsonConvert.SerializeObject(response).ToString();
+                string retorno = JsonConvert.SerializeObject(response).ToString();
+            }
+            catch
+            {
+
+            }
         }
 
 
@@ -876,8 +897,9 @@ namespace PartsHunter
             try
             {
                 formatter.Serialize(fs, variables);
-                MessageBox.Show("Success!");
-              
+                MessageBox.Show("This will cloase, reload the application!");
+                this.Close();
+
             }
             catch (SerializationException e)
             {
