@@ -12,10 +12,10 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Web</InstallFrom>
+    <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
@@ -23,15 +23,14 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://raw.githubusercontent.com/TiagoPaulaSilva/PartsHunter/master/Windows%2520App/PartsHunter/publish/</InstallUrl>
-    <UpdateUrl>https://raw.githubusercontent.com/TiagoPaulaSilva/PartsHunter/master/Windows%2520App/PartsHunter/publish/</UpdateUrl>
+    <UpdateUrl>https://raw.githubusercontent.com/TiagoPaulaSilva/PartsHunter/tree/master/Windows%2520App/PartsHunter/publish/</UpdateUrl>
     <SupportUrl>https://github.com/TiagoPaulaSilva</SupportUrl>
     <ErrorReportUrl>https://github.com/TiagoPaulaSilva</ErrorReportUrl>
     <TargetCulture>en-US</TargetCulture>
     <ProductName>PartsHunter</ProductName>
     <PublisherName>PartsHunter</PublisherName>
     <SuiteName>Controlando Elétrons</SuiteName>
-    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationRevision>5</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
