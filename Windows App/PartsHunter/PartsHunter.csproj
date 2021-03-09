@@ -23,10 +23,15 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://raw.githubusercontent.com/TiagoPaulaSilva/PartsHunter/master/Windows%2520App/PartsHunter/publish/</InstallUrl>
-    <UpdateUrl>https://raw.githubusercontent.com/TiagoPaulaSilva/PartsHunter/master/Windows%2520App/PartsHunter/publish/</UpdateUrl>
+    <InstallUrl>https://raw.githubusercontent.com/TiagoPaulaSilva/PartsHunter/tree/master/Windows%2520App/PartsHunter/publish/</InstallUrl>
+    <UpdateUrl>https://raw.githubusercontent.com/TiagoPaulaSilva/PartsHunter/tree/master/Windows%2520App/PartsHunter/publish/</UpdateUrl>
+    <SupportUrl>https://github.com/TiagoPaulaSilva</SupportUrl>
+    <ErrorReportUrl>https://github.com/TiagoPaulaSilva</ErrorReportUrl>
+    <TargetCulture>en-US</TargetCulture>
+    <ProductName>PartsHunter</ProductName>
     <PublisherName>PartsHunter</PublisherName>
-    <ApplicationRevision>1</ApplicationRevision>
+    <SuiteName>Controlando Elétrons</SuiteName>
+    <ApplicationRevision>2</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
