@@ -32,7 +32,9 @@ namespace PartsHunter
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonClear = new System.Windows.Forms.Button();
+            this.buttonEdit = new System.Windows.Forms.Button();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
             this.labelBright = new System.Windows.Forms.Label();
             this.trackBarBright = new System.Windows.Forms.TrackBar();
@@ -49,6 +51,9 @@ namespace PartsHunter
             this.textBoxSearch = new System.Windows.Forms.TextBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.dataGridViewSearch = new System.Windows.Forms.DataGridView();
+            this._Category = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Drawer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonSave = new System.Windows.Forms.Button();
@@ -60,11 +65,13 @@ namespace PartsHunter
             this.textBoxDrawer = new System.Windows.Forms.TextBox();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this._Category = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Drawer = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.buttonDelete = new System.Windows.Forms.Button();
-            this.buttonEdit = new System.Windows.Forms.Button();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label6 = new System.Windows.Forms.Label();
+            this.buttonFirebase_Save = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBoxFirebase_Key = new System.Windows.Forms.TextBox();
+            this.textBoxFirebase_URL = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBoxSettings.SuspendLayout();
@@ -75,12 +82,14 @@ namespace PartsHunter
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(0, 15);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
@@ -113,6 +122,17 @@ namespace PartsHunter
             this.tabPage1.Text = "Search";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // buttonDelete
+            // 
+            this.buttonDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDelete.Location = new System.Drawing.Point(772, 743);
+            this.buttonDelete.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonDelete.Name = "buttonDelete";
+            this.buttonDelete.Size = new System.Drawing.Size(153, 28);
+            this.buttonDelete.TabIndex = 72;
+            this.buttonDelete.Text = "DELETE";
+            this.buttonDelete.UseVisualStyleBackColor = true;
+            // 
             // buttonClear
             // 
             this.buttonClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -124,6 +144,17 @@ namespace PartsHunter
             this.buttonClear.Text = "Clear All";
             this.buttonClear.UseVisualStyleBackColor = true;
             this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click_1);
+            // 
+            // buttonEdit
+            // 
+            this.buttonEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonEdit.Location = new System.Drawing.Point(620, 743);
+            this.buttonEdit.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonEdit.Name = "buttonEdit";
+            this.buttonEdit.Size = new System.Drawing.Size(153, 28);
+            this.buttonEdit.TabIndex = 71;
+            this.buttonEdit.Text = "EDIT";
+            this.buttonEdit.UseVisualStyleBackColor = true;
             // 
             // groupBoxSettings
             // 
@@ -326,6 +357,27 @@ namespace PartsHunter
             this.dataGridViewSearch.TabIndex = 0;
             this.dataGridViewSearch.SelectionChanged += new System.EventHandler(this.dataGridViewResults_SelectionChanged);
             // 
+            // _Category
+            // 
+            this._Category.HeaderText = "Category";
+            this._Category.MinimumWidth = 6;
+            this._Category.Name = "_Category";
+            this._Category.ReadOnly = true;
+            // 
+            // Description
+            // 
+            this.Description.HeaderText = "Description";
+            this.Description.MinimumWidth = 6;
+            this.Description.Name = "Description";
+            this.Description.ReadOnly = true;
+            // 
+            // Drawer
+            // 
+            this.Drawer.HeaderText = "Drawer";
+            this.Drawer.MinimumWidth = 6;
+            this.Drawer.Name = "Drawer";
+            this.Drawer.ReadOnly = true;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.groupBox1);
@@ -435,48 +487,82 @@ namespace PartsHunter
             this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider1.ContainerControl = this;
             // 
-            // _Category
+            // tabPage3
             // 
-            this._Category.HeaderText = "Category";
-            this._Category.MinimumWidth = 6;
-            this._Category.Name = "_Category";
-            this._Category.ReadOnly = true;
+            this.tabPage3.Controls.Add(this.button1);
+            this.tabPage3.Controls.Add(this.textBoxFirebase_URL);
+            this.tabPage3.Controls.Add(this.label6);
+            this.tabPage3.Controls.Add(this.buttonFirebase_Save);
+            this.tabPage3.Controls.Add(this.label7);
+            this.tabPage3.Controls.Add(this.textBoxFirebase_Key);
+            this.tabPage3.Location = new System.Drawing.Point(4, 25);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(947, 820);
+            this.tabPage3.TabIndex = 3;
+            this.tabPage3.Text = "Firebase Config";
+            this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // Description
+            // label6
             // 
-            this.Description.HeaderText = "Description";
-            this.Description.MinimumWidth = 6;
-            this.Description.Name = "Description";
-            this.Description.ReadOnly = true;
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(9, 24);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(105, 17);
+            this.label6.TabIndex = 70;
+            this.label6.Text = "Database URL:";
             // 
-            // Drawer
+            // buttonFirebase_Save
             // 
-            this.Drawer.HeaderText = "Drawer";
-            this.Drawer.MinimumWidth = 6;
-            this.Drawer.Name = "Drawer";
-            this.Drawer.ReadOnly = true;
+            this.buttonFirebase_Save.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.buttonFirebase_Save.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonFirebase_Save.Font = new System.Drawing.Font("Microsoft New Tai Lue", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonFirebase_Save.Location = new System.Drawing.Point(641, 86);
+            this.buttonFirebase_Save.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonFirebase_Save.Name = "buttonFirebase_Save";
+            this.buttonFirebase_Save.Size = new System.Drawing.Size(141, 28);
+            this.buttonFirebase_Save.TabIndex = 69;
+            this.buttonFirebase_Save.Text = "SAVE";
+            this.buttonFirebase_Save.UseVisualStyleBackColor = false;
+            this.buttonFirebase_Save.Click += new System.EventHandler(this.buttonFirebase_Save_Click);
             // 
-            // buttonDelete
+            // label7
             // 
-            this.buttonDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonDelete.Location = new System.Drawing.Point(772, 743);
-            this.buttonDelete.Margin = new System.Windows.Forms.Padding(4);
-            this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(153, 28);
-            this.buttonDelete.TabIndex = 72;
-            this.buttonDelete.Text = "DELETE";
-            this.buttonDelete.UseVisualStyleBackColor = true;
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(13, 59);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(101, 17);
+            this.label7.TabIndex = 68;
+            this.label7.Text = "Database Key:";
             // 
-            // buttonEdit
+            // textBoxFirebase_Key
             // 
-            this.buttonEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonEdit.Location = new System.Drawing.Point(620, 743);
-            this.buttonEdit.Margin = new System.Windows.Forms.Padding(4);
-            this.buttonEdit.Name = "buttonEdit";
-            this.buttonEdit.Size = new System.Drawing.Size(153, 28);
-            this.buttonEdit.TabIndex = 71;
-            this.buttonEdit.Text = "EDIT";
-            this.buttonEdit.UseVisualStyleBackColor = true;
+            this.textBoxFirebase_Key.Location = new System.Drawing.Point(122, 56);
+            this.textBoxFirebase_Key.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxFirebase_Key.Name = "textBoxFirebase_Key";
+            this.textBoxFirebase_Key.PasswordChar = '*';
+            this.textBoxFirebase_Key.Size = new System.Drawing.Size(660, 22);
+            this.textBoxFirebase_Key.TabIndex = 67;
+            // 
+            // textBoxFirebase_URL
+            // 
+            this.textBoxFirebase_URL.Location = new System.Drawing.Point(122, 21);
+            this.textBoxFirebase_URL.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxFirebase_URL.Name = "textBoxFirebase_URL";
+            this.textBoxFirebase_URL.Size = new System.Drawing.Size(660, 22);
+            this.textBoxFirebase_URL.TabIndex = 71;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(789, 56);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 72;
+            this.button1.Text = "Show";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_2);
             // 
             // Form1
             // 
@@ -505,6 +591,8 @@ namespace PartsHunter
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -546,6 +634,13 @@ namespace PartsHunter
         private System.Windows.Forms.DataGridViewTextBoxColumn Drawer;
         private System.Windows.Forms.Button buttonDelete;
         private System.Windows.Forms.Button buttonEdit;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TextBox textBoxFirebase_URL;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button buttonFirebase_Save;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox textBoxFirebase_Key;
+        private System.Windows.Forms.Button button1;
     }
 }
 

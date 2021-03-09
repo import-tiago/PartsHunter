@@ -26,7 +26,7 @@
     <InstallUrl>https://raw.githubusercontent.com/TiagoPaulaSilva/PartsHunter/master/Windows%2520App/PartsHunter/publish/</InstallUrl>
     <UpdateUrl>https://raw.githubusercontent.com/TiagoPaulaSilva/PartsHunter/master/Windows%2520App/PartsHunter/publish/</UpdateUrl>
     <PublisherName>PartsHunter</PublisherName>
-    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>

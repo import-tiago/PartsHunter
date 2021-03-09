@@ -50,7 +50,8 @@ namespace PartsHunter
         private int LED_Highlight_Brightness;
         private CultureInfo culture = new CultureInfo("es-ES", false);
         private string Current_Category = String.Empty;
-
+        private string Firebase_Database_URL;
+        private string Firebase_Database_KEY;
         private readonly NameValueCollection configuration = ConfigurationManager.AppSettings;
         private readonly JavaScriptSerializer serializer = new JavaScriptSerializer();
         private readonly IFirebaseConfig Config = new FirebaseConfig();
@@ -66,8 +67,10 @@ namespace PartsHunter
         {
             InitializeComponent();
 
-            Config.BasePath = configuration.Get("firebase_base");
-            Config.AuthSecret = configuration.Get("firebase_auth");
+            Load_Firebase_Secrets();
+
+            Config.BasePath = Firebase_Database_URL;
+            Config.AuthSecret = Firebase_Database_KEY;
 
             Client = new FireSharp.FirebaseClient(Config);
             if (Client == null)
@@ -127,8 +130,9 @@ namespace PartsHunter
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Load_Local_File_Configs();
             
+            Load_Local_File_Configs();
+
             dataGridViewSearch.Columns[0].Width = (int)(dataGridViewSearch.Width * 0.3);
             dataGridViewSearch.Columns[1].Width = (int)(dataGridViewSearch.Width * 0.6);
             dataGridViewSearch.Columns[2].Width = (int)(dataGridViewSearch.Width * 0.1);
@@ -136,6 +140,9 @@ namespace PartsHunter
             labelNumberResults.Visible = false;
             comboBoxCategories_SearchTab.Text = comboBoxCategories_SearchTab.Items[0].ToString();
             comboBoxCategories_RegisterTab.Text = comboBoxCategories_RegisterTab.Items[0].ToString();
+
+            textBoxFirebase_URL.Text = Firebase_Database_URL;
+            textBoxFirebase_Key.Text = Firebase_Database_KEY;
 
             Load_Firebase_Database();
             Pre_Load_Done = true;
@@ -853,7 +860,60 @@ namespace PartsHunter
             }
         }
 
+        void Save_Firebase_Secrets()
+        {
+            Hashtable variables = new Hashtable();
 
+            variables.Add("URL", textBoxFirebase_URL.Text);
+            variables.Add("KEY", textBoxFirebase_Key.Text);
+            
+
+            FileStream fs = new FileStream("Firebase_Secrets.dat", FileMode.Create);
+
+
+            BinaryFormatter formatter = new BinaryFormatter();
+
+            try
+            {
+                formatter.Serialize(fs, variables);
+                MessageBox.Show("Success!");
+              
+            }
+            catch (SerializationException e)
+            {
+                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                throw;
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
+
+        
+        void Load_Firebase_Secrets()
+        {
+            Hashtable variables = null;
+
+            FileStream fs = new FileStream("Firebase_Secrets.dat", FileMode.OpenOrCreate);
+            
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                variables = (Hashtable)formatter.Deserialize(fs);
+
+                Firebase_Database_URL = (string)variables["URL"];
+                Firebase_Database_KEY = (string)variables["KEY"];
+            }
+            catch (SerializationException e)
+            {
+
+            }
+            finally
+            {
+                fs.Close();
+            }
+        }
         void Load_Local_File_Configs()
         {
             Hashtable variables = null;
@@ -1179,6 +1239,26 @@ namespace PartsHunter
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+            }
+        }
+
+        private void buttonFirebase_Save_Click(object sender, EventArgs e)
+        {
+            Save_Firebase_Secrets();
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            if(button1.Text == "Show")
+            {
+                textBoxFirebase_Key.Text = Firebase_Database_KEY;
+                textBoxFirebase_Key.PasswordChar = '\0';
+                button1.Text = "Hide";
+            }
+            else
+            {
+                textBoxFirebase_Key.PasswordChar = '*';
+                button1.Text = "Show";
             }
         }
     }
