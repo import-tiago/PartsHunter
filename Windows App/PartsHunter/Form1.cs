@@ -322,7 +322,7 @@ namespace PartsHunter
         {
             string[] newRow;
             int numberResults = 0;
-            //Load_Firebase_Database();
+            Load_Firebase_Database();
 
             dataGridViewSearch.AllowUserToAddRows = true;
 
