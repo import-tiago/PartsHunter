@@ -161,6 +161,17 @@ namespace PartsHunter
 
             FIll_ComboBox_Category();
             Set_Firebase_HardwareDevice("-1,0,0,0,0,0");
+
+            if(Firebase_Database_KEY == "" && Firebase_Database_URL == "")
+            {
+                buttonSearch.Enabled = false;
+                buttonListAll.Enabled = false;
+                buttonEdit.Enabled = false;
+                buttonDelete.Enabled = false;
+                buttonClear.Enabled = false;
+                buttonSave.Enabled = false;
+
+            }
         }
 
         void Load_Firebase_Database()
