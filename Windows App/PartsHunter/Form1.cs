@@ -162,7 +162,7 @@ namespace PartsHunter
             FIll_ComboBox_Category();
             Set_Firebase_HardwareDevice("-1,0,0,0,0,0");
 
-            if(Firebase_Database_KEY == "" && Firebase_Database_URL == "")
+            if(Firebase_Database_KEY == null && Firebase_Database_URL == null)
             {
                 buttonSearch.Enabled = false;
                 buttonListAll.Enabled = false;
