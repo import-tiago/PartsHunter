@@ -993,6 +993,7 @@ namespace PartsHunter
                 LED_Highlight_Time = 100;
                 LED_Highlight_Color = Color.FromArgb(0, 255, 0); 
                 SaveData();
+                Load_Local_File_Configs();
             }
 
 
