@@ -63,15 +63,15 @@ namespace PartsHunter
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.textBoxDrawer = new System.Windows.Forms.TextBox();
-            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
+            this.textBoxFirebase_URL = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.buttonFirebase_Save = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.textBoxFirebase_Key = new System.Windows.Forms.TextBox();
-            this.textBoxFirebase_URL = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBoxSettings.SuspendLayout();
@@ -81,8 +81,8 @@ namespace PartsHunter
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewSearch)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -132,6 +132,7 @@ namespace PartsHunter
             this.buttonDelete.TabIndex = 72;
             this.buttonDelete.Text = "DELETE";
             this.buttonDelete.UseVisualStyleBackColor = true;
+            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
             // buttonClear
             // 
@@ -155,6 +156,7 @@ namespace PartsHunter
             this.buttonEdit.TabIndex = 71;
             this.buttonEdit.Text = "EDIT";
             this.buttonEdit.UseVisualStyleBackColor = true;
+            this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
             // 
             // groupBoxSettings
             // 
@@ -482,11 +484,6 @@ namespace PartsHunter
             this.textBoxDrawer.TabIndex = 3;
             this.textBoxDrawer.Validating += new System.ComponentModel.CancelEventHandler(this.textBoxQuantity_Validating);
             // 
-            // errorProvider1
-            // 
-            this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
-            this.errorProvider1.ContainerControl = this;
-            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.button1);
@@ -502,6 +499,24 @@ namespace PartsHunter
             this.tabPage3.TabIndex = 3;
             this.tabPage3.Text = "Firebase Config";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(789, 56);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 72;
+            this.button1.Text = "Show";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_2);
+            // 
+            // textBoxFirebase_URL
+            // 
+            this.textBoxFirebase_URL.Location = new System.Drawing.Point(122, 21);
+            this.textBoxFirebase_URL.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxFirebase_URL.Name = "textBoxFirebase_URL";
+            this.textBoxFirebase_URL.Size = new System.Drawing.Size(660, 22);
+            this.textBoxFirebase_URL.TabIndex = 71;
             // 
             // label6
             // 
@@ -546,23 +561,10 @@ namespace PartsHunter
             this.textBoxFirebase_Key.Size = new System.Drawing.Size(660, 22);
             this.textBoxFirebase_Key.TabIndex = 67;
             // 
-            // textBoxFirebase_URL
+            // errorProvider1
             // 
-            this.textBoxFirebase_URL.Location = new System.Drawing.Point(122, 21);
-            this.textBoxFirebase_URL.Margin = new System.Windows.Forms.Padding(4);
-            this.textBoxFirebase_URL.Name = "textBoxFirebase_URL";
-            this.textBoxFirebase_URL.Size = new System.Drawing.Size(660, 22);
-            this.textBoxFirebase_URL.TabIndex = 71;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(789, 56);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 72;
-            this.button1.Text = "Show";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_2);
+            this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
+            this.errorProvider1.ContainerControl = this;
             // 
             // Form1
             // 
@@ -590,9 +592,9 @@ namespace PartsHunter
             this.tabPage2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
 
         }

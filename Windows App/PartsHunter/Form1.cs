@@ -103,15 +103,13 @@ namespace PartsHunter
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-
+            /*
             if (Pre_Load_Done == false)
             {
                 Pre_Load_Done = true;
                 Load_Firebase_Database();
-
-
-
             }
+            */
             if (tabControl1.SelectedIndex == 1 && Pre_Load_Done == false)
             {
                 FIll_ComboBox_Category();
@@ -120,7 +118,7 @@ namespace PartsHunter
 
             if (tabControl1.SelectedIndex == 0 && dataGridViewSearch.CurrentRow == null)
             {                
-                Set_Firebase_HardwareDevice("-1,0,0,0,0,0");
+              //  Set_Firebase_HardwareDevice("-1,0,0,0,0,0");
             }
 
             else if (tabControl1.SelectedIndex == 0 && dataGridViewSearch.CurrentRow != null)
@@ -162,6 +160,7 @@ namespace PartsHunter
             Pre_Load_Done = true;
 
             FIll_ComboBox_Category();
+            Set_Firebase_HardwareDevice("-1,0,0,0,0,0");
         }
 
         void Load_Firebase_Database()
@@ -591,6 +590,8 @@ namespace PartsHunter
             Load_Firebase_Database();
 
             FIll_ComboBox_Category();
+
+            SearchByDescription(textBoxSearch.Text);
         }
 
      
@@ -936,50 +937,65 @@ namespace PartsHunter
                 fs.Close();
             }
         }
+
+      
+
         void Load_Local_File_Configs()
         {
             Hashtable variables = null;
 
-            FileStream fs = new FileStream("DataFile.dat", FileMode.OpenOrCreate);
-
-            try
+            if (File.Exists("DataFile.dat"))
             {
+                FileStream fs = new FileStream("DataFile.dat", FileMode.OpenOrCreate);
 
-                BinaryFormatter formatter = new BinaryFormatter();
-                variables = (Hashtable)formatter.Deserialize(fs);
-                LED_Highlight_Color = (Color)variables["Color"];
-                LED_Highlight_Time = (int)variables["Time"];
-                LED_Highlight_Brightness = (int)variables["Brightness"];
-
-
-                buttonColor.BackColor = LED_Highlight_Color;
-
-                trackBarTime.Value = LED_Highlight_Time;
-                if (LED_Highlight_Time < 1000)
+                try
                 {
-                    if (LED_Highlight_Time < 100)
-                        labelTime.Text = "always on";
+
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    variables = (Hashtable)formatter.Deserialize(fs);
+                    LED_Highlight_Color = (Color)variables["Color"];
+                    LED_Highlight_Time = (int)variables["Time"];
+                    LED_Highlight_Brightness = (int)variables["Brightness"];
+
+
+                    buttonColor.BackColor = LED_Highlight_Color;
+
+                    trackBarTime.Value = LED_Highlight_Time;
+                    if (LED_Highlight_Time < 1000)
+                    {
+                        if (LED_Highlight_Time < 100)
+                            labelTime.Text = "always on";
+                        else
+                            labelTime.Text = LED_Highlight_Time + "ms blinky";
+                    }
+
                     else
-                        labelTime.Text = LED_Highlight_Time + "ms blinky";
+                        labelTime.Text = "1s blinky";
+
+                    trackBarBright.Value = LED_Highlight_Brightness;
+                    int x = (LED_Highlight_Brightness * 100) / 255;
+                    labelBright.Text = x + "% brightness";
+
+
                 }
+                catch (SerializationException e)
+                {
 
-                else
-                    labelTime.Text = "1s blinky";
-
-                trackBarBright.Value = LED_Highlight_Brightness;
-                int x = (LED_Highlight_Brightness * 100) / 255;
-                labelBright.Text = x + "% brightness";
-
-
+                }
+                finally
+                {
+                    fs.Close();
+                }
             }
-            catch (SerializationException e)
+            else
             {
+                LED_Highlight_Brightness = 128;
+                LED_Highlight_Time = 100;
+                LED_Highlight_Color = Color.FromArgb(0, 255, 0); 
+                SaveData();
+            }
 
-            }
-            finally
-            {
-                fs.Close();
-            }
+
         }
 
         private void buttonEdit_Click(object sender, EventArgs e)
@@ -1028,6 +1044,7 @@ namespace PartsHunter
                         Update_Firebase(_drawer, _description);
                     Pre_Load_Done = false;
                     ReLoad_Fields();
+                    
                 }
             }
             catch
@@ -1186,13 +1203,18 @@ namespace PartsHunter
             int x = (trackBarBright.Value * 100) / 255;
             if (x <= 0)
                 x = 1;
+            
+            if (LED_Highlight_Brightness <= 0)
+                LED_Highlight_Brightness = 1;
+
             labelBright.Text = x + "% brightness";
         }
 
         private void buttonClear_Click_1(object sender, EventArgs e)
-        {
-            
+        {            
             Set_Firebase_HardwareDevice("-1,0,0,0,0,0");
+            dataGridViewSearch.Rows.Clear();
+            labelNumberResults.Visible = false;
         }
 
         private void label9_Click(object sender, EventArgs e)

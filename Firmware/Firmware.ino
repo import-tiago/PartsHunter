@@ -1,7 +1,6 @@
 //Arduino Libraries
 #include <Arduino.h>
 
-
 //External Libraries
 #include <FastLED.h>
 #include <Ticker.h>
@@ -51,7 +50,7 @@ String Hardware_Device_String;
 char Data_from_Firebase_Array[FIREBASE_MESSAGE_SIZE];
 String Current_Adjusts = "";
 String Last_Adjusts = "";
-
+int error = 0;
 
 //Global Objects
 CRGB LED_Strip[TOTAL_NUMBER_LEDS_AT_SRIP];
@@ -69,6 +68,7 @@ FirebaseConfig config;
 
 
 void setup() {
+  wdt_enable(WDTO_2S);
 
   Serial.begin(115200);
 
@@ -199,6 +199,12 @@ void Firebase_Commands_Monitor() {
   uint8_t blue_color = atoi(Extract_Parameter_Value(Data_from_Firebase_Array, ',', 3));
   uint8_t brightness_level = atoi(Extract_Parameter_Value(Data_from_Firebase_Array, ',', 4));
   uint16_t blinky_time = atoi(Extract_Parameter_Value(Data_from_Firebase_Array, ',', 5));
+
+  if(!drawer_number && !red_color && !green_color && !blue_color && !brightness_level && !blinky_time)
+    error++;
+
+    if(error >= 5)
+      ESP.restart();
 
   _DEBUG(drawer_number, red_color, green_color, blue_color, brightness_level, blinky_time);
 
