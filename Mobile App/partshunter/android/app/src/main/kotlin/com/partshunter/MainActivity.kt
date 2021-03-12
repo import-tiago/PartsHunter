@@ -1,4 +1,4 @@
-package com.example.partshunter
+package com.partshunter
 
 import io.flutter.embedding.android.FlutterActivity
 

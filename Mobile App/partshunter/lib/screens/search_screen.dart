@@ -1,7 +1,8 @@
 //Flutter
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:dropdown_below/dropdown_below.dart';
+
+import 'package:firebase_database/firebase_database.dart';
 
 //Application
 
@@ -15,6 +16,8 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final databaseReference = FirebaseDatabase.instance.reference();
+
   int scaffoldBottomIndex = 1;
 
   void scaffoldBottomOnTap(int index) {
@@ -24,6 +27,28 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   String dropdownValue;
+
+  void createData() {
+    databaseReference
+        .child("flutterDevsTeam1")
+        .set({'name': 'Deepak Nishad', 'description': 'Team Lead'});
+  }
+
+  void readData() {
+    databaseReference.once().then((DataSnapshot snapshot) {
+      print('Data : ${snapshot.value}');
+    });
+  }
+
+  void deleteData() {
+    databaseReference.child('flutterDevsTeam1').remove();
+  }
+
+  void updateData() {
+    databaseReference
+        .child('flutterDevsTeam1')
+        .update({'description': 'TESTE'});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +63,8 @@ class _SearchScreenState extends State<SearchScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.grading), label: "New"),
           BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Config"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.format_list_numbered), label: "Config"),
         ],
       ),
       body: Column(
@@ -144,6 +171,10 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
           ),
+          TextButton(onPressed: createData, child: Text("CREATE")),
+          TextButton(onPressed: readData, child: Text("READ")),
+          TextButton(onPressed: updateData, child: Text("UPDATE")),
+          TextButton(onPressed: deleteData, child: Text("DELETTE")),
         ],
       ),
     );

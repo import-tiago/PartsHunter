@@ -1,6 +1,6 @@
 # partshunter
 
-A new Flutter project.
+PartsHunter is an organizer system (hardware, firmware, Windows app, mobile app and cloud) for storage and automatic identification of electronic components.
 
 ## Getting Started
 
