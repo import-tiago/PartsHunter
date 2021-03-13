@@ -64,12 +64,28 @@ class _SearchScreenState extends State<SearchScreen> {
   Map<dynamic, dynamic> values;
   var value2;
 
+  List<String> myList;
+
+  List<Map<dynamic, dynamic>> lists = [];
+
   getClientes() async {
     await databaseReference.once().then((DataSnapshot snapshot) {
       //values = snapshot.value;
       value2 = snapshot;
+      Map<dynamic, dynamic> map;
+      final value = snapshot.value as Map;
+      for (final key in value.keys) {
+        map = value[key];
+      }
 
+      var x = snapshot.value.entries.elementAt(0).key;
+
+/*
       //var a = values[0].value[0].value["Description"];
+      for (var value in snapshot.value) {
+        myList.add(value);
+      }
+      */
 
       len = snapshot.value.length;
     });
@@ -216,34 +232,49 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           TextButton(
               onPressed: () {
-                createData("CAPACITOR", "1nF", "44");
+                createData("RESISTOR", "10k", "3");
               },
               child: Text("CREATE")),
           TextButton(onPressed: readData, child: Text("READ")),
           //TextButton(onPressed: updateData, child: Text("UPDATE")),
           //TextButton(onPressed: deleteData, child: Text("DELETTE")),
-          Expanded(
-            child: FutureBuilder(
-                future: getClientes(),
-                builder: (_, values) {
-                  if (values.connectionState == ConnectionState.waiting) {
-                    return new Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else {
-                    return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: len, //values.key.length,
-                        itemBuilder: (_, index) {
-                          return Center(
-                            child: Text(value2[index]
-                                .value["HardwareDevice"]
-                                .toString()),
-                          );
-                        });
-                  }
-                }),
-          ),
+          FutureBuilder(
+              future: databaseReference.once(),
+              builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
+                if (snapshot.hasData) {
+                  lists.clear();
+                  Map<dynamic, dynamic> values = snapshot.data.value;
+
+                  values.forEach((key, values) {
+                    if (key != "HardwareDevice") {
+                      Map<dynamic, dynamic> values2 = values;
+                      values2.forEach((key, values) {
+                        lists.add(values);
+                      });
+                    }
+                    //if (values == "Description" || values == "Drawer")
+                    // lists.add(values);
+                  });
+                  return new ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: lists.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Card(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text("Descripttion: " +
+                                  lists[index]
+                                      ["Description"]), //["Description"]),
+                              Text("Drawer: " + lists[index]["Drawer"]),
+                              //Text("Drawer: " + lists[index]['key']["Drawer"]),
+                            ],
+                          ),
+                        );
+                      });
+                }
+                return CircularProgressIndicator();
+              })
         ],
       ),
     );
