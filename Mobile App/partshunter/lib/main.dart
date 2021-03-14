@@ -10,7 +10,7 @@ import 'package:splashscreen/splashscreen.dart';
 import 'package:partshunter/screens/search_screen.dart';
 
 //Stores
-import 'package:partshunter/stores/colors_store.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -18,7 +18,7 @@ void main() {
 
 // ignore: must_be_immutable
 class MyApp extends StatelessWidget {
-  ColorsStore colors = ColorsStore();
+  
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: 'PartsHunter',
               theme: ThemeData(
-                primaryColor: colors.primaryColor,
-                accentColor: colors.secondaryColor,
+                primaryColor: Color.fromRGBO(41, 55, 109, 1.0),
+                accentColor: Color.fromRGBO(155, 252, 255, 1.0),
                 visualDensity: VisualDensity.adaptivePlatformDensity,
               ),
               home: _introScreen(),

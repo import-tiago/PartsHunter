@@ -5,7 +5,7 @@ class Todo {
   String drawer;
   String description;
 
-  Todo(this.drawer, this.description);
+  Todo(this.description, this.drawer);
 
   Todo.fromSnapshot(DataSnapshot snapshot)
       : key = snapshot.key,

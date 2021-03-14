@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+
 import 'package:partshunter/models/todo.dart';
 
 //Application
+import 'dart:convert';
+
+import 'package:partshunter/stores/parts_database.dart';
 
 //Screens
 
@@ -17,7 +22,16 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  PartsDatabaseStore _partsDatabaseStore = PartsDatabaseStore();
+
   final databaseReference = FirebaseDatabase.instance.reference();
+
+  @override
+  void initState() {
+    _partsDatabaseStore.getF();
+     //_partsDatabaseStore.getParts(snapshot: snapshot);
+  }
+  
 
   int scaffoldBottomIndex = 1;
 
@@ -27,21 +41,12 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
-  String dropdownValue;
+  
 
-  createData(
-    String category,
-    String description,
-    String drawer,
-  ) async {
+  createData(String category, String description, String drawer) async {
     Todo todo = new Todo(description, drawer);
-    await databaseReference
-        .reference()
-        .child(category)
-        .push()
-        .set(todo.toJson());
 
-    //databaseReference.child(category).set(todo.toJson());
+    await databaseReference.reference().child(category).push().set(todo.toJson());
   }
 
   readData() async {
@@ -50,57 +55,40 @@ class _SearchScreenState extends State<SearchScreen> {
     });
   }
 
+
+
+
+  getCategory(String category) async {
+
+    await databaseReference.child(category).once().then((DataSnapshot _snapshot) {
+      _partsDatabaseStore.getParts(snap: _snapshot);
+    });
+  }
+
   void deleteData(String drawer) {
     databaseReference.child('flutterDevsTeam1').remove();
   }
 
   void updateData(String drawer, String description) {
-    databaseReference
-        .child('flutterDevsTeam1')
-        .update({'description': 'TESTE'});
+    databaseReference.child('flutterDevsTeam1').update({'description': 'TESTE'});
   }
 
+  String dropdownValue;
+
   int len = 0;
+  int len2 = 0;
   Map<dynamic, dynamic> values;
   var value2;
 
-  List<String> myList;
+  dynamic myList;
 
   List<Map<dynamic, dynamic>> lists = [];
 
   getClientes() async {
     await databaseReference.once().then((DataSnapshot snapshot) {
-      //values = snapshot.value;
       value2 = snapshot;
-      Map<dynamic, dynamic> map;
-      final value = snapshot.value as Map;
-      for (final key in value.keys) {
-        map = value[key];
-      }
-
-      var x = snapshot.value.entries.elementAt(0).key;
-
-/*
-      //var a = values[0].value[0].value["Description"];
-      for (var value in snapshot.value) {
-        myList.add(value);
-      }
-      */
-
       len = snapshot.value.length;
     });
-
-    //values = _qn;
-    //len = _qn.value.length;
-
-    //String s = values.data[index]["Description"];
-
-    //values = _snapshot;
-    //print('Data : ${_snapshot.value}');
-
-    //var firestore = Firestore.instance;
-
-    //QuerySnapshot values = await firestore.collection("clientes").getDocuments();
 
     return values;
   }
@@ -121,8 +109,7 @@ class _SearchScreenState extends State<SearchScreen> {
             label: "Search",
           ),
           BottomNavigationBarItem(icon: Icon(Icons.library_add), label: "New"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.keyboard_hide_outlined), label: "Keypad"),
+          BottomNavigationBarItem(icon: Icon(Icons.keyboard_hide_outlined), label: "Keypad"),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Config"),
         ],
       ),
@@ -139,51 +126,49 @@ class _SearchScreenState extends State<SearchScreen> {
                     margin: EdgeInsets.only(right: 10, left: 10),
                     padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        border: Border.all(
-                            color: Colors.grey[600],
-                            style: BorderStyle.solid,
-                            width: 0.80)),
-                    child: DropdownButton<String>(
-                      underline: SizedBox(),
-                      hint: Text("Category"),
-                      isExpanded: true,
-                      value: dropdownValue,
-                      onChanged: (String newValue) {
-                        setState(() {
-                          dropdownValue = newValue;
-                        });
-                      },
-                      items: <String>['One', 'Two', 'Free', 'Four']
-                          .map<DropdownMenuItem<String>>((String value) {
+                        borderRadius: BorderRadius.circular(5.0), border: Border.all(color: Colors.grey[600], style: BorderStyle.solid, width: 0.80)),
+                    child: Observer(builder: (_) {
+                      return DropdownButton<String>(
+                        underline: SizedBox(),
+                        hint: Text("Category"),
+                        isExpanded: true,
+                        value: dropdownValue,
+                        onChanged: (String newValue) {
+                          
+                          setState(() {
+                            dropdownValue = newValue;
+                          });
+                            
+                          
+                        },
+                        items: _partsDatabaseStore.dropDownMenuItems, /*<String>['One', 'Two', 'Free', 'Four'].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
                         );
                       }).toList(),
-                    ),
+
+                      */
+                      );
+                    }),
                   ),
                 ),
                 Container(
                   child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        getCategory(dropdownValue);
+                        print(dropdownValue);
+                      },
                       child: Text(
                         'List All',
                         style: TextStyle(fontSize: 16),
                       ),
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromRGBO(41, 55, 109, 1.0)),
-                          side: MaterialStateProperty.all(BorderSide(
-                              width: 2,
-                              color: Color.fromRGBO(41, 55, 109, 1.0))),
-                          foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                          padding: MaterialStateProperty.all(
-                              EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 20)),
-                          textStyle: MaterialStateProperty.all(
-                              TextStyle(fontSize: 30)))),
+                          backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(41, 55, 109, 1.0)),
+                          side: MaterialStateProperty.all(BorderSide(width: 2, color: Color.fromRGBO(41, 55, 109, 1.0))),
+                          foregroundColor: MaterialStateProperty.all(Colors.white),
+                          padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
+                          textStyle: MaterialStateProperty.all(TextStyle(fontSize: 30)))),
                 ),
               ],
             ),
@@ -214,71 +199,73 @@ class _SearchScreenState extends State<SearchScreen> {
                         style: TextStyle(fontSize: 16),
                       ),
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Color.fromRGBO(41, 55, 109, 1.0)),
-                          side: MaterialStateProperty.all(BorderSide(
-                              width: 2,
-                              color: Color.fromRGBO(41, 55, 109, 1.0))),
-                          foregroundColor:
-                              MaterialStateProperty.all(Colors.white),
-                          padding: MaterialStateProperty.all(
-                              EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 20)),
-                          textStyle: MaterialStateProperty.all(
-                              TextStyle(fontSize: 30)))),
+                          backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(41, 55, 109, 1.0)),
+                          side: MaterialStateProperty.all(BorderSide(width: 2, color: Color.fromRGBO(41, 55, 109, 1.0))),
+                          foregroundColor: MaterialStateProperty.all(Colors.white),
+                          padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
+                          textStyle: MaterialStateProperty.all(TextStyle(fontSize: 30)))),
                 ),
               ],
             ),
           ),
           TextButton(
               onPressed: () {
-                createData("RESISTOR", "10k", "3");
+                createData("RESISTOR", "100R", "99");
               },
               child: Text("CREATE")),
           TextButton(onPressed: readData, child: Text("READ")),
           //TextButton(onPressed: updateData, child: Text("UPDATE")),
           //TextButton(onPressed: deleteData, child: Text("DELETTE")),
-          FutureBuilder(
-              future: databaseReference.once(),
-              builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
-                if (snapshot.hasData) {
-                  lists.clear();
-                  Map<dynamic, dynamic> values = snapshot.data.value;
 
-                  values.forEach((key, values) {
-                    if (key != "HardwareDevice") {
-                      Map<dynamic, dynamic> values2 = values;
-                      values2.forEach((key, values) {
-                        lists.add(values);
-                      });
-                    }
-                    //if (values == "Description" || values == "Drawer")
-                    // lists.add(values);
-                  });
-                  return new ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: lists.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text("Descripttion: " +
-                                  lists[index]
-                                      ["Description"]), //["Description"]),
-                              Text("Drawer: " + lists[index]["Drawer"]),
-                              //Text("Drawer: " + lists[index]['key']["Drawer"]),
-                            ],
-                          ),
+  
+          Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey[300]),
+              ),
+              child: Observer(builder: (_) {
+                return FutureBuilder(
+                    future: databaseReference.once(),
+                    builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
+                      len = snapshot.data.value.length;
+
+                      if (snapshot.hasData) {
+                       // _partsDatabaseStore.getParts(snapshot: snapshot);
+
+                        return new DataTable(
+                          columns: const <DataColumn>[
+                            DataColumn(
+                              label: Text(
+                                'CATEGORY',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'DESCRIPTION',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'DRAWER',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ],
+                          rows: List<DataRow>.generate(
+                              len,
+                              (index) => DataRow(cells: [
+                                    DataCell(Text(_partsDatabaseStore.json[index]["Category"])),
+                                    DataCell(Text(_partsDatabaseStore.json[index]["Description"])),
+                                    DataCell(Text(_partsDatabaseStore.json[index]["Drawer"])),
+                                  ])),
                         );
-                      });
-                }
-                return CircularProgressIndicator();
-              })
+                      } else
+                        return CircularProgressIndicator();
+                    });
+              })),
         ],
       ),
     );
   }
 }
-
-class Data {}
