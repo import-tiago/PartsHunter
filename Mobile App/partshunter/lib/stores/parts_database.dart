@@ -12,7 +12,7 @@ abstract class _PartsDatabaseStore with Store {
   ///PartsDatabaseStore _partsDatabaseStore = PartsDatabaseStore();
   ///
 
-  final databaseReference = FirebaseDatabase.instance.reference();
+  final firebase = FirebaseDatabase.instance.reference();
 
   @observable
   Color primaryColor = Color.fromRGBO(41, 55, 109, 1.0);
@@ -24,7 +24,7 @@ abstract class _PartsDatabaseStore with Store {
   Color tertiaryColor = Color.fromRGBO(155, 252, 255, 1.0);
 
   @observable
-  List<Map<dynamic, dynamic>> json = [];
+  List<Map<dynamic, dynamic>> JSON_Obj = [];
 
   @observable
   List<DropdownMenuItem<String>> dropDownMenuItems;
@@ -32,56 +32,48 @@ abstract class _PartsDatabaseStore with Store {
   @observable
   List<Map<dynamic, dynamic>> lists = [];
 
+  @observable
+  int DataTable_Length = 0;
+
   @action
-  void buildAndGetDropDownMenuItems() {
+  void Build_DropDown() {
     bool alreadyExist = false;
     List<DropdownMenuItem<String>> items = new List();
 
     items.clear();
 
-    items.add(new DropdownMenuItem(value: json[0]["Category"], child: new Text(json[0]["Category"])));
+    items.add(new DropdownMenuItem(value: JSON_Obj[0]["Category"], child: new Text(JSON_Obj[0]["Category"])));
 
-    
-for (int i = 0; i < json.length; i++) {
-    
-    for (int y = 0; y < items.length; y++) {      
-    
-        if (items[y].value == json[i]["Category"]){
+    for (int i = 0; i < JSON_Obj.length; i++) {
+      for (int y = 0; y < items.length; y++) {
+        if (items[y].value == JSON_Obj[i]["Category"]) {
           alreadyExist = true;
           break;
         }
+      }
+
+      if (alreadyExist == false)
+        items.add(new DropdownMenuItem(value: JSON_Obj[i]["Category"], child: new Text(JSON_Obj[i]["Category"])));
+      else
+        alreadyExist = false;
     }
-    
-    if(alreadyExist == false)
-      items.add(new DropdownMenuItem(value: json[i]["Category"], child: new Text(json[i]["Category"])));
-    else
-      alreadyExist = false;
-}
-
-
-
-
-
-
 
     if (dropDownMenuItems != null) dropDownMenuItems.clear();
 
     dropDownMenuItems = items;
-
-
   }
 
   @action
-  getF() async {
-    await databaseReference.once().then((DataSnapshot _snap) {
-      getParts(snap: _snap);
+  Get_Firebase_and_Convert_to_JSON() async {
+    await firebase.once().then((DataSnapshot _snap) async {
+      await Snapshot_to_JSON(snap: _snap);
     });
   }
 
   @action
-  Future<void> getParts({AsyncSnapshot<DataSnapshot> snapshot, DataSnapshot snap}) async {
+  Future<void> Snapshot_to_JSON({AsyncSnapshot<DataSnapshot> snapshot, DataSnapshot snap}) async {
     lists.clear();
-    json.clear();
+    JSON_Obj.clear();
 
     Map<dynamic, dynamic> values;
 
@@ -98,7 +90,7 @@ for (int i = 0; i < json.length; i++) {
           String b = values["Description"];
           String c = values["Drawer"];
 
-          String _string = '{' +
+          String JSON_Str = '{' +
               '\"Category\"' +
               ':' +
               '\"' +
@@ -118,12 +110,31 @@ for (int i = 0; i < json.length; i++) {
               '\"' +
               '}';
 
-          json.add(jsonDecode(_string));
+          JSON_Obj.add(jsonDecode(JSON_Str));
 
           lists.add(values);
         });
       }
     });
-    buildAndGetDropDownMenuItems();
+
+    DataTable_Length = JSON_Obj.length;
+    Build_DropDown();
+  }
+
+  @action
+  Fill_DataTrable_from_Selected_Category(String selected_category) async {
+    await Get_Firebase_and_Convert_to_JSON();
+
+    List<Map<dynamic, dynamic>> JSON_Obj_only_selected_category = [];
+
+    for (int i = 0; i < JSON_Obj.length; i++) {
+      if (JSON_Obj[i]["Category"] == selected_category) {
+        JSON_Obj_only_selected_category.add(JSON_Obj[i]);
+      }
+    }
+
+    JSON_Obj.clear();
+    JSON_Obj = JSON_Obj_only_selected_category;
+    DataTable_Length = JSON_Obj.length;
   }
 }

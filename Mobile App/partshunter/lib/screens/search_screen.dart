@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
+
 import 'package:partshunter/models/todo.dart';
 
 //Application
@@ -22,14 +23,19 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  PartsDatabaseStore _partsDatabaseStore = PartsDatabaseStore();
 
-  final databaseReference = FirebaseDatabase.instance.reference();
+  PartsDatabaseStore store = PartsDatabaseStore();
+
+  final firebase = FirebaseDatabase.instance.reference();
+
+
+
 
   @override
   void initState() {
-    _partsDatabaseStore.getF();
-     //_partsDatabaseStore.getParts(snapshot: snapshot);
+    store.Get_Firebase_and_Convert_to_JSON();
+    
+     //store.Snapshot_to_JSON(snapshot: snapshot);
   }
   
 
@@ -46,11 +52,11 @@ class _SearchScreenState extends State<SearchScreen> {
   createData(String category, String description, String drawer) async {
     Todo todo = new Todo(description, drawer);
 
-    await databaseReference.reference().child(category).push().set(todo.toJson());
+    await firebase.reference().child(category).push().set(todo.toJson());
   }
 
   readData() async {
-    await databaseReference.once().then((DataSnapshot _snapshot) {
+    await firebase.once().then((DataSnapshot _snapshot) {
       print('Data : ${_snapshot.value}');
     });
   }
@@ -60,39 +66,23 @@ class _SearchScreenState extends State<SearchScreen> {
 
   getCategory(String category) async {
 
-    await databaseReference.child(category).once().then((DataSnapshot _snapshot) {
-      _partsDatabaseStore.getParts(snap: _snapshot);
+    await firebase.child(category).once().then((DataSnapshot _snapshot) {
+      store.Snapshot_to_JSON(snap: _snapshot);
     });
+
+    
   }
 
   void deleteData(String drawer) {
-    databaseReference.child('flutterDevsTeam1').remove();
+    firebase.child('flutterDevsTeam1').remove();
   }
 
   void updateData(String drawer, String description) {
-    databaseReference.child('flutterDevsTeam1').update({'description': 'TESTE'});
+    firebase.child('flutterDevsTeam1').update({'description': 'TESTE'});
   }
 
-  String dropdownValue;
-
-  int len = 0;
-  int len2 = 0;
-  Map<dynamic, dynamic> values;
-  var value2;
-
-  dynamic myList;
-
-  List<Map<dynamic, dynamic>> lists = [];
-
-  getClientes() async {
-    await databaseReference.once().then((DataSnapshot snapshot) {
-      value2 = snapshot;
-      len = snapshot.value.length;
-    });
-
-    return values;
-  }
-
+  String Current_Selected_DropDown_Value;
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,23 +122,15 @@ class _SearchScreenState extends State<SearchScreen> {
                         underline: SizedBox(),
                         hint: Text("Category"),
                         isExpanded: true,
-                        value: dropdownValue,
-                        onChanged: (String newValue) {
-                          
+                        value: Current_Selected_DropDown_Value,
+                        onChanged: (String newValue) {                          
                           setState(() {
-                            dropdownValue = newValue;
+                            Current_Selected_DropDown_Value = newValue;                            
                           });
-                            
-                          
-                        },
-                        items: _partsDatabaseStore.dropDownMenuItems, /*<String>['One', 'Two', 'Free', 'Four'].map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
 
-                      */
+                          store.Fill_DataTrable_from_Selected_Category(Current_Selected_DropDown_Value);                          
+                        },
+                        items: store.dropDownMenuItems,
                       );
                     }),
                   ),
@@ -156,8 +138,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 Container(
                   child: TextButton(
                       onPressed: () {
-                        getCategory(dropdownValue);
-                        print(dropdownValue);
+                        getCategory(Current_Selected_DropDown_Value);
+                        print(Current_Selected_DropDown_Value);
                       },
                       child: Text(
                         'List All',
@@ -216,56 +198,48 @@ class _SearchScreenState extends State<SearchScreen> {
           TextButton(onPressed: readData, child: Text("READ")),
           //TextButton(onPressed: updateData, child: Text("UPDATE")),
           //TextButton(onPressed: deleteData, child: Text("DELETTE")),
-
   
           Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey[300]),
               ),
               child: Observer(builder: (_) {
-                return FutureBuilder(
-                    future: databaseReference.once(),
-                    builder: (context, AsyncSnapshot<DataSnapshot> snapshot) {
-                      len = snapshot.data.value.length;
-
-                      if (snapshot.hasData) {
-                       // _partsDatabaseStore.getParts(snapshot: snapshot);
-
-                        return new DataTable(
-                          columns: const <DataColumn>[
-                            DataColumn(
-                              label: Text(
-                                'CATEGORY',
-                                style: TextStyle(fontStyle: FontStyle.italic),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                'DESCRIPTION',
-                                style: TextStyle(fontStyle: FontStyle.italic),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                'DRAWER',
-                                style: TextStyle(fontStyle: FontStyle.italic),
-                              ),
-                            ),
-                          ],
-                          rows: List<DataRow>.generate(
-                              len,
-                              (index) => DataRow(cells: [
-                                    DataCell(Text(_partsDatabaseStore.json[index]["Category"])),
-                                    DataCell(Text(_partsDatabaseStore.json[index]["Description"])),
-                                    DataCell(Text(_partsDatabaseStore.json[index]["Drawer"])),
-                                  ])),
-                        );
-                      } else
-                        return CircularProgressIndicator();
-                    });
-              })),
+                    return DataTable(
+                      columns: const <DataColumn>[
+                        DataColumn(
+                          label: Text(
+                            'CATEGORY',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'DESCRIPTION',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'DRAWER',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                      ],
+                      rows: List<DataRow>.generate(store.DataTable_Length, (index) { 
+                        return DataRow(
+                                  cells: [
+                                    DataCell(Text(store.JSON_Obj[index]["Category"])),
+                                    DataCell(Text(store.JSON_Obj[index]["Description"])),
+                                    DataCell(Text(store.JSON_Obj[index]["Drawer"])),
+                                  ]);
+                            }
+                        ),
+                    );
+              })),        
         ],
       ),
     );
   }
+
+
 }
