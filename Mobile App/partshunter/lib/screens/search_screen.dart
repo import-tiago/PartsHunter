@@ -5,13 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-
-import 'package:partshunter/models/todo.dart';
-
 //Application
 import 'dart:convert';
 
-import 'package:partshunter/stores/parts_database.dart';
+import 'package:partshunter/stores/store.dart';
 
 //Screens
 
@@ -23,74 +20,29 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-
   PartsDatabaseStore store = PartsDatabaseStore();
 
   final firebase = FirebaseDatabase.instance.reference();
 
-
-
-
   @override
   void initState() {
     store.Get_Firebase_and_Convert_to_JSON();
-    
-     //store.Snapshot_to_JSON(snapshot: snapshot);
-  }
-  
-
-  int scaffoldBottomIndex = 1;
-
-  void scaffoldBottomOnTap(int index) {
-    setState(() {
-      scaffoldBottomIndex = index;
-    });
   }
 
-  
+  int Current_BottomNavigation_Index = 1;
 
-  createData(String category, String description, String drawer) async {
-    Todo todo = new Todo(description, drawer);
-
-    await firebase.reference().child(category).push().set(todo.toJson());
-  }
-
-  readData() async {
-    await firebase.once().then((DataSnapshot _snapshot) {
-      print('Data : ${_snapshot.value}');
-    });
-  }
-
-
-
-
-  getCategory(String category) async {
-
-    await firebase.child(category).once().then((DataSnapshot _snapshot) {
-      store.Snapshot_to_JSON(snap: _snapshot);
-    });
-
-    
-  }
-
-  void deleteData(String drawer) {
-    firebase.child('flutterDevsTeam1').remove();
-  }
-
-  void updateData(String drawer, String description) {
-    firebase.child('flutterDevsTeam1').update({'description': 'TESTE'});
-  }
+  void Change_BottomNavigation_Index(int index) => setState(() => Current_BottomNavigation_Index = index);
 
   String Current_Selected_DropDown_Value;
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: scaffoldBottomIndex,
-        onTap: scaffoldBottomOnTap,
+        currentIndex: Current_BottomNavigation_Index,
+        onTap: Change_BottomNavigation_Index,
         unselectedItemColor: Colors.grey,
         selectedItemColor: Color.fromRGBO(65, 91, 165, 1.0),
         items: [
@@ -123,12 +75,12 @@ class _SearchScreenState extends State<SearchScreen> {
                         hint: Text("Category"),
                         isExpanded: true,
                         value: Current_Selected_DropDown_Value,
-                        onChanged: (String newValue) {                          
+                        onChanged: (String newValue) {
                           setState(() {
-                            Current_Selected_DropDown_Value = newValue;                            
+                            Current_Selected_DropDown_Value = newValue;
                           });
 
-                          store.Fill_DataTrable_from_Selected_Category(Current_Selected_DropDown_Value);                          
+                          store.Fill_DataTrable_from_Selected_Category(Current_Selected_DropDown_Value);
                         },
                         items: store.dropDownMenuItems,
                       );
@@ -138,8 +90,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 Container(
                   child: TextButton(
                       onPressed: () {
-                        getCategory(Current_Selected_DropDown_Value);
-                        print(Current_Selected_DropDown_Value);
+                        store.List_All_Parts();
                       },
                       child: Text(
                         'List All',
@@ -165,6 +116,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       height: 40,
                       margin: EdgeInsets.only(right: 10, left: 10),
                       child: TextField(
+                        onChanged: (input) => store.Description_Search_Input = input,
                         textAlign: TextAlign.left,
                         decoration: InputDecoration(
                           hintText: 'Description',
@@ -175,7 +127,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 Container(
                   child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        store.Fill_DataTrable_from_Search(store.Description_Search_Input);
+                      },
                       child: Text(
                         'Search',
                         style: TextStyle(fontSize: 16),
@@ -190,56 +144,65 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
           ),
-          TextButton(
-              onPressed: () {
-                createData("RESISTOR", "100R", "99");
-              },
-              child: Text("CREATE")),
-          TextButton(onPressed: readData, child: Text("READ")),
-          //TextButton(onPressed: updateData, child: Text("UPDATE")),
-          //TextButton(onPressed: deleteData, child: Text("DELETTE")),
-  
-          Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey[300]),
+          Observer(builder: (_){
+            return Container(
+              margin: EdgeInsets.only(top: 3, bottom: 10, right: 10, left: 10),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                            child: Text(
+                  
+                store.DataTable_Length > 1 ? "${store.DataTable_Length} results found" : "${store.DataTable_Length} result found" ,
+                style: TextStyle(fontSize: 16),
+          ),
               ),
-              child: Observer(builder: (_) {
-                    return DataTable(
-                      columns: const <DataColumn>[
-                        DataColumn(
-                          label: Text(
-                            'CATEGORY',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+            );
+
+
+          }),
+                    SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Container(
+                    width: MediaQuery.of(context).size.width - 20,
+                    margin: EdgeInsets.only(top: 10, right: 10, left: 10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey[300]),
+                    ),
+                    child: Observer(builder: (_) {
+                      return DataTable(
+                        columns: const <DataColumn>[
+                          DataColumn(
+                            label: Text(
+                              'CATEGORY',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'DESCRIPTION',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+                          DataColumn(
+                            label: Text(
+                              'DESCRIPTION',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'DRAWER',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+                          DataColumn(
+                            label: Text(
+                              'DRAWER',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
                           ),
-                        ),
-                      ],
-                      rows: List<DataRow>.generate(store.DataTable_Length, (index) { 
-                        return DataRow(
-                                  cells: [
-                                    DataCell(Text(store.JSON_Obj[index]["Category"])),
-                                    DataCell(Text(store.JSON_Obj[index]["Description"])),
-                                    DataCell(Text(store.JSON_Obj[index]["Drawer"])),
-                                  ]);
-                            }
-                        ),
-                    );
-              })),        
+                        ],
+                        rows: List<DataRow>.generate(store.DataTable_Length, (index) {
+                          return DataRow(cells: [
+                            DataCell(Text(store.JSON_Obj[index]["Category"])),
+                            DataCell(Text(store.JSON_Obj[index]["Description"])),
+                            DataCell(Text(store.JSON_Obj[index]["Drawer"])),
+                          ]);
+                        }),
+                      );
+                    }))),
+          ),
         ],
       ),
     );
   }
-
-
 }

@@ -3,15 +3,14 @@ import 'dart:convert';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:partshunter/models/todo.dart';
 
-part 'parts_database.g.dart';
+part 'store.g.dart';
 
 class PartsDatabaseStore = _PartsDatabaseStore with _$PartsDatabaseStore;
 
 abstract class _PartsDatabaseStore with Store {
-  ///PartsDatabaseStore _partsDatabaseStore = PartsDatabaseStore();
-  ///
-
+  
   final firebase = FirebaseDatabase.instance.reference();
 
   @observable
@@ -34,6 +33,9 @@ abstract class _PartsDatabaseStore with Store {
 
   @observable
   int DataTable_Length = 0;
+
+  @observable
+  String Description_Search_Input =  "";
 
   @action
   void Build_DropDown() {
@@ -122,6 +124,36 @@ abstract class _PartsDatabaseStore with Store {
   }
 
   @action
+  Fill_DataTrable_from_Search(String input) async {
+    
+    await Get_Firebase_and_Convert_to_JSON();
+
+    List<Map<dynamic, dynamic>> JSON_Obj_only_Description = [];
+    
+    for (int i = 0; i < JSON_Obj.length; i++) {
+
+       var words = input.split(' ').toList();
+
+       Set<String> set = Set.from(words);
+       
+       set.forEach((w) {
+
+         String s = JSON_Obj[i]["Description"];
+
+         if (s.contains(w)) {
+           JSON_Obj_only_Description.add(JSON_Obj[i]);
+         }
+
+       });      
+    }
+
+    JSON_Obj.clear();
+    JSON_Obj = JSON_Obj_only_Description;
+    DataTable_Length = JSON_Obj.length;
+
+  }
+
+  @action
   Fill_DataTrable_from_Selected_Category(String selected_category) async {
     await Get_Firebase_and_Convert_to_JSON();
 
@@ -136,5 +168,30 @@ abstract class _PartsDatabaseStore with Store {
     JSON_Obj.clear();
     JSON_Obj = JSON_Obj_only_selected_category;
     DataTable_Length = JSON_Obj.length;
+  }
+
+  //createData("RESISTOR", "100R", "99");
+  createData(String category, String description, String drawer) async {
+    Todo todo = new Todo(description, drawer);
+
+    await firebase.reference().child(category).push().set(todo.toJson());
+  }
+
+  readData() async {
+    await firebase.once().then((DataSnapshot _snapshot) {
+      print('Data : ${_snapshot.value}');
+    });
+  }
+
+  void deleteData(String drawer) {
+    firebase.child('flutterDevsTeam1').remove();
+  }
+
+  void updateData(String drawer, String description) {
+    firebase.child('flutterDevsTeam1').update({'description': 'TESTE'});
+  }
+
+  List_All_Parts() async {
+    await Get_Firebase_and_Convert_to_JSON();
   }
 }
