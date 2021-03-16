@@ -37,6 +37,13 @@ abstract class _PartsDatabaseStore with Store {
   @observable
   String Description_Search_Input =  "";
 
+  @observable
+  int Keypad_Input;
+
+  @computed
+  String get SetHardwareDevice => Set_Hardware_Device(Keypad_Input);
+
+
   @action
   void Build_DropDown() {
     bool alreadyExist = false;
@@ -123,6 +130,11 @@ abstract class _PartsDatabaseStore with Store {
     Build_DropDown();
   }
 
+
+bool equalsIgnoreCase(String string1, String string2) {
+  return string1?.toLowerCase() == string2?.toLowerCase();
+}
+
   @action
   Fill_DataTrable_from_Search(String input) async {
     
@@ -134,16 +146,36 @@ abstract class _PartsDatabaseStore with Store {
 
        var words = input.split(' ').toList();
 
-       Set<String> set = Set.from(words);
+       Set<String> wordsInput = Set.from(words);
        
-       set.forEach((w) {
+       wordsInput.forEach((w) {
 
          String s = JSON_Obj[i]["Description"];
 
+
+
+
+      var words2 = s.split(' ').toList();
+
+       Set<String> wordsFirebase = Set.from(words2);
+       
+       wordsFirebase.forEach((_w) {
+
+       if(equalsIgnoreCase( _w,  w) ){
+
+          JSON_Obj_only_Description.add(JSON_Obj[i]);
+
+        }
+
+       });
+
+
+         
+/*
          if (s.contains(w)) {
            JSON_Obj_only_Description.add(JSON_Obj[i]);
          }
-
+*/
        });      
     }
 
@@ -194,4 +226,17 @@ abstract class _PartsDatabaseStore with Store {
   List_All_Parts() async {
     await Get_Firebase_and_Convert_to_JSON();
   }
+
+  Set_Hardware_Device(int input) async {
+
+    if(input == null || input < -1 || input >599)
+      input = -1;
+    String output =  "${input},0,255,0,10,100";  
+
+    await firebase.update({'HardwareDevice': output});
+
+
+    
+  }
+  
 }

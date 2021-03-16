@@ -9,6 +9,14 @@ part of 'store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$PartsDatabaseStore on _PartsDatabaseStore, Store {
+  Computed<String> _$SetHardwareDeviceComputed;
+
+  @override
+  String get SetHardwareDevice => (_$SetHardwareDeviceComputed ??=
+          Computed<String>(() => super.SetHardwareDevice,
+              name: '_PartsDatabaseStore.SetHardwareDevice'))
+      .value;
+
   final _$primaryColorAtom = Atom(name: '_PartsDatabaseStore.primaryColor');
 
   @override
@@ -116,6 +124,38 @@ mixin _$PartsDatabaseStore on _PartsDatabaseStore, Store {
     });
   }
 
+  final _$Description_Search_InputAtom =
+      Atom(name: '_PartsDatabaseStore.Description_Search_Input');
+
+  @override
+  String get Description_Search_Input {
+    _$Description_Search_InputAtom.reportRead();
+    return super.Description_Search_Input;
+  }
+
+  @override
+  set Description_Search_Input(String value) {
+    _$Description_Search_InputAtom
+        .reportWrite(value, super.Description_Search_Input, () {
+      super.Description_Search_Input = value;
+    });
+  }
+
+  final _$Keypad_InputAtom = Atom(name: '_PartsDatabaseStore.Keypad_Input');
+
+  @override
+  int get Keypad_Input {
+    _$Keypad_InputAtom.reportRead();
+    return super.Keypad_Input;
+  }
+
+  @override
+  set Keypad_Input(int value) {
+    _$Keypad_InputAtom.reportWrite(value, super.Keypad_Input, () {
+      super.Keypad_Input = value;
+    });
+  }
+
   final _$Get_Firebase_and_Convert_to_JSONAsyncAction =
       AsyncAction('_PartsDatabaseStore.Get_Firebase_and_Convert_to_JSON');
 
@@ -133,6 +173,15 @@ mixin _$PartsDatabaseStore on _PartsDatabaseStore, Store {
       {AsyncSnapshot<DataSnapshot> snapshot, DataSnapshot snap}) {
     return _$Snapshot_to_JSONAsyncAction
         .run(() => super.Snapshot_to_JSON(snapshot: snapshot, snap: snap));
+  }
+
+  final _$Fill_DataTrable_from_SearchAsyncAction =
+      AsyncAction('_PartsDatabaseStore.Fill_DataTrable_from_Search');
+
+  @override
+  Future Fill_DataTrable_from_Search(String input) {
+    return _$Fill_DataTrable_from_SearchAsyncAction
+        .run(() => super.Fill_DataTrable_from_Search(input));
   }
 
   final _$Fill_DataTrable_from_Selected_CategoryAsyncAction =
@@ -167,7 +216,10 @@ tertiaryColor: ${tertiaryColor},
 JSON_Obj: ${JSON_Obj},
 dropDownMenuItems: ${dropDownMenuItems},
 lists: ${lists},
-DataTable_Length: ${DataTable_Length}
+DataTable_Length: ${DataTable_Length},
+Description_Search_Input: ${Description_Search_Input},
+Keypad_Input: ${Keypad_Input},
+SetHardwareDevice: ${SetHardwareDevice}
     ''';
   }
 }

@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:partshunter/screens/keypad_screen.dart';
+import 'package:partshunter/screens/register_screen.dart';
 
 //Application
 import 'dart:convert';
@@ -31,7 +33,18 @@ class _SearchScreenState extends State<SearchScreen> {
 
   int Current_BottomNavigation_Index = 1;
 
-  void Change_BottomNavigation_Index(int index) => setState(() => Current_BottomNavigation_Index = index);
+  void Change_BottomNavigation_Index(int index) {
+    setState(() => Current_BottomNavigation_Index = index);
+    switch (index) {
+     
+      case 1:
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
+        break;
+      case 2:
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => KeypadScreen()));
+        break;
+    }
+  }
 
   String Current_Selected_DropDown_Value;
 
@@ -41,8 +54,8 @@ class _SearchScreenState extends State<SearchScreen> {
       appBar: AppBar(),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: Current_BottomNavigation_Index,
-        onTap: Change_BottomNavigation_Index,
+        currentIndex: 0,
+        onTap: (int index) => Change_BottomNavigation_Index(index),
         unselectedItemColor: Colors.grey,
         selectedItemColor: Color.fromRGBO(65, 91, 165, 1.0),
         items: [
@@ -52,7 +65,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           BottomNavigationBarItem(icon: Icon(Icons.library_add), label: "New"),
           BottomNavigationBarItem(icon: Icon(Icons.keyboard_hide_outlined), label: "Keypad"),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Config"),
         ],
       ),
       body: Column(
@@ -144,22 +156,19 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
           ),
-          Observer(builder: (_){
+          Observer(builder: (_) {
             return Container(
-              margin: EdgeInsets.only(top: 3, bottom: 10, right: 10, left: 10),
+              margin: EdgeInsets.only(top: 3, bottom: 10, right: 10, left: 18),
               child: Align(
                 alignment: Alignment.centerLeft,
-                            child: Text(
-                  
-                store.DataTable_Length > 1 ? "${store.DataTable_Length} results found" : "${store.DataTable_Length} result found" ,
-                style: TextStyle(fontSize: 16),
-          ),
+                child: Text(
+                  store.DataTable_Length > 1 ? "${store.DataTable_Length} results found" : "${store.DataTable_Length} result found",
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                ),
               ),
             );
-
-
           }),
-                    SingleChildScrollView(
+          SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,

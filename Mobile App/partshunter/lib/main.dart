@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         SplashScreen(
-          seconds: 2,
+          seconds: 1,
           gradientBackground: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
