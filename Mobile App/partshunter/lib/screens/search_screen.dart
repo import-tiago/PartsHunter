@@ -59,7 +59,6 @@ class _SearchScreenState extends State<SearchScreen> {
   bool isSelected = false;
 
   bool checkbox_state = false;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -100,18 +99,61 @@ class _SearchScreenState extends State<SearchScreen> {
                   Icons.delete,
                   color: Colors.white,
                 ),
-                onTap: () {store.deleteData(store.JSON_Obj[store.DataTable_Selected_Row]["Category"],
-                                store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);}),
+                onTap: () {
+                  Alert(
+                    context: context,
+                    type: AlertType.warning,
+                    title: "DELETING",
+                    desc: "Want to remove this part from the database?",
+                    buttons: [
+                      DialogButton(
+                          child: Container(
+                            height: 40,
+                            width: 90,
+                            child: Center(
+                              child: Text(
+                                'YES',
+                                style: TextStyle(fontSize: 20, color: Colors.white),
+                              ),
+                            ),
+                            decoration: new BoxDecoration(
+                              borderRadius: new BorderRadius.all(new Radius.circular(5.0)),
+                              color: Color.fromRGBO(41, 55, 109, 1.0),
+                            ),
+                          ),
+                          onPressed: () {
+                            store.deleteData(store.JSON_Obj[store.DataTable_Selected_Row]["Category"],
+                                store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);
+
+                            Navigator.of(context, rootNavigator: true).pop();
+                          },
+                          color: Colors.transparent),
+                      DialogButton(
+                        child: Text(
+                          'CANCEL',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromRGBO(41, 55, 109, 1.0),
+                          ),
+                        ),
+                        onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                        color: Colors.transparent,
+                      )
+                    ],
+                  ).show();
+                }),
             FloatingActionRowDivider(),
             FloatingActionRowButton(
                 icon: Icon(
                   Icons.edit,
                   color: Colors.white,
                 ),
-                onTap: () { //Editing_DropDown_Value = store.JSON_Obj[store.DataTable_Selected_Row]["Category"];
-                              store.Editing_Dropdown_Item = store.JSON_Obj[store.DataTable_Selected_Row]["Category"];
-                              buildEditingScreen(store.JSON_Obj[store.DataTable_Selected_Row]["Category"],
-                                  store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);}),
+                onTap: () {
+                  //Editing_DropDown_Value = store.JSON_Obj[store.DataTable_Selected_Row]["Category"];
+                  store.Editing_Dropdown_Item = store.JSON_Obj[store.DataTable_Selected_Row]["Category"];
+                  buildEditingScreen(store.JSON_Obj[store.DataTable_Selected_Row]["Category"],
+                      store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);
+                }),
           ],
         ),
       ),
@@ -266,6 +308,12 @@ class _SearchScreenState extends State<SearchScreen> {
                                 }),
                                 selected: index == selectedIndex,
                                 onSelectChanged: (val) {
+
+                                  
+
+                                  store.Set_Hardware_Device(int.parse(store.JSON_Obj[index]["Drawer"]));
+
+
                                   setState(() {
                                     if (index == selectedIndex && val == true) {
                                       selectedIndex = -1;
@@ -274,6 +322,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                     }
                                     if (index == selectedIndex && val == false) {
                                       selectedIndex = -1;
+                                      store.Set_Hardware_Device(-1);
                                       store.DataTable_Selectable = false;
                                       store.Show_Buttons_Edit_and_Delete = false;
                                     } else {
@@ -301,6 +350,50 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
+  bool showAlertDialog() {
+    bool _return;
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "DELETING PART",
+      desc: "Continue with the deletion?",
+      buttons: [
+        DialogButton(
+            color: Colors.transparent,
+            child: TextButton(
+                onPressed: () {},
+                child: Text(
+                  'YES',
+                  style: TextStyle(fontSize: 16),
+                ),
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(41, 55, 109, 1.0)),
+                    side: MaterialStateProperty.all(BorderSide(width: 2, color: Color.fromRGBO(41, 55, 109, 1.0))),
+                    foregroundColor: MaterialStateProperty.all(Colors.white),
+                    padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
+                    textStyle: MaterialStateProperty.all(TextStyle(fontSize: 30)))),
+            onPressed: () {
+              _return = true;
+              Navigator.of(context, rootNavigator: true).pop();
+            }),
+        DialogButton(
+            color: Colors.transparent,
+            child: TextButton(
+              onPressed: () {},
+              child: Text(
+                'CANCEL',
+                style: TextStyle(fontSize: 16, color: Color.fromRGBO(41, 55, 109, 1.0)),
+              ),
+            ),
+            onPressed: () {
+              _return = false;
+              Navigator.of(context, rootNavigator: true).pop();
+            })
+      ],
+    ).show();
+    return _return;
+  }
+
   Widget buildDropDown(String category) {
     return StatefulBuilder(builder: (context, setState) {
       return Expanded(
@@ -322,6 +415,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 Editing_DropDown_Value = newValue;
               });*/
                 store.Editing_Dropdown_Item = newValue;
+                store.Editing_Category = newValue;
 
                 setState(() {});
                 //store.Register_Category = newValue;
@@ -394,7 +488,18 @@ class _SearchScreenState extends State<SearchScreen> {
                               onPressed: () async {
                                 FocusScope.of(context).unfocus();
 
-                                store.editData(store.Editing_Category, store.Editing_Description, store.Editing_Drawer);
+                                if (store.Editing_Category == "") store.Editing_Category = category;
+
+                                if (store.Editing_Description == "") store.Editing_Description = description;
+
+                                if (store.Editing_Drawer == "") store.Editing_Drawer = drawer;
+
+                                store.editData(
+                                    store.Editing_Category, store.Editing_Description, store.Editing_Drawer, category, description, drawer);
+
+                                store.Editing_Category = "";
+                                store.Editing_Description = "";
+                                store.Editing_Drawer = "";
 /*
                                 if (Last_Register_Description != store.Register_Description && Last_Register_Drawer != store.Register_Drawer) {
                                   if (await store.createData(store.Register_Category, store.Register_Description, store.Register_Drawer) == true) {
@@ -411,7 +516,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
                                   */
 
-                                  Navigator.pop(context);
+                                Navigator.pop(context);
                               },
                               child: Text(
                                 'SAVE',

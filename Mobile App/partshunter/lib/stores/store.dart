@@ -236,7 +236,7 @@ abstract class _PartsDatabaseStore with Store {
     });
   }
 
-  void deleteData(String category, String description, String drawer) {
+  Future<void> deleteData(String category, String description, String drawer) async{
 
     firebase.once().then((DataSnapshot _snap) async {
 
@@ -277,8 +277,70 @@ abstract class _PartsDatabaseStore with Store {
     firebase.child('flutterDevsTeam1').update({'description': 'TESTE'});
   }
 
-  void editData(String category, String description, String drawer) {
-    firebase.child(category).update({description: drawer});
+
+
+
+
+
+
+
+  Future<void> editData(String category, String description, String drawer,   String oldCategory, String oldDescription, String oldDrawer) async {
+   // firebase.child(category).update({description: drawer});
+
+
+   if(category != oldCategory){
+     await deleteData(oldCategory, oldDescription, oldDrawer);
+     await createData(category, description, drawer);
+   }
+
+   else{
+
+
+
+
+
+    firebase.once().then((DataSnapshot _snap) async {
+
+        Map<dynamic, dynamic> values = _snap.value;
+
+        String _address;
+
+        await values.forEach((key1, values) {
+          if (key1 != "HardwareDevice") {
+            Map<dynamic, dynamic> values2 = values;
+            values2.forEach((key, values) async {
+              
+              String a = key1;
+              String b = values["Description"];
+              String c = values["Drawer"];
+
+
+//TODO: if category changes, then: DELTE and CREATE
+//TODO: if category does not change, then, UPDATE
+
+
+              if(a == oldCategory && b == oldDescription && c == oldDrawer){
+                print(a);
+                _address = category + '/' + key.toString();
+
+                //firebase.child(_address).remove();
+                await firebase.child(_address).update({"Description": description});
+                await firebase.child(_address).update({"Drawer": drawer});
+
+                await Get_Firebase_and_Convert_to_JSON();
+              }
+
+            });
+          }
+        });
+
+    });
+
+
+
+  }
+
+
   }
 
 
