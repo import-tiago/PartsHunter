@@ -54,8 +54,32 @@ abstract class _PartsDatabaseStore with Store {
   @observable
   bool DataTable_Selectable = false;
 
+@observable
+  bool Show_Buttons_Edit_and_Delete = false;
+
   @observable
   int DataTable_Selected_Row;
+
+  @observable
+  bool Editing_Mode_Checkbox = false;
+
+  @observable
+  String Editing_Dropdown_Item;
+
+
+  @observable
+  String Editing_Category = "";
+
+  @observable
+  String Editing_Description = "";
+
+  @observable
+  String Editing_Drawer = "";
+
+
+  @observable
+  bool editCancel = false;
+ 
 
   @action
   void Build_DropDown() {
@@ -254,8 +278,9 @@ abstract class _PartsDatabaseStore with Store {
   }
 
   void editData(String category, String description, String drawer) {
-    firebase.child('flutterDevsTeam1').update({'description': 'TESTE'});
+    firebase.child(category).update({description: drawer});
   }
+
 
 
 

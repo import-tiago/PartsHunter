@@ -10,12 +10,16 @@ import 'package:partshunter/screens/register_screen.dart';
 
 //Application
 import 'dart:convert';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'package:partshunter/stores/store.dart';
+import 'package:floating_action_row/floating_action_row.dart';
 
 //Screens
 
 //Stores
+
+import 'package:partshunter/models/custom_dialog.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -48,10 +52,14 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   String Current_Selected_DropDown_Value;
+  String Editing_DropDown_Value;
   bool row1Selected = false;
 
   int selectedIndex = -1;
   bool isSelected = false;
+
+  bool checkbox_state = false;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -72,9 +80,42 @@ class _SearchScreenState extends State<SearchScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.keyboard_hide_outlined), label: "Keypad"),
         ],
       ),
-      body: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
+      /*    
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.red,
+          onPressed: () {},
+          child: const Icon(
+            Icons.edit,
+            color: Colors.white,
+          ),
+        ),
+*/
+      floatingActionButton: Visibility(
+        visible: store.Show_Buttons_Edit_and_Delete,
+        child: FloatingActionRow(
+          color: Color.fromRGBO(41, 55, 109, 1.0),
+          children: <Widget>[
+            FloatingActionRowButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+                onTap: () {store.deleteData(store.JSON_Obj[store.DataTable_Selected_Row]["Category"],
+                                store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);}),
+            FloatingActionRowDivider(),
+            FloatingActionRowButton(
+                icon: Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                ),
+                onTap: () { //Editing_DropDown_Value = store.JSON_Obj[store.DataTable_Selected_Row]["Category"];
+                              store.Editing_Dropdown_Item = store.JSON_Obj[store.DataTable_Selected_Row]["Category"];
+                              buildEditingScreen(store.JSON_Obj[store.DataTable_Selected_Row]["Category"],
+                                  store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);}),
+          ],
+        ),
+      ),
+      body: Stack(alignment: Alignment.bottomCenter, children: [
         SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
@@ -215,26 +256,35 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                             ],
                             rows: List<DataRow>.generate(store.DataTable_Length, (index) {
-                              return DataRow(
+                              return DataRow.byIndex(
+                                index: index,
+                                color: MaterialStateColor.resolveWith((states) {
+                                  if (index == selectedIndex) {
+                                    return Colors.yellow[200];
+                                  } else
+                                    return Colors.transparent;
+                                }),
                                 selected: index == selectedIndex,
                                 onSelectChanged: (val) {
                                   setState(() {
                                     if (index == selectedIndex && val == true) {
                                       selectedIndex = -1;
                                       store.DataTable_Selectable = false;
+                                      store.Show_Buttons_Edit_and_Delete = false;
                                     }
                                     if (index == selectedIndex && val == false) {
                                       selectedIndex = -1;
                                       store.DataTable_Selectable = false;
+                                      store.Show_Buttons_Edit_and_Delete = false;
                                     } else {
                                       selectedIndex = index;
                                       store.DataTable_Selected_Row = index;
-                                      store.DataTable_Selectable = true;
+                                      store.Show_Buttons_Edit_and_Delete = true;
+                                      //store.DataTable_Selectable = true;
                                     }
                                   });
                                 },
                                 cells: [
-                                  
                                   DataCell(Text(store.JSON_Obj[index]["Category"])),
                                   DataCell(Text(store.JSON_Obj[index]["Description"])),
                                   DataCell(Text(store.JSON_Obj[index]["Drawer"])),
@@ -247,79 +297,200 @@ class _SearchScreenState extends State<SearchScreen> {
             ],
           ),
         ),
-        Visibility(
-          visible:  store.DataTable_Selectable,
-                  child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 20, bottom: 20),
-                child: SizedBox.fromSize(
-                  size: Size(56, 56), // button width and height
-                  child: ClipOval(
-                    child: Material(
-                      color: Color.fromRGBO(41, 55, 109, 1.0), // button color
-                      child: InkWell(
-                        splashColor: Colors.white, // splash color
-                        onTap: () {
-
-                          
-                          
-                          
-                          store.deleteData(store.JSON_Obj[store.DataTable_Selected_Row]["Category"], store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);
-
-
-
-
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ), // icon
-                            Text("Delete", style: TextStyle(color: Colors.white)), // text
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 20, bottom: 20),
-                child: SizedBox.fromSize(
-                  size: Size(56, 56), // button width and height
-                  child: ClipOval(
-                    child: Material(
-                      color: Color.fromRGBO(41, 55, 109, 1.0), // button color
-                      child: InkWell(
-                        splashColor: Colors.white, // splash color
-                        onTap: () {
-
-                          store.editData(store.JSON_Obj[store.DataTable_Selected_Row]["Category"], store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);
-                        }, // button pressed
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                            ), // icon
-                            Text("Edit", style: TextStyle(color: Colors.white)), // text
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
       ]),
     );
+  }
+
+  Widget buildDropDown(String category) {
+    return StatefulBuilder(builder: (context, setState) {
+      return Expanded(
+        child: Container(
+          height: 40,
+          margin: EdgeInsets.only(left: 10),
+          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5.0), border: Border.all(color: Colors.grey[600], style: BorderStyle.solid, width: 0.80)),
+          child: Builder(builder: (_) {
+            return DropdownButton<String>(
+              underline: SizedBox(),
+              hint: Text("Choose an existing category"),
+              isExpanded: true,
+              value: store.Editing_Dropdown_Item, //Editing_DropDown_Value,
+              onChanged: (String newValue) {
+                /*
+              setState(() {
+                Editing_DropDown_Value = newValue;
+              });*/
+                store.Editing_Dropdown_Item = newValue;
+
+                setState(() {});
+                //store.Register_Category = newValue;
+              },
+              items: store.dropDownMenuItems,
+            );
+          }),
+        ),
+      );
+    });
+  }
+
+  Widget buildTextField() {
+    return Expanded(
+      child: Container(
+          height: 40,
+          margin: EdgeInsets.only(right: 10, left: 10),
+          child: TextField(
+            onChanged: (input) {
+              input = input.toUpperCase();
+              store.Editing_Category = input;
+            },
+            textAlign: TextAlign.left,
+            decoration: InputDecoration(
+              hintText: 'Type a new category',
+              border: const OutlineInputBorder(),
+              contentPadding: EdgeInsets.only(left: 10, right: 10),
+            ),
+          )),
+    );
+  }
+
+  Future<Widget> buildEditingScreen(String category, String description, String drawer) async {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                title: Center(child: Text('Editing Mode')),
+                actions: <Widget>[
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FlatButton(
+                          onPressed: () {
+                            //Navigator.pop(context, null);
+                          },
+                          child: TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'CANCEL',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(41, 55, 109, 1.0)),
+                                  side: MaterialStateProperty.all(BorderSide(width: 2, color: Color.fromRGBO(41, 55, 109, 1.0))),
+                                  foregroundColor: MaterialStateProperty.all(Colors.white),
+                                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
+                                  textStyle: MaterialStateProperty.all(TextStyle(fontSize: 30)))),
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            //Navigator.pop(context, cityList);
+                          },
+                          child: TextButton(
+                              onPressed: () async {
+                                FocusScope.of(context).unfocus();
+
+                                store.editData(store.Editing_Category, store.Editing_Description, store.Editing_Drawer);
+/*
+                                if (Last_Register_Description != store.Register_Description && Last_Register_Drawer != store.Register_Drawer) {
+                                  if (await store.createData(store.Register_Category, store.Register_Description, store.Register_Drawer) == true) {
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Success")));
+
+                                    Last_Register_Category = store.Register_Category;
+                                    Last_Register_Description = store.Register_Description;
+                                    Last_Register_Drawer = store.Register_Drawer;
+                                  } else
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Fail")));
+                                } else
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Fail! Some Description and/or Drawer")));
+
+
+                                  */
+
+                                  Navigator.pop(context);
+                              },
+                              child: Text(
+                                'SAVE',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(41, 55, 109, 1.0)),
+                                  side: MaterialStateProperty.all(BorderSide(width: 2, color: Color.fromRGBO(41, 55, 109, 1.0))),
+                                  foregroundColor: MaterialStateProperty.all(Colors.white),
+                                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
+                                  textStyle: MaterialStateProperty.all(TextStyle(fontSize: 30)))),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                content: Container(
+                  height: 160,
+                  //width: double.minPositive,
+                  child: Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          checkbox_state ? buildTextField() : buildDropDown(category),
+                          Wrap(
+                            spacing: -8.0,
+                            direction: Axis.horizontal,
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              Checkbox(
+                                  activeColor: Color.fromRGBO(41, 55, 109, 1.0),
+                                  value: checkbox_state,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      checkbox_state = value;
+                                    });
+                                  }),
+                              Text(
+                                "new",
+                                style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      Container(
+                          height: 40,
+                          margin: EdgeInsets.only(right: 10, left: 10, top: 10),
+                          child: TextField(
+                            controller: TextEditingController()..text = description,
+                            onChanged: (input) => store.Editing_Description = input,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              hintText: 'Description',
+                              border: const OutlineInputBorder(),
+                              contentPadding: EdgeInsets.only(left: 10, right: 10),
+                            ),
+                          )),
+                      Container(
+                          height: 40,
+                          margin: EdgeInsets.only(right: 10, left: 10, top: 20),
+                          child: TextField(
+                            controller: TextEditingController()..text = drawer,
+                            onChanged: (input) => store.Editing_Drawer = input,
+                            textAlign: TextAlign.left,
+                            decoration: InputDecoration(
+                              hintText: 'Drawer',
+                              border: const OutlineInputBorder(),
+                              contentPadding: EdgeInsets.only(left: 10, right: 10),
+                            ),
+                          )),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        });
   }
 }

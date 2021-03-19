@@ -156,6 +156,202 @@ mixin _$PartsDatabaseStore on _PartsDatabaseStore, Store {
     });
   }
 
+  final _$Register_CategoryAtom =
+      Atom(name: '_PartsDatabaseStore.Register_Category');
+
+  @override
+  String get Register_Category {
+    _$Register_CategoryAtom.reportRead();
+    return super.Register_Category;
+  }
+
+  @override
+  set Register_Category(String value) {
+    _$Register_CategoryAtom.reportWrite(value, super.Register_Category, () {
+      super.Register_Category = value;
+    });
+  }
+
+  final _$Register_DescriptionAtom =
+      Atom(name: '_PartsDatabaseStore.Register_Description');
+
+  @override
+  String get Register_Description {
+    _$Register_DescriptionAtom.reportRead();
+    return super.Register_Description;
+  }
+
+  @override
+  set Register_Description(String value) {
+    _$Register_DescriptionAtom.reportWrite(value, super.Register_Description,
+        () {
+      super.Register_Description = value;
+    });
+  }
+
+  final _$Register_DrawerAtom =
+      Atom(name: '_PartsDatabaseStore.Register_Drawer');
+
+  @override
+  String get Register_Drawer {
+    _$Register_DrawerAtom.reportRead();
+    return super.Register_Drawer;
+  }
+
+  @override
+  set Register_Drawer(String value) {
+    _$Register_DrawerAtom.reportWrite(value, super.Register_Drawer, () {
+      super.Register_Drawer = value;
+    });
+  }
+
+  final _$DataTable_SelectableAtom =
+      Atom(name: '_PartsDatabaseStore.DataTable_Selectable');
+
+  @override
+  bool get DataTable_Selectable {
+    _$DataTable_SelectableAtom.reportRead();
+    return super.DataTable_Selectable;
+  }
+
+  @override
+  set DataTable_Selectable(bool value) {
+    _$DataTable_SelectableAtom.reportWrite(value, super.DataTable_Selectable,
+        () {
+      super.DataTable_Selectable = value;
+    });
+  }
+
+  final _$Show_Buttons_Edit_and_DeleteAtom =
+      Atom(name: '_PartsDatabaseStore.Show_Buttons_Edit_and_Delete');
+
+  @override
+  bool get Show_Buttons_Edit_and_Delete {
+    _$Show_Buttons_Edit_and_DeleteAtom.reportRead();
+    return super.Show_Buttons_Edit_and_Delete;
+  }
+
+  @override
+  set Show_Buttons_Edit_and_Delete(bool value) {
+    _$Show_Buttons_Edit_and_DeleteAtom
+        .reportWrite(value, super.Show_Buttons_Edit_and_Delete, () {
+      super.Show_Buttons_Edit_and_Delete = value;
+    });
+  }
+
+  final _$DataTable_Selected_RowAtom =
+      Atom(name: '_PartsDatabaseStore.DataTable_Selected_Row');
+
+  @override
+  int get DataTable_Selected_Row {
+    _$DataTable_Selected_RowAtom.reportRead();
+    return super.DataTable_Selected_Row;
+  }
+
+  @override
+  set DataTable_Selected_Row(int value) {
+    _$DataTable_Selected_RowAtom
+        .reportWrite(value, super.DataTable_Selected_Row, () {
+      super.DataTable_Selected_Row = value;
+    });
+  }
+
+  final _$Editing_Mode_CheckboxAtom =
+      Atom(name: '_PartsDatabaseStore.Editing_Mode_Checkbox');
+
+  @override
+  bool get Editing_Mode_Checkbox {
+    _$Editing_Mode_CheckboxAtom.reportRead();
+    return super.Editing_Mode_Checkbox;
+  }
+
+  @override
+  set Editing_Mode_Checkbox(bool value) {
+    _$Editing_Mode_CheckboxAtom.reportWrite(value, super.Editing_Mode_Checkbox,
+        () {
+      super.Editing_Mode_Checkbox = value;
+    });
+  }
+
+  final _$Editing_Dropdown_ItemAtom =
+      Atom(name: '_PartsDatabaseStore.Editing_Dropdown_Item');
+
+  @override
+  String get Editing_Dropdown_Item {
+    _$Editing_Dropdown_ItemAtom.reportRead();
+    return super.Editing_Dropdown_Item;
+  }
+
+  @override
+  set Editing_Dropdown_Item(String value) {
+    _$Editing_Dropdown_ItemAtom.reportWrite(value, super.Editing_Dropdown_Item,
+        () {
+      super.Editing_Dropdown_Item = value;
+    });
+  }
+
+  final _$Editing_CategoryAtom =
+      Atom(name: '_PartsDatabaseStore.Editing_Category');
+
+  @override
+  String get Editing_Category {
+    _$Editing_CategoryAtom.reportRead();
+    return super.Editing_Category;
+  }
+
+  @override
+  set Editing_Category(String value) {
+    _$Editing_CategoryAtom.reportWrite(value, super.Editing_Category, () {
+      super.Editing_Category = value;
+    });
+  }
+
+  final _$Editing_DescriptionAtom =
+      Atom(name: '_PartsDatabaseStore.Editing_Description');
+
+  @override
+  String get Editing_Description {
+    _$Editing_DescriptionAtom.reportRead();
+    return super.Editing_Description;
+  }
+
+  @override
+  set Editing_Description(String value) {
+    _$Editing_DescriptionAtom.reportWrite(value, super.Editing_Description, () {
+      super.Editing_Description = value;
+    });
+  }
+
+  final _$Editing_DrawerAtom = Atom(name: '_PartsDatabaseStore.Editing_Drawer');
+
+  @override
+  String get Editing_Drawer {
+    _$Editing_DrawerAtom.reportRead();
+    return super.Editing_Drawer;
+  }
+
+  @override
+  set Editing_Drawer(String value) {
+    _$Editing_DrawerAtom.reportWrite(value, super.Editing_Drawer, () {
+      super.Editing_Drawer = value;
+    });
+  }
+
+  final _$editCancelAtom = Atom(name: '_PartsDatabaseStore.editCancel');
+
+  @override
+  bool get editCancel {
+    _$editCancelAtom.reportRead();
+    return super.editCancel;
+  }
+
+  @override
+  set editCancel(bool value) {
+    _$editCancelAtom.reportWrite(value, super.editCancel, () {
+      super.editCancel = value;
+    });
+  }
+
   final _$Get_Firebase_and_Convert_to_JSONAsyncAction =
       AsyncAction('_PartsDatabaseStore.Get_Firebase_and_Convert_to_JSON');
 
@@ -219,6 +415,18 @@ lists: ${lists},
 DataTable_Length: ${DataTable_Length},
 Description_Search_Input: ${Description_Search_Input},
 Keypad_Input: ${Keypad_Input},
+Register_Category: ${Register_Category},
+Register_Description: ${Register_Description},
+Register_Drawer: ${Register_Drawer},
+DataTable_Selectable: ${DataTable_Selectable},
+Show_Buttons_Edit_and_Delete: ${Show_Buttons_Edit_and_Delete},
+DataTable_Selected_Row: ${DataTable_Selected_Row},
+Editing_Mode_Checkbox: ${Editing_Mode_Checkbox},
+Editing_Dropdown_Item: ${Editing_Dropdown_Item},
+Editing_Category: ${Editing_Category},
+Editing_Description: ${Editing_Description},
+Editing_Drawer: ${Editing_Drawer},
+editCancel: ${editCancel},
 SetHardwareDevice: ${SetHardwareDevice}
     ''';
   }
