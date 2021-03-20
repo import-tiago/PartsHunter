@@ -54,7 +54,7 @@ abstract class _PartsDatabaseStore with Store {
   @observable
   bool DataTable_Selectable = false;
 
-@observable
+  @observable
   bool Show_Buttons_Edit_and_Delete = false;
 
   @observable
@@ -66,7 +66,6 @@ abstract class _PartsDatabaseStore with Store {
   @observable
   String Editing_Dropdown_Item;
 
-
   @observable
   String Editing_Category = "";
 
@@ -76,10 +75,8 @@ abstract class _PartsDatabaseStore with Store {
   @observable
   String Editing_Drawer = "";
 
-
   @observable
   bool editCancel = false;
- 
 
   @action
   void Build_DropDown() {
@@ -224,10 +221,13 @@ abstract class _PartsDatabaseStore with Store {
       Todo todo = new Todo(description, drawer);
 
       await firebase.reference().child(category).push().set(todo.toJson());
+      await Get_Firebase_and_Convert_to_JSON();
+      DataTable_Length = JSON_Obj.length;
       return true;
-    }
-    else
-    return false;
+    } else
+      return false;
+
+      
   }
 
   readData() async {
@@ -236,71 +236,48 @@ abstract class _PartsDatabaseStore with Store {
     });
   }
 
-  Future<void> deleteData(String category, String description, String drawer) async{
-
+  Future<void> deleteData(String category, String description, String drawer) async {
     firebase.once().then((DataSnapshot _snap) async {
+      Map<dynamic, dynamic> values = _snap.value;
 
-        Map<dynamic, dynamic> values = _snap.value;
+      String _address;
 
-        String _address;
+      await values.forEach((key1, values) {
+        if (key1 != "HardwareDevice") {
+          Map<dynamic, dynamic> values2 = values;
+          values2.forEach((key, values) async {
+            String a = key1;
+            String b = values["Description"];
+            String c = values["Drawer"];
 
-        await values.forEach((key1, values) {
-          if (key1 != "HardwareDevice") {
-            Map<dynamic, dynamic> values2 = values;
-            values2.forEach((key, values) {
-              
-              String a = key1;
-              String b = values["Description"];
-              String c = values["Drawer"];
+            if (a == category && b == description && c == drawer) {
+              print(a);
+              _address = category + '/' + key.toString();
 
-              if(a == category && b == description && c ==drawer){
-                print(a);
-                _address = category + '/' + key.toString();
+              firebase.child(_address).remove();
 
-                firebase.child(_address).remove();
-
-                Get_Firebase_and_Convert_to_JSON();
-              }
-
-            });
-          }
-        });
-
+              await Get_Firebase_and_Convert_to_JSON();        
+            }
+          });
+        }
+      });
     });
 
 
-
-    
   }
 
   void updateData(String drawer, String description) {
     firebase.child('flutterDevsTeam1').update({'description': 'TESTE'});
   }
 
+  Future<void> editData(String category, String description, String drawer, String oldCategory, String oldDescription, String oldDrawer) async {
+    // firebase.child(category).update({description: drawer});
 
-
-
-
-
-
-
-  Future<void> editData(String category, String description, String drawer,   String oldCategory, String oldDescription, String oldDrawer) async {
-   // firebase.child(category).update({description: drawer});
-
-
-   if(category != oldCategory){
-     await deleteData(oldCategory, oldDescription, oldDrawer);
-     await createData(category, description, drawer);
-   }
-
-   else{
-
-
-
-
-
-    firebase.once().then((DataSnapshot _snap) async {
-
+    if (category != oldCategory) {
+      await deleteData(oldCategory, oldDescription, oldDrawer);
+      await createData(category, description, drawer);
+    } else {
+      firebase.once().then((DataSnapshot _snap) async {
         Map<dynamic, dynamic> values = _snap.value;
 
         String _address;
@@ -309,17 +286,14 @@ abstract class _PartsDatabaseStore with Store {
           if (key1 != "HardwareDevice") {
             Map<dynamic, dynamic> values2 = values;
             values2.forEach((key, values) async {
-              
               String a = key1;
               String b = values["Description"];
               String c = values["Drawer"];
 
-
 //TODO: if category changes, then: DELTE and CREATE
 //TODO: if category does not change, then, UPDATE
 
-
-              if(a == oldCategory && b == oldDescription && c == oldDrawer){
+              if (a == oldCategory && b == oldDescription && c == oldDrawer) {
                 print(a);
                 _address = category + '/' + key.toString();
 
@@ -329,30 +303,20 @@ abstract class _PartsDatabaseStore with Store {
 
                 await Get_Firebase_and_Convert_to_JSON();
               }
-
             });
           }
         });
-
-    });
-
-
-
+      });
+    }
   }
-
-
-  }
-
-
-
 
   List_All_Parts() async {
     await Get_Firebase_and_Convert_to_JSON();
   }
 
   Set_Hardware_Device(int input) async {
-    if (input == null || input < -1 || input > 599) input = -1;
-    String output = "${input},0,255,0,10,100";
+    if (input == null || input < -1 || input > 600) input = -1;
+    String output = "${input},0,255,0,128,100";
 
     await firebase.update({'HardwareDevice': output});
   }

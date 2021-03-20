@@ -22,7 +22,7 @@
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
+    <MapFileExtensions>false</MapFileExtensions>
     <UpdateUrl>https://raw.githubusercontent.com/TiagoPaulaSilva/PartsHunter/tree/master/Windows%2520App/PartsHunter/publish/</UpdateUrl>
     <SupportUrl>https://github.com/TiagoPaulaSilva</SupportUrl>
     <ErrorReportUrl>https://github.com/TiagoPaulaSilva</ErrorReportUrl>
@@ -30,7 +30,8 @@
     <ProductName>PartsHunter</ProductName>
     <PublisherName>PartsHunter</PublisherName>
     <SuiteName>Controlando Elétrons</SuiteName>
-    <ApplicationRevision>14</ApplicationRevision>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <ApplicationRevision>16</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -57,7 +58,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>PartsHunter.ico</ApplicationIcon>
+    <ApplicationIcon>_PartsHunter.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>303C2FD38DE046EDAA52DC51ECAC8A8E34BCD409</ManifestCertificateThumbprint>
@@ -76,6 +77,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>PartsHunter.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FireSharp, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -189,6 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="PartsHunter.ico" />
+    <Content Include="_PartsHunter.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

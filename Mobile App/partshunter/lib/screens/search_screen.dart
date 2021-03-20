@@ -43,9 +43,11 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() => Current_BottomNavigation_Index = index);
     switch (index) {
       case 1:
+      store.Set_Hardware_Device(-1);
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
         break;
       case 2:
+      store.Set_Hardware_Device(-1);
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => KeypadScreen()));
         break;
     }
@@ -89,73 +91,83 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
 */
-      floatingActionButton: Visibility(
-        visible: store.Show_Buttons_Edit_and_Delete,
-        child: FloatingActionRow(
-          color: Color.fromRGBO(41, 55, 109, 1.0),
-          children: <Widget>[
-            FloatingActionRowButton(
-                icon: Icon(
-                  Icons.delete,
-                  color: Colors.white,
-                ),
-                onTap: () {
-                  Alert(
-                    context: context,
-                    type: AlertType.warning,
-                    title: "DELETING",
-                    desc: "Want to remove this part from the database?",
-                    buttons: [
-                      DialogButton(
-                          child: Container(
-                            height: 40,
-                            width: 90,
-                            child: Center(
-                              child: Text(
-                                'YES',
-                                style: TextStyle(fontSize: 20, color: Colors.white),
+      floatingActionButton: Builder(
+        builder: (_){
+              return Visibility(
+          visible: store.Show_Buttons_Edit_and_Delete,
+          child: FloatingActionRow(
+            color: Color.fromRGBO(41, 55, 109, 1.0),
+            children: <Widget>[
+              FloatingActionRowButton(
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                  onTap: () {
+                    Alert(
+                      context: context,
+                      type: AlertType.warning,
+                      title: "DELETING",
+                      desc: "Want to remove this part from the database?",
+                      buttons: [
+                        DialogButton(
+                            child: Container(
+                              height: 40,
+                              width: 90,
+                              child: Center(
+                                child: Text(
+                                  'YES',
+                                  style: TextStyle(fontSize: 20, color: Colors.white),
+                                ),
+                              ),
+                              decoration: new BoxDecoration(
+                                borderRadius: new BorderRadius.all(new Radius.circular(5.0)),
+                                color: Color.fromRGBO(41, 55, 109, 1.0),
                               ),
                             ),
-                            decoration: new BoxDecoration(
-                              borderRadius: new BorderRadius.all(new Radius.circular(5.0)),
+                            onPressed: () {
+                              store.deleteData(store.JSON_Obj[store.DataTable_Selected_Row]["Category"],
+                                  store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);
+
+                                     if (store.JSON_Obj.length <= 1) 
+                                     store.Show_Buttons_Edit_and_Delete = false;
+                                     setState(() {
+                                       
+                                     });
+        
+
+                              Navigator.of(context, rootNavigator: true).pop();
+                            },
+                            color: Colors.transparent),
+                        DialogButton(
+                          child: Text(
+                            'CANCEL',
+                            style: TextStyle(
+                              fontSize: 20,
                               color: Color.fromRGBO(41, 55, 109, 1.0),
                             ),
                           ),
-                          onPressed: () {
-                            store.deleteData(store.JSON_Obj[store.DataTable_Selected_Row]["Category"],
-                                store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);
-
-                            Navigator.of(context, rootNavigator: true).pop();
-                          },
-                          color: Colors.transparent),
-                      DialogButton(
-                        child: Text(
-                          'CANCEL',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Color.fromRGBO(41, 55, 109, 1.0),
-                          ),
-                        ),
-                        onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                        color: Colors.transparent,
-                      )
-                    ],
-                  ).show();
-                }),
-            FloatingActionRowDivider(),
-            FloatingActionRowButton(
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                ),
-                onTap: () {
-                  //Editing_DropDown_Value = store.JSON_Obj[store.DataTable_Selected_Row]["Category"];
-                  store.Editing_Dropdown_Item = store.JSON_Obj[store.DataTable_Selected_Row]["Category"];
-                  buildEditingScreen(store.JSON_Obj[store.DataTable_Selected_Row]["Category"],
-                      store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);
-                }),
-          ],
-        ),
+                          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                          color: Colors.transparent,
+                        )
+                      ],
+                    ).show();
+                  }),
+              FloatingActionRowDivider(),
+              FloatingActionRowButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  ),
+                  onTap: () {
+                    //Editing_DropDown_Value = store.JSON_Obj[store.DataTable_Selected_Row]["Category"];
+                    store.Editing_Dropdown_Item = store.JSON_Obj[store.DataTable_Selected_Row]["Category"];
+                    buildEditingScreen(store.JSON_Obj[store.DataTable_Selected_Row]["Category"],
+                        store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);
+                  }),
+            ],
+          ),
+        );},
       ),
       body: Stack(alignment: Alignment.bottomCenter, children: [
         SingleChildScrollView(

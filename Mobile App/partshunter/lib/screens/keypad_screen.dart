@@ -31,7 +31,11 @@ class _KeypadScreenState extends State<KeypadScreen> {
   int Current_BottomNavigation_Index = 1;
 
   void Change_BottomNavigation_Index(int index) {
+
+
+if(index != 2)
     setState(() => Current_BottomNavigation_Index = index);
+    
     switch (index) {
       case 0:
         store.Set_Hardware_Device(-1);

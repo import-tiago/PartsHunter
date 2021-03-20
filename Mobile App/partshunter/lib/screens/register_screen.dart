@@ -26,6 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void initState() {
+    super.initState();
     store.Get_Firebase_and_Convert_to_JSON();
   }
 
@@ -43,10 +44,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() => Current_BottomNavigation_Index = index);
     switch (index) {
       case 0:
+      store.Set_Hardware_Device(-1);
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SearchScreen()));
         break;
 
       case 2:
+      store.Set_Hardware_Device(-1);
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => KeypadScreen()));
         break;
     }
@@ -132,21 +135,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 onPressed: () async {
                   FocusScope.of(context).unfocus();
 
-                  if(Last_Register_Description != store.Register_Description && Last_Register_Drawer != store.Register_Drawer){
+                  if (Last_Register_Description != store.Register_Description && Last_Register_Drawer != store.Register_Drawer) {
                     if (await store.createData(store.Register_Category, store.Register_Description, store.Register_Drawer) == true) {
-
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Success")));
 
                       Last_Register_Category = store.Register_Category;
                       Last_Register_Description = store.Register_Description;
                       Last_Register_Drawer = store.Register_Drawer;
-                  
-
                     } else
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Fail")));
-                  }
-                   else
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Fail! Some Description and/or Drawer")));
+                  } else
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Fail! Some Description and/or Drawer")));
                 },
                 child: Text(
                   'SAVE',
@@ -210,4 +209,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
-

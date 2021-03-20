@@ -82,8 +82,7 @@ void setup() {
 
   timer1.attach(0.05, ISR_Highlight_Drawer);  //50 mili-seconds overflow
 
-  WiFi_Connect(WIFI_SSID, WIFI_PASSWORD);
-  //WiFi_Connect("Tiago", "tiago1234");
+  WiFi_Connect(WIFI_SSID, WIFI_PASSWORD);  
 
   Firebase_Connect(FIREBASE_HOST, API_KEY, USER_EMAIL, USER_PASSWORD);
 
@@ -147,7 +146,7 @@ void UART_Commands_Monitor() {
 
     _DEBUG(drawer_number, red_color, green_color, blue_color, brightness_level, blinky_time);
 
-    if (drawer_number < 0) // Turn-off all LEDs
+    if (drawer_number <= 0) // Turn-off all LEDs
     {
       red_color = 0;
       green_color = 0;
@@ -158,15 +157,16 @@ void UART_Commands_Monitor() {
       SETUP_ISR_Highlight(1, red_color, green_color, blue_color, brightness_level, blinky_time);
     }
     else if (
-      (drawer_number >= 0) && (drawer_number <= TOTAL_NUMBER_LEDS_AT_SRIP) &&
+      (drawer_number >= 1) && (drawer_number <= TOTAL_NUMBER_LEDS_AT_SRIP) &&
       (red_color >= 0) && (red_color <= 255) &&
       (green_color >= 0) && (green_color <= 255) &&
       (blue_color >= 0) && (blue_color <= 255) &&
       (brightness_level >= 0) && (brightness_level <= 255) &&
       (blinky_time >= 100) && (blinky_time <= 1000))
     {
-      uint16_t led_position = drawer_number;          
-    
+      uint16_t led_position = drawer_number;
+
+      led_position--;
     Current_Adjusts = String(Data_from_UART_Array);
     
     Serial.println("Current_Adjusts");
@@ -208,7 +208,7 @@ void Firebase_Commands_Monitor() {
 
   _DEBUG(drawer_number, red_color, green_color, blue_color, brightness_level, blinky_time);
 
-  if (drawer_number < 0) // Turn-off all LEDs
+  if (drawer_number <= 0) // Turn-off all LEDs
   {
     red_color = 0;
     green_color = 0;
@@ -217,7 +217,7 @@ void Firebase_Commands_Monitor() {
     SETUP_ISR_Highlight(1, red_color, green_color, blue_color, brightness_level, blinky_time);
   }
   else if (
-    (drawer_number >= 0) && (drawer_number <= TOTAL_NUMBER_LEDS_AT_SRIP) &&
+    (drawer_number >= 1) && (drawer_number <= TOTAL_NUMBER_LEDS_AT_SRIP) &&
     (red_color >= 0) && (red_color <= 255) &&
     (green_color >= 0) && (green_color <= 255) &&
     (blue_color >= 0) && (blue_color <= 255) &&
@@ -225,7 +225,8 @@ void Firebase_Commands_Monitor() {
     (blinky_time >= 100) && (blinky_time <= 1000))
   {
     uint16_t led_position = drawer_number;
-  
+    led_position--;
+    
     Current_Adjusts = String(Data_from_Firebase_Array);
 
   if(Current_Adjusts != Last_Adjusts)

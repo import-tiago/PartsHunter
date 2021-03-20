@@ -29,20 +29,20 @@ namespace PartsHunter
 {
     public partial class Form1 : Form
     {
-        
+
         private const int SEARCH = 0;
         private const int REGISTER = 1;
         private const int CLEAR_ALL = 0;
         private const int CLEAR_KEEPING_FILLED_DRAWERS = 1;
         private dynamic JSON_Firebase;
-        
-        
-        
+
+
+
         private bool Pre_Load_Done = false;
-        
+
         private string Current_Button_Click = String.Empty;
         private string Last_Button_Click = String.Empty;
-        
+
         private bool validatedCategory;
         private bool validatedDescription;
         private bool validatedDrawer;
@@ -80,36 +80,30 @@ namespace PartsHunter
                 MessageBox.Show("Error Connection");
             }
 
-        
+
         }
 
-        
 
-   
 
-      
+
+
+
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
 
-            
+
             Set_Firebase_HardwareDevice("-1,0,0,0,0,0");
 
 
-      
+
         }
 
- 
+
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            /*
-            if (Pre_Load_Done == false)
-            {
-                Pre_Load_Done = true;
-                Load_Firebase_Database();
-            }
-            */
+
             if (tabControl1.SelectedIndex == 1 && Pre_Load_Done == false)
             {
                 FIll_ComboBox_Category();
@@ -117,8 +111,7 @@ namespace PartsHunter
 
 
             if (tabControl1.SelectedIndex == 0 && dataGridViewSearch.CurrentRow == null)
-            {                
-              //  Set_Firebase_HardwareDevice("-1,0,0,0,0,0");
+            {
             }
 
             else if (tabControl1.SelectedIndex == 0 && dataGridViewSearch.CurrentRow != null)
@@ -126,7 +119,7 @@ namespace PartsHunter
                 Highligth_From_Results();
             }
 
-            if(tabControl1.SelectedIndex == 2)
+            if (tabControl1.SelectedIndex == 2)
             {
                 if (Firebase_Database_KEY == "" && Firebase_Database_URL == "")
                 {
@@ -140,10 +133,10 @@ namespace PartsHunter
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
             Load_Local_File_Configs();
 
-            
+
 
             dataGridViewSearch.Columns[0].Width = (int)(dataGridViewSearch.Width * 0.3);
             dataGridViewSearch.Columns[1].Width = (int)(dataGridViewSearch.Width * 0.6);
@@ -162,7 +155,7 @@ namespace PartsHunter
             FIll_ComboBox_Category();
             Set_Firebase_HardwareDevice("-1,0,0,0,0,0");
 
-            if(Firebase_Database_KEY == null && Firebase_Database_URL == null)
+            if (Firebase_Database_KEY == null && Firebase_Database_URL == null)
             {
                 buttonSearch.Enabled = false;
                 buttonListAll.Enabled = false;
@@ -183,13 +176,13 @@ namespace PartsHunter
         {
             comboBoxCategories_RegisterTab.Items.Clear();
             comboBoxCategories_RegisterTab.Items.Add("<Select one or type a new one>");
-            
+
             int items = comboBoxCategories_RegisterTab.Items.Count;
             int items2 = comboBoxCategories_SearchTab.Items.Count;
 
             string value = string.Empty;
             string value2 = string.Empty;
-            
+
             bool ignore = false;
             bool ignore2 = false;
 
@@ -207,7 +200,7 @@ namespace PartsHunter
                     for (int i = 0; i < items; i++)
                     {
                         value = comboBoxCategories_RegisterTab.Items[i].ToString();
-                        
+
                         if (key == value || key == "HardwareDevice")
                             ignore = true;
                     }
@@ -223,14 +216,14 @@ namespace PartsHunter
                     for (int i = 0; i < items2; i++)
                     {
 
-                        
+
                         value2 = comboBoxCategories_SearchTab.Items[i].ToString();
 
                         if (key == value || key == "HardwareDevice" || key == value2)
                             ignore2 = true;
                     }
                     if (ignore2 == false)
-                    {                        
+                    {
                         comboBoxCategories_SearchTab.Items.Add(key);
                     }
                 }
@@ -310,7 +303,7 @@ namespace PartsHunter
                     }
                 }
                 else
-                {                    
+                {
                     Set_Firebase_HardwareDevice("-1,0,0,0,0,0");
                     labelNumberResults.Text = "0" + " results found";
                 }
@@ -365,7 +358,7 @@ namespace PartsHunter
                 }
                 else
                 {
-                    
+
                     Set_Firebase_HardwareDevice("-1,0,0,0,0,0");
                     labelNumberResults.Text = "0" + " results found";
                 }
@@ -405,12 +398,12 @@ namespace PartsHunter
 
                 var drawer = dataGridViewSearch[2, x].Value.ToString();
 
-                
+
                 string command = drawer + ',' + LED_Highlight_Color.R + ',' + LED_Highlight_Color.G + ',' + LED_Highlight_Color.B + ',' + LED_Highlight_Brightness + ',' + LED_Highlight_Time;
 
                 Set_Firebase_HardwareDevice(command);
 
-                
+
             }
             catch
             {
@@ -463,89 +456,8 @@ namespace PartsHunter
                 MessageBox.Show("Select a category");
             }
         }
-        /*
-
-        void FindRegisteredComponent(string input)
-        {
-            string[] newRow;
-            int numberResults = 0;
-
-            dataGridViewRegisteredParts.AllowUserToAddRows = true;
-
-            dataGridViewRegisteredParts.Rows.Clear();
-
-            foreach (var key in JSON_Firebase.Keys)
-            {
-                if (key != "void" && key != "HardwareDevice")
-                {
-                    foreach (var key2 in JSON_Firebase[key].Keys)
-                    {
-                        string s = JSON_Firebase[key][key2]["Description"].ToString();
-
-                        string[] words = input.Split(' ');
-
-                        foreach (var w in words)
-                        {
-
-                            if (culture.CompareInfo.IndexOf(s, w, CompareOptions.IgnoreCase) >= 0)
-                            {
-                                foreach (DataGridViewRow row in dataGridViewRegisteredParts.Rows)
-                                {
-                                    newRow = new string[] { JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Drawer"] };
-
-                                    if (row.Cells[0].Value != JSON_Firebase[key][key2]["Description"])
-                                    {
-                                        dataGridViewRegisteredParts.Rows.Add(newRow);
-                                        numberResults++;
-                                        break;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    
-                    Set_Firebase_HardwareDevice("-1,0,0,0,0,0");
-                    labelNumberResults2.Text = "0" + " results found";
-                }
-            }
-            dataGridViewRegisteredParts.AllowUserToAddRows = false;
-            labelNumberResults2.Text = numberResults.ToString() + " results found";
-
-            if (numberResults == 1)
-                Show_Location_Registered_Part(0);
-            else if (numberResults == 0)
-                groupBoxCurrentLocation.Visible = false;
-
-        }
-        */
-        /*
-        private void buttonNewBox_Click(object sender, EventArgs e)
-        {
-            labelNumberResults2.Visible = false;
-            groupBoxCurrentLocation.Visible = false;
-            string[] newRow;
-            int index = 0;
-            bool get_small = false;
-            comboBoxCategory.Text = comboBoxCategory.Items[0].ToString();
 
 
-
-
-
-
-
-
-
-
-
-        }
-        */
 
         private void comboBoxCategory_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -605,41 +517,9 @@ namespace PartsHunter
             SearchByDescription(textBoxSearch.Text);
         }
 
-     
-
-        /*
-        int Fill_Parts_Datagrid()
-        {
-            string[] newRow;
-            string value = string.Empty;
-            int results = 0;
-
-            dataGridViewRegister.Rows.Clear();
-            dataGridViewRegister.AllowUserToAddRows = true;
-
-            foreach (var key in JSON_Firebase.Keys)
-            {
-                if (key != "void" && key != "HardwareDevice")
-                {
-                    foreach (var key2 in JSON_Firebase[key].Keys)
-                    {
 
 
-                        newRow = new string[] { key, JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Drawer"] };
 
-                        dataGridViewRegister.Rows.Add(newRow);
-
-                        results++;
-
-                    }
-                }
-            }
-
-            dataGridViewRegister.AllowUserToAddRows = false;
-
-            return results;
-        }
-        */
 
         void Highlight_Drawer_From_Box_Selection()
         {
@@ -659,142 +539,13 @@ namespace PartsHunter
             }
         }
 
-        /*
-        void Highlight_Drawer_From_Parts_Selection()
-        {
-            string drawer = "";
-
-            try
-            {
-                int x = dataGridViewRegister.SelectedCells[0].RowIndex;
-
-                if(dataGridViewRegister[2, x].Value != null)
-                    drawer = dataGridViewRegister[2, x].Value.ToString();
-
-                
-                string command = drawer + ',' + LED_Highlight_Color.R + ',' + LED_Highlight_Color.G + ',' + LED_Highlight_Color.B + ',' + LED_Highlight_Brightness + ',' + LED_Highlight_Time;
-
-                Set_Firebase_HardwareDevice(command);
-                
-            }
-            catch
-            {
-
-            }
-
-
-        }
-        */
-
-
-
-        /*
-
-        private void dataGridViewCurrentParts_SelectionChanged(object sender, EventArgs e)
-        {
-            Highlight_Drawer_From_Parts_Selection();
-
-            
-            
-        }
-
-        */
-
-        /*
-        private void buttonFindCurrentLocation_Click(object sender, EventArgs e)
-        {
-
-            groupBoxCurrentLocation.Visible = true;
-            labelNumberResults2.Visible = true;
-            FindRegisteredComponent(textBoxDescription.Text);
-        }
-        */
-        /*
-        private void dataGridViewRegisteredParts_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            Show_Location_Registered_Part(e.RowIndex);
-        }
-        */
-        /*
-        void Show_Location_Registered_Part(int clickIndex)
-        {
-            int clicked_index = clickIndex;
-
-            int drawer_index = 0;
-
-            string drawer = dataGridViewRegisteredParts.Rows[clicked_index].Cells[1].Value.ToString();
-
-            try
-            {
-                
-                string command = drawer + ',' + LED_Highlight_Color.R + ',' + LED_Highlight_Color.G + ',' + LED_Highlight_Color.B + ',' + LED_Highlight_Brightness + ',' + LED_Highlight_Time;
-
-                Set_Firebase_HardwareDevice(command);
-                
-                int milliseconds = 1000;
-                Thread.Sleep(milliseconds);
-
-            }
-            catch
-            {
-
-            }
-
-
-           
-                foreach (DataGridViewRow rowDrawer in dataGridViewCurrentParts.Rows)
-                {
-                    if (rowDrawer.Cells[2].Value != null)
-                    {
-
-                        if ((rowDrawer.Cells[2].Value.ToString() == drawer))
-                        {
-                            drawer_index = rowDrawer.Index;
-                            break;
-                        }
-
-                        dataGridViewCurrentParts.Rows[drawer_index].Selected = true;
-                    }
-                else
-                {
-                    newRow = new string[] { key, JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Drawer"] };
-
-                    dataGridViewCurrentParts.Rows.Add(newRow);
-                }
-
-                }
-
-
-         
-
-
-
-
-
-
-            groupBoxCurrentLocation.Visible = false;
-
-            textBoxDescription.Text = dataGridViewRegisteredParts.Rows[clicked_index].Cells[0].Value.ToString();
-        }
-        */
-        /*
-        private void textBoxDescription_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                groupBoxCurrentLocation.Visible = true;
-                labelNumberResults2.Visible = true;
-                FindRegisteredComponent(textBoxDescription.Text);
-            }
-        }
-        */
         private void buttonSave_Click_1(object sender, EventArgs e)
         {
-           
+
 
             if (validatedCategory && validatedDescription && validatedDrawer)
             {
-                string category = comboBoxCategories_RegisterTab.Text;
+                string category = comboBoxCategories_RegisterTab.Text.ToUpper();
                 string description = textBoxDescription.Text;
                 string drawer = textBoxDrawer.Text;
                 Push_New_Component(category, description, drawer);
@@ -899,7 +650,7 @@ namespace PartsHunter
 
             variables.Add("URL", textBoxFirebase_URL.Text);
             variables.Add("KEY", textBoxFirebase_Key.Text);
-            
+
 
             FileStream fs = new FileStream("Firebase_Secrets.dat", FileMode.Create);
 
@@ -924,13 +675,13 @@ namespace PartsHunter
             }
         }
 
-        
+
         void Load_Firebase_Secrets()
         {
             Hashtable variables = null;
 
             FileStream fs = new FileStream("Firebase_Secrets.dat", FileMode.OpenOrCreate);
-            
+
             try
             {
                 BinaryFormatter formatter = new BinaryFormatter();
@@ -949,7 +700,7 @@ namespace PartsHunter
             }
         }
 
-      
+
 
         void Load_Local_File_Configs()
         {
@@ -1002,7 +753,7 @@ namespace PartsHunter
             {
                 LED_Highlight_Brightness = 128;
                 LED_Highlight_Time = 100;
-                LED_Highlight_Color = Color.FromArgb(0, 255, 0); 
+                LED_Highlight_Color = Color.FromArgb(0, 255, 0);
                 SaveData();
                 Load_Local_File_Configs();
             }
@@ -1018,7 +769,6 @@ namespace PartsHunter
 
             try
             {
-                //labelNumberResults2.Visible = false;
 
 
                 category = "";
@@ -1032,10 +782,6 @@ namespace PartsHunter
                 description = "";
                 if (dataGridViewSearch.SelectedCells.Count > 0)
                     description = dataGridViewSearch.SelectedCells[1].Value.ToString();
-
-
-
-
 
                 Form2 f2 = new Form2(category, drawer, description);
                 var result = f2.ShowDialog();
@@ -1056,7 +802,7 @@ namespace PartsHunter
                         Update_Firebase(_drawer, _description);
                     Pre_Load_Done = false;
                     ReLoad_Fields();
-                    
+
                 }
             }
             catch
@@ -1087,7 +833,7 @@ namespace PartsHunter
         {
             try
             {
-              
+
 
                 string drawer = "";
                 if (dataGridViewSearch.SelectedCells.Count > 0)
@@ -1153,11 +899,11 @@ namespace PartsHunter
 
         private void buttonClear_Click(object sender, EventArgs e)
         {
-            
+
             Set_Firebase_HardwareDevice("-1,0,0,0,0,0");
         }
 
-    
+
 
         private void buttonSettings_Click(object sender, EventArgs e)
         {
@@ -1215,7 +961,7 @@ namespace PartsHunter
             int x = (trackBarBright.Value * 100) / 255;
             if (x <= 0)
                 x = 1;
-            
+
             if (LED_Highlight_Brightness <= 0)
                 LED_Highlight_Brightness = 1;
 
@@ -1223,7 +969,7 @@ namespace PartsHunter
         }
 
         private void buttonClear_Click_1(object sender, EventArgs e)
-        {            
+        {
             Set_Firebase_HardwareDevice("-1,0,0,0,0,0");
             dataGridViewSearch.Rows.Clear();
             labelNumberResults.Visible = false;
@@ -1305,7 +1051,7 @@ namespace PartsHunter
 
         private void button1_Click_2(object sender, EventArgs e)
         {
-            if(button1.Text == "Show")
+            if (button1.Text == "Show")
             {
                 textBoxFirebase_Key.Text = Firebase_Database_KEY;
                 textBoxFirebase_Key.PasswordChar = '\0';
