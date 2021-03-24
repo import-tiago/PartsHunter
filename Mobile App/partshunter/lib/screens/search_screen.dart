@@ -234,6 +234,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           height: 40,
                           margin: EdgeInsets.only(right: 10, left: 10),
                           child: TextField(
+                            keyboardType: TextInputType.visiblePassword,
                             onChanged: (input) => store.Description_Search_Input = input,
                             textAlign: TextAlign.left,
                             decoration: InputDecoration(
@@ -580,6 +581,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           height: 40,
                           margin: EdgeInsets.only(right: 10, left: 10, top: 10),
                           child: TextField(
+                            keyboardType: TextInputType.visiblePassword,
                             controller: TextEditingController()..text = description,
                             onChanged: (input) => store.Editing_Description = input,
                             textAlign: TextAlign.left,
@@ -593,6 +595,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           height: 40,
                           margin: EdgeInsets.only(right: 10, left: 10, top: 20),
                           child: TextField(
+                             keyboardType: TextInputType.number,
                             controller: TextEditingController()..text = drawer,
                             onChanged: (input) => store.Editing_Drawer = input,
                             textAlign: TextAlign.left,

@@ -108,6 +108,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               height: 40,
               margin: EdgeInsets.only(right: 10, left: 10, top: 10),
               child: TextField(
+                keyboardType: TextInputType.visiblePassword,
                 onChanged: (input) => store.Register_Description = input,
                 textAlign: TextAlign.left,
                 decoration: InputDecoration(
@@ -120,6 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               height: 40,
               margin: EdgeInsets.only(right: 10, left: 10, top: 20),
               child: TextField(
+                keyboardType: TextInputType.number,                
                 onChanged: (input) => store.Register_Drawer = input,
                 textAlign: TextAlign.left,
                 decoration: InputDecoration(
