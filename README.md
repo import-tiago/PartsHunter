@@ -1,6 +1,6 @@
 # PartsHunter
 
-[![Status](https://img.shields.io/badge/status-WIP-red)](https://github.com/TiagoPaulaSilva/PartsHunter) [![Donate](https://img.shields.io/badge/support-Buy%20me%20a%20coffee-yellow)](https://www.buymeacoffee.com/TiagoPaulaSilva)
+[![Status](https://img.shields.io/badge/Status-Finished-green.svg)](https://github.com/TiagoPaulaSilva/PartsHunter) [![Donate](https://img.shields.io/badge/support-Buy%20me%20a%20coffee-yellow)](https://www.buymeacoffee.com/TiagoPaulaSilva)
 
 PartsHunter is an organizer system for storage and automatic identification of electronic components.
 
