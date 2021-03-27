@@ -16,7 +16,7 @@
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateEnabled>false</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
@@ -31,7 +31,7 @@
     <PublisherName>PartsHunter</PublisherName>
     <SuiteName>Controlando Elétrons</SuiteName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>16</ApplicationRevision>
+    <ApplicationRevision>17</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -176,8 +176,8 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="PartsHunter_TemporaryKey.pfx" />
     <None Include="Properties\app.manifest" />
@@ -193,6 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="PartsHunter.ico" />
+    <None Include="Resources\BatchFileExample.png" />
     <Content Include="_PartsHunter.ico" />
   </ItemGroup>
   <ItemGroup>

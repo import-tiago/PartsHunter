@@ -50,6 +50,7 @@ namespace PartsHunter
         private Color LED_Highlight_Color;
         private int LED_Highlight_Time;
         private int LED_Highlight_Brightness;
+        private string BatcFileLocation;
         private CultureInfo culture = new CultureInfo("es-ES", false);
         private string Current_Category = String.Empty;
         private string Firebase_Database_URL;
@@ -1062,6 +1063,63 @@ namespace PartsHunter
                 textBoxFirebase_Key.PasswordChar = '*';
                 button1.Text = "Show";
             }
+        }
+
+        private void buttonGetFileAddress_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                textBoxFileLocation.Text = openFileDialog1.FileName;
+                BatcFileLocation = openFileDialog1.FileName;
+            }
+        }
+
+        private void buttonSaveFromFile_Click(object sender, EventArgs e)
+        {            
+            string text = System.IO.File.ReadAllText(@BatcFileLocation);
+            string[] lines = System.IO.File.ReadAllLines(@BatcFileLocation);
+
+            string category = string.Empty;
+            string description = string.Empty;
+            string drawer = string.Empty;
+
+            int index = 0;
+            int totalParts = 0;
+
+            progressBar1.Visible = true;
+            progressBar1.Maximum = lines.Length;
+
+            try
+            {
+                foreach (string l in lines)
+                {
+                    string[] words = l.Split(',');
+
+                    index = 0;
+                    foreach (var w in words)
+                    {
+                        switch (index++)
+                        {
+                            case 0: category = w; break;
+                            case 1: description = w; break;
+                            case 2: drawer = w; break;
+                        }                        
+                    }
+                    Push_New_Component(category.ToUpper(), description, drawer);
+                    totalParts++;
+                    progressBar1.Value++;
+                }
+                
+                ReLoad_Fields();
+                Pre_Load_Done = false;
+                MessageBox.Show("Success! " + totalParts + " Parts added to cloud databese.");
+            }
+            catch
+            {
+                MessageBox.Show("Fail! Check the file and the text formatting rules.");
+            }
+
+            progressBar1.Visible = false;
         }
     }
 }

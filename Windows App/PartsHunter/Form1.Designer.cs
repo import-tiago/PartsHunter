@@ -73,6 +73,16 @@ namespace PartsHunter
             this.textBoxFirebase_Key = new System.Windows.Forms.TextBox();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textBoxFileLocation = new System.Windows.Forms.TextBox();
+            this.buttonGetFileAddress = new System.Windows.Forms.Button();
+            this.buttonSaveFromFile = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBoxSettings.SuspendLayout();
@@ -84,6 +94,8 @@ namespace PartsHunter
             this.groupBox1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -383,6 +395,7 @@ namespace PartsHunter
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
             this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
@@ -406,7 +419,7 @@ namespace PartsHunter
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(925, 202);
+            this.groupBox1.Size = new System.Drawing.Size(925, 220);
             this.groupBox1.TabIndex = 67;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "PART INFORMATION";
@@ -416,7 +429,7 @@ namespace PartsHunter
             this.buttonSave.BackColor = System.Drawing.Color.PaleTurquoise;
             this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSave.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSave.Location = new System.Drawing.Point(100, 153);
+            this.buttonSave.Location = new System.Drawing.Point(100, 164);
             this.buttonSave.Margin = new System.Windows.Forms.Padding(4);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(111, 33);
@@ -440,7 +453,7 @@ namespace PartsHunter
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(23, 28);
+            this.label3.Location = new System.Drawing.Point(8, 28);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(69, 17);
@@ -469,7 +482,7 @@ namespace PartsHunter
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(15, 124);
+            this.label5.Location = new System.Drawing.Point(8, 124);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(77, 17);
@@ -567,6 +580,108 @@ namespace PartsHunter
             this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider1.ContainerControl = this;
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label10);
+            this.groupBox2.Controls.Add(this.label9);
+            this.groupBox2.Controls.Add(this.pictureBox1);
+            this.groupBox2.Controls.Add(this.progressBar1);
+            this.groupBox2.Controls.Add(this.buttonSaveFromFile);
+            this.groupBox2.Controls.Add(this.buttonGetFileAddress);
+            this.groupBox2.Controls.Add(this.textBoxFileLocation);
+            this.groupBox2.Controls.Add(this.label8);
+            this.groupBox2.Location = new System.Drawing.Point(10, 275);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox2.Size = new System.Drawing.Size(925, 432);
+            this.groupBox2.TabIndex = 72;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "BATCH REGISTRATION";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(8, 31);
+            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(92, 17);
+            this.label8.TabIndex = 54;
+            this.label8.Text = "File Location:";
+            // 
+            // textBoxFileLocation
+            // 
+            this.textBoxFileLocation.Location = new System.Drawing.Point(100, 28);
+            this.textBoxFileLocation.Margin = new System.Windows.Forms.Padding(4);
+            this.textBoxFileLocation.Name = "textBoxFileLocation";
+            this.textBoxFileLocation.Size = new System.Drawing.Size(777, 22);
+            this.textBoxFileLocation.TabIndex = 72;
+            // 
+            // buttonGetFileAddress
+            // 
+            this.buttonGetFileAddress.Location = new System.Drawing.Point(884, 28);
+            this.buttonGetFileAddress.Name = "buttonGetFileAddress";
+            this.buttonGetFileAddress.Size = new System.Drawing.Size(33, 23);
+            this.buttonGetFileAddress.TabIndex = 73;
+            this.buttonGetFileAddress.Text = "...";
+            this.buttonGetFileAddress.UseVisualStyleBackColor = true;
+            this.buttonGetFileAddress.Click += new System.EventHandler(this.buttonGetFileAddress_Click);
+            // 
+            // buttonSaveFromFile
+            // 
+            this.buttonSaveFromFile.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.buttonSaveFromFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSaveFromFile.Font = new System.Drawing.Font("Arial Rounded MT Bold", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSaveFromFile.Location = new System.Drawing.Point(100, 74);
+            this.buttonSaveFromFile.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonSaveFromFile.Name = "buttonSaveFromFile";
+            this.buttonSaveFromFile.Size = new System.Drawing.Size(111, 33);
+            this.buttonSaveFromFile.TabIndex = 72;
+            this.buttonSaveFromFile.Text = "SAVE";
+            this.buttonSaveFromFile.UseVisualStyleBackColor = false;
+            this.buttonSaveFromFile.Click += new System.EventHandler(this.buttonSaveFromFile_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(100, 57);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(777, 10);
+            this.progressBar1.TabIndex = 74;
+            this.progressBar1.Visible = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::PartsHunter.Properties.Resources.BatchFileExample;
+            this.pictureBox1.Location = new System.Drawing.Point(11, 153);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(531, 260);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 75;
+            this.pictureBox1.TabStop = false;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(8, 133);
+            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(65, 17);
+            this.label9.TabIndex = 76;
+            this.label9.Text = "Example:";
+            // 
+            // label10
+            // 
+            this.label10.Location = new System.Drawing.Point(549, 153);
+            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(403, 202);
+            this.label10.TabIndex = 77;
+            this.label10.Text = resources.GetString("label10.Text");
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -597,6 +712,9 @@ namespace PartsHunter
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -645,6 +763,16 @@ namespace PartsHunter
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBoxFirebase_Key;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button buttonSaveFromFile;
+        private System.Windows.Forms.Button buttonGetFileAddress;
+        private System.Windows.Forms.TextBox textBoxFileLocation;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
     }
 }
 
