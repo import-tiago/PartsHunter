@@ -43,11 +43,11 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() => Current_BottomNavigation_Index = index);
     switch (index) {
       case 1:
-      store.Set_Hardware_Device(-1);
+        store.Set_Hardware_Device(-1);
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
         break;
       case 2:
-      store.Set_Hardware_Device(-1);
+        store.Set_Hardware_Device(-1);
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => KeypadScreen()));
         break;
     }
@@ -61,6 +61,11 @@ class _SearchScreenState extends State<SearchScreen> {
   bool isSelected = false;
 
   bool checkbox_state = false;
+
+  int _currentSortColumn = 0;
+  bool _isAscending = true;
+  bool sort = true;
+    int _sortColumnIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -81,93 +86,82 @@ class _SearchScreenState extends State<SearchScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.keyboard_hide_outlined), label: "Keypad"),
         ],
       ),
-      /*    
-      floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.red,
-          onPressed: () {},
-          child: const Icon(
-            Icons.edit,
-            color: Colors.white,
-          ),
-        ),
-*/
       floatingActionButton: Builder(
-        builder: (_){
-              return Visibility(
-          visible: store.Show_Buttons_Edit_and_Delete,
-          child: FloatingActionRow(
-            color: Color.fromRGBO(41, 55, 109, 1.0),
-            children: <Widget>[
-              FloatingActionRowButton(
-                  icon: Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                  ),
-                  onTap: () {
-                    Alert(
-                      context: context,
-                      type: AlertType.warning,
-                      title: "DELETING",
-                      desc: "Want to remove this part from the database?",
-                      buttons: [
-                        DialogButton(
-                            child: Container(
-                              height: 40,
-                              width: 90,
-                              child: Center(
-                                child: Text(
-                                  'YES',
-                                  style: TextStyle(fontSize: 20, color: Colors.white),
+        builder: (_) {
+          return Visibility(
+            visible: store.Show_Buttons_Edit_and_Delete,
+            child: FloatingActionRow(
+              color: Color.fromRGBO(41, 55, 109, 1.0),
+              children: <Widget>[
+                FloatingActionRowButton(
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                    ),
+                    onTap: () {
+                      Alert(
+                        context: context,
+                        type: AlertType.warning,
+                        title: "DELETING",
+                        desc: "Want to remove this part from the database?",
+                        buttons: [
+                          DialogButton(
+                              child: Container(
+                                height: 40,
+                                width: 90,
+                                child: Center(
+                                  child: Text(
+                                    'YES',
+                                    style: TextStyle(fontSize: 20, color: Colors.white),
+                                  ),
+                                ),
+                                decoration: new BoxDecoration(
+                                  borderRadius: new BorderRadius.all(new Radius.circular(5.0)),
+                                  color: Color.fromRGBO(41, 55, 109, 1.0),
                                 ),
                               ),
-                              decoration: new BoxDecoration(
-                                borderRadius: new BorderRadius.all(new Radius.circular(5.0)),
+                              onPressed: () {
+                                store.deleteData(
+                                    store.JSON_Obj[store.DataTable_Selected_Row]["Category"],
+                                    store.JSON_Obj[store.DataTable_Selected_Row]["Description"],
+                                    store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);
+
+                                if (store.JSON_Obj.length <= 1) store.Show_Buttons_Edit_and_Delete = false;
+                                setState(() {});
+
+                                Navigator.of(context, rootNavigator: true).pop();
+                              },
+                              color: Colors.transparent),
+                          DialogButton(
+                            child: Text(
+                              'CANCEL',
+                              style: TextStyle(
+                                fontSize: 20,
                                 color: Color.fromRGBO(41, 55, 109, 1.0),
                               ),
                             ),
-                            onPressed: () {
-                              store.deleteData(store.JSON_Obj[store.DataTable_Selected_Row]["Category"],
-                                  store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);
-
-                                     if (store.JSON_Obj.length <= 1) 
-                                     store.Show_Buttons_Edit_and_Delete = false;
-                                     setState(() {
-                                       
-                                     });
-        
-
-                              Navigator.of(context, rootNavigator: true).pop();
-                            },
-                            color: Colors.transparent),
-                        DialogButton(
-                          child: Text(
-                            'CANCEL',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Color.fromRGBO(41, 55, 109, 1.0),
-                            ),
-                          ),
-                          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                          color: Colors.transparent,
-                        )
-                      ],
-                    ).show();
-                  }),
-              FloatingActionRowDivider(),
-              FloatingActionRowButton(
-                  icon: Icon(
-                    Icons.edit,
-                    color: Colors.white,
-                  ),
-                  onTap: () {
-                    //Editing_DropDown_Value = store.JSON_Obj[store.DataTable_Selected_Row]["Category"];
-                    store.Editing_Dropdown_Item = store.JSON_Obj[store.DataTable_Selected_Row]["Category"];
-                    buildEditingScreen(store.JSON_Obj[store.DataTable_Selected_Row]["Category"],
-                        store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);
-                  }),
-            ],
-          ),
-        );},
+                            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                            color: Colors.transparent,
+                          )
+                        ],
+                      ).show();
+                    }),
+                FloatingActionRowDivider(),
+                FloatingActionRowButton(
+                    icon: Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                    ),
+                    onTap: () {
+                      //Editing_DropDown_Value = store.JSON_Obj[store.DataTable_Selected_Row]["Category"];
+                      store.Editing_Dropdown_Item = store.JSON_Obj[store.DataTable_Selected_Row]["Category"];
+                      buildEditingScreen(store.JSON_Obj[store.DataTable_Selected_Row]["Category"],
+                          store.JSON_Obj[store.DataTable_Selected_Row]["Description"], store.JSON_Obj[store.DataTable_Selected_Row]["Drawer"]);
+                    }),
+              ],
+            ),
+          );
+        },
       ),
       body: Stack(alignment: Alignment.bottomCenter, children: [
         SingleChildScrollView(
@@ -280,34 +274,58 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Container(
-                        width: MediaQuery.of(context).size.width - 20,
-                        margin: EdgeInsets.only(top: 10, right: 10, left: 10),
+
+                        width: MediaQuery.of(context).size.width - 10,
+                        margin: EdgeInsets.only(top: 10, right: 5, left: 5),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey[300]),
                         ),
                         child: Observer(builder: (_) {
                           return DataTable(
+                            columnSpacing: 30,
                             showCheckboxColumn: store.DataTable_Selectable,
-                            sortAscending: true,
-                            sortColumnIndex: 2,
-                            columns: const <DataColumn>[
+                            sortAscending: sort,
+                            sortColumnIndex: _sortColumnIndex ,
+                            columns: <DataColumn>[
                               DataColumn(
+                                
                                 label: Text(
                                   'CATEGORY',
                                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                                 ),
+                                onSort: (columnIndex, ascending) {
+                                     _sortColumnIndex = columnIndex;
+                                  setState(() {
+                                    sort = !sort;
+                                  });
+                                  onSortColum(columnIndex, ascending, "CATEGORY");
+                                },
                               ),
                               DataColumn(
                                 label: Text(
                                   'DESCRIPTION',
                                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                                 ),
+                                onSort: (columnIndex, ascending) {
+                                  _sortColumnIndex = columnIndex;
+                                  setState(() {
+                                    sort = !sort;
+                                  });
+                                  onSortColum(columnIndex, ascending, "DESCRIPTION");
+                                },
                               ),
                               DataColumn(
                                 label: Text(
                                   'DRAWER',
                                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                                 ),
+                                onSort: (columnIndex, ascending) {
+                                  _sortColumnIndex = columnIndex;
+                                  setState(() {
+                                    sort = !sort;
+                                  });
+                                  onSortColum(columnIndex, ascending, "DRAWER");
+                                },
                               ),
                             ],
                             rows: List<DataRow>.generate(store.DataTable_Length, (index) {
@@ -321,11 +339,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 }),
                                 selected: index == selectedIndex,
                                 onSelectChanged: (val) {
-
-                                  
-
                                   store.Set_Hardware_Device(int.parse(store.JSON_Obj[index]["Drawer"]));
-
 
                                   setState(() {
                                     if (index == selectedIndex && val == true) {
@@ -347,9 +361,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                   });
                                 },
                                 cells: [
-                                  DataCell(Text(store.JSON_Obj[index]["Category"])),
-                                  DataCell(Text(store.JSON_Obj[index]["Description"])),
-                                  DataCell(Text(store.JSON_Obj[index]["Drawer"])),
+                                  //DataCell(Text(store.JSON_Obj[index]["Category"])),
+                                  //DataCell(Text(store.JSON_Obj[index]["Description"])),
+                                  //DataCell(Text(store.JSON_Obj[index]["Drawer"])),
+
+                                  DataCell(Text(store.list[index].Get("Category"))),
+                                  DataCell(Text(store.list[index].Get("Description"))),
+                                  DataCell(Text(store.list[index].Get("Drawer"))),
                                 ],
                               );
                             }),
@@ -361,6 +379,40 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ]),
     );
+  }
+
+  onSortColum(int columnIndex, bool ascending, String sortingByColumn) {
+    switch (sortingByColumn) {
+      case "CATEGORY":
+        if (columnIndex == 0) {
+          if (ascending) {
+            store.list.sort((a, b) => a.Category.compareTo(b.Category));
+          } else {
+            store.list.sort((a, b) => b.Category.compareTo(a.Category));
+          }
+        }
+        break;
+
+        case "DESCRIPTION":
+        if (columnIndex == 1) {
+          if (ascending) {
+            store.list.sort((a, b) => a.Description.compareTo(b.Description));
+          } else {
+            store.list.sort((a, b) => b.Description.compareTo(a.Description));
+          }
+        }
+        break;
+
+         case "DRAWER":
+        if (columnIndex == 2) {
+          if (ascending) {
+            store.list.sort((a, b) => a.Drawer.compareTo(b.Drawer));
+          } else {
+            store.list.sort((a, b) => b.Drawer.compareTo(a.Drawer));
+          }
+        }
+        break;
+    }
   }
 
   bool showAlertDialog() {
@@ -595,7 +647,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           height: 40,
                           margin: EdgeInsets.only(right: 10, left: 10, top: 20),
                           child: TextField(
-                             keyboardType: TextInputType.number,
+                            keyboardType: TextInputType.number,
                             controller: TextEditingController()..text = drawer,
                             onChanged: (input) => store.Editing_Drawer = input,
                             textAlign: TextAlign.left,

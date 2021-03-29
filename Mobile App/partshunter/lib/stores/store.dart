@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:partshunter/models/todo.dart';
+import 'package:partshunter/models/json.dart';
 
 part 'store.g.dart';
 
@@ -23,6 +24,18 @@ abstract class _PartsDatabaseStore with Store {
 
   @observable
   List<Map<dynamic, dynamic>> JSON_Obj = [];
+
+    @observable
+  List<String> Column_Category = [];
+
+  @observable
+  List<String> Column_Description= [];
+
+  @observable
+  List<String> Column_Drawer= [];
+
+  @observable
+  List list = [];
 
   @observable
   List<DropdownMenuItem<String>> dropDownMenuItems;
@@ -157,15 +170,38 @@ abstract class _PartsDatabaseStore with Store {
 
           lists.add(values);
         });
-      }
+      }      
     });
 
+
+
+
     DataTable_Length = JSON_Obj.length;
+
+   _toList();
+      
     Build_DropDown();
   }
 
   bool equalsIgnoreCase(String string1, String string2) {
     return string1?.toLowerCase() == string2?.toLowerCase();
+  }
+
+  void _toList(){
+
+    if(list != null){
+      list.clear();
+
+    }
+
+    for(int index=0; index < JSON_Obj.length; index++) {
+      
+      list.add(Part(JSON_Obj[index]["Category"], JSON_Obj[index]["Description"], JSON_Obj[index]["Drawer"]));
+    }
+
+
+   
+
   }
 
   @action
@@ -197,6 +233,7 @@ abstract class _PartsDatabaseStore with Store {
     JSON_Obj.clear();
     JSON_Obj = JSON_Obj_only_Description;
     DataTable_Length = JSON_Obj.length;
+    _toList();
   }
 
   @action
@@ -214,6 +251,7 @@ abstract class _PartsDatabaseStore with Store {
     JSON_Obj.clear();
     JSON_Obj = JSON_Obj_only_selected_category;
     DataTable_Length = JSON_Obj.length;
+    _toList();
   }
 
   Future<bool> createData(String category, String description, String drawer) async {
@@ -223,6 +261,7 @@ abstract class _PartsDatabaseStore with Store {
       await firebase.reference().child(category).push().set(todo.toJson());
       await Get_Firebase_and_Convert_to_JSON();
       DataTable_Length = JSON_Obj.length;
+      _toList();
       return true;
     } else
       return false;
