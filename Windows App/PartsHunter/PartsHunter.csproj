@@ -152,7 +152,6 @@
   <ItemGroup>
     <Compile Include="Business\AuthenticationBusiness.cs" />
     <Compile Include="Business\Interfaces\IAuthenticationBusiness.cs" />
-    <Compile Include="Controllers\ComponentsController.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
