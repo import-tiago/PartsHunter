@@ -8,6 +8,7 @@ namespace PartsHunter
         public string Category { get; set; }
 
         public string Drawer { get; set; }
+
         public string Description { get; set; }
 
         public Form2()
@@ -21,8 +22,6 @@ namespace PartsHunter
             dataGridView.Rows[0].Cells[1].Value = Drawer;
             dataGridView.Rows[0].Cells[2].Value = Description;
 
-
-
             dataGridView.Columns[0].ReadOnly = false;
             dataGridView.Columns[1].ReadOnly = false;
             dataGridView.Columns[2].ReadOnly = false;
@@ -31,9 +30,9 @@ namespace PartsHunter
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            Category = dataGridView.Rows[0].Cells[0].Value.ToString();
-            Drawer = dataGridView.Rows[0].Cells[1].Value.ToString();
-            Description = dataGridView.Rows[0].Cells[2].Value.ToString();
+            Category = dataGridView.Rows[0].Cells[0].Value?.ToString();
+            Drawer = dataGridView.Rows[0].Cells[1].Value?.ToString();
+            Description = dataGridView.Rows[0].Cells[2].Value?.ToString();
 
             DialogResult = DialogResult.OK;
             Close();

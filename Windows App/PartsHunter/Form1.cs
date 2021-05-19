@@ -16,19 +16,10 @@ namespace PartsHunter
 {
     public partial class Form1 : Form
     {
-        // TODO: remover variável
-        private readonly string Firebase_Database_URL;
-
-        // TODO: remover variável
-        private readonly string Firebase_Database_KEY;
-
         private const int SEARCH = 0;
         private const int REGISTER = 1;
         private const int CLEAR_ALL = 0;
         private const int CLEAR_KEEPING_FILLED_DRAWERS = 1;
-
-        // TODO: remover variável, implementar como retorno de método
-        private readonly dynamic JSON_Firebase;
 
         // TODO: tornar dispensável construindo um método
         private bool Pre_Load_Done = false;
@@ -96,14 +87,14 @@ namespace PartsHunter
 
             if (tabControl1.SelectedIndex == 2)
             {
-                if (Firebase_Database_KEY == "" && Firebase_Database_URL == "")
-                {
-                    buttonShow.Visible = false;
-                }
-                else
-                {
-                    buttonShow.Visible = true;
-                }
+                //if (String.IsNullOrEmpty(Firebase_Database_KEY) && String.IsNullOrEmpty(Firebase_Database_URL))
+                //{
+                buttonShow.Visible = false;
+                //}
+                //else
+                //{
+                //    buttonShow.Visible = true;
+                //}
             }
 
         }
@@ -141,25 +132,25 @@ namespace PartsHunter
             comboBoxCategories_SearchTab.Text = comboBoxCategories_SearchTab.Items[0].ToString();
             comboBoxCategories_RegisterTab.Text = comboBoxCategories_RegisterTab.Items[0].ToString();
 
-            //textBoxFirebase_URL.Text = Firebase_Database_URL;
-            //textBoxFirebase_Key.Text = Firebase_Database_KEY;
+            textBoxFirebase_URL.Text = _firebaseRepositorie.BasePath;
+            textBoxFirebase_Key.Text = _firebaseRepositorie.AuthSecret;
 
-            //_authenticationBusiness.LoadSecrets();
-            //firebaseRepositorie.Load_Firebase_Database();
+            _authenticationBusiness.LoadSecrets();
+            _firebaseRepositorie.Load_Firebase_Database();
             Pre_Load_Done = true;
 
             FIll_ComboBox_Category();
             _firebaseRepositorie.SetHardwareDevice("-1,0,0,0,0,0");
 
-            //if (Firebase_Database_KEY == null && Firebase_Database_URL == null)
-            //{
-            //    buttonSearch.Enabled = false;
-            //    buttonListAll.Enabled = false;
-            //    buttonEdit.Enabled = false;
-            //    buttonDelete.Enabled = false;
-            //    buttonClear.Enabled = false;
-            //    buttonSave.Enabled = false;
-            //}
+            if (_firebaseRepositorie.AuthSecret == null && _firebaseRepositorie.BasePath == null)
+            {
+                buttonSearch.Enabled = false;
+                buttonListAll.Enabled = false;
+                buttonEdit.Enabled = false;
+                buttonDelete.Enabled = false;
+                buttonClear.Enabled = false;
+                buttonSave.Enabled = false;
+            }
         }
 
         private void FIll_ComboBox_Category()
@@ -171,9 +162,10 @@ namespace PartsHunter
             int items2 = comboBoxCategories_SearchTab.Items.Count;
 
             string value = String.Empty;
-            try
+
+            if (_firebaseRepositorie.JSON_Firebase != null)
             {
-                foreach (dynamic key in JSON_Firebase.Keys)
+                foreach (dynamic key in _firebaseRepositorie.JSON_Firebase.Keys)
                 {
                     bool ignore = false;
                     bool ignore2 = false;
@@ -208,10 +200,7 @@ namespace PartsHunter
                     }
                 }
             }
-            catch
-            {
 
-            }
             comboBoxCategories_RegisterTab.Text = comboBoxCategories_RegisterTab.Items[0].ToString();
         }
 
@@ -231,7 +220,7 @@ namespace PartsHunter
 
                     foreach (DataGridViewRow row in dataGridViewSearch.Rows)
                     {
-                        newRow = new string[] { comboBoxCategories_SearchTab.Text, component[key]["Description"], JSON_Firebase[key]["Drawer"] };
+                        newRow = new string[] { comboBoxCategories_SearchTab.Text, component[key]["Description"], _firebaseRepositorie.JSON_Firebase[key]["Drawer"] };
 
                         if (row.Cells[0].Value != component[key]["Description"])
                         {
@@ -259,48 +248,52 @@ namespace PartsHunter
 
             dataGridViewSearch.Rows.Clear();
 
-            foreach (dynamic key in JSON_Firebase.Keys)
+            if (_firebaseRepositorie.JSON_Firebase != null)
             {
-                if (key != "void" && key != "HardwareDevice")
+                foreach (dynamic key in _firebaseRepositorie.JSON_Firebase.Keys)
                 {
-                    foreach (dynamic key2 in JSON_Firebase[key].Keys)
+                    if (key != "void" && key != "HardwareDevice")
                     {
-                        string s = JSON_Firebase[key][key2]["Description"].ToString();
-
-                        string[] words = input.Split(' ');
-
-
-
-                        foreach (string w in words)
+                        foreach (dynamic key2 in _firebaseRepositorie.JSON_Firebase[key].Keys)
                         {
+                            string s = _firebaseRepositorie.JSON_Firebase[key][key2]["Description"].ToString();
 
-                            if (culture.CompareInfo.IndexOf(s, w, CompareOptions.IgnoreCase) >= 0)
+                            string[] words = input.Split(' ');
+
+
+
+                            foreach (string w in words)
                             {
-                                foreach (DataGridViewRow row in dataGridViewSearch.Rows)
-                                {
-                                    newRow = new string[] { key, JSON_Firebase[key][key2]["Description"], JSON_Firebase[key][key2]["Drawer"] };
 
-                                    if (row.Cells[0].Value != JSON_Firebase[key][key2]["Description"])
+                                if (culture.CompareInfo.IndexOf(s, w, CompareOptions.IgnoreCase) >= 0)
+                                {
+                                    foreach (DataGridViewRow row in dataGridViewSearch.Rows)
                                     {
-                                        dataGridViewSearch.Rows.Add(newRow);
-                                        numberResults++;
-                                        break;
+                                        newRow = new string[] { key, _firebaseRepositorie.JSON_Firebase[key][key2]["Description"], _firebaseRepositorie.JSON_Firebase[key][key2]["Drawer"] };
+
+                                        if (row.Cells[0].Value != _firebaseRepositorie.JSON_Firebase[key][key2]["Description"])
+                                        {
+                                            dataGridViewSearch.Rows.Add(newRow);
+                                            numberResults++;
+                                            break;
+                                        }
                                     }
                                 }
-                            }
-                            else
-                            {
+                                else
+                                {
+                                }
                             }
                         }
                     }
-                }
-                else
-                {
+                    else
+                    {
 
-                    _firebaseRepositorie.SetHardwareDevice("-1,0,0,0,0,0");
-                    labelNumberResults.Text = "0" + " results found";
+                        _firebaseRepositorie.SetHardwareDevice("-1,0,0,0,0,0");
+                        labelNumberResults.Text = "0" + " results found";
+                    }
                 }
             }
+
             dataGridViewSearch.AllowUserToAddRows = false;
             labelNumberResults.Text = numberResults.ToString() + " results found";
         }
@@ -430,13 +423,13 @@ namespace PartsHunter
 
         private void Highlight_Drawer_From_Box_Selection()
         {
-            foreach (dynamic key in JSON_Firebase.Keys)
+            foreach (dynamic key in _firebaseRepositorie.JSON_Firebase.Keys)
             {
-                foreach (dynamic key2 in JSON_Firebase[key].Keys)
+                foreach (dynamic key2 in _firebaseRepositorie.JSON_Firebase[key].Keys)
                 {
-                    if (JSON_Firebase[key][key2]["Box"] == Current_Selected_Box)
+                    if (_firebaseRepositorie.JSON_Firebase[key][key2]["Box"] == Current_Selected_Box)
                     {
-                        switch (JSON_Firebase[key][key2]["Drawer"])
+                        switch (_firebaseRepositorie.JSON_Firebase[key][key2]["Drawer"])
                         {
 
                         }

@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 using PartsHunter.Business.Interfaces;
 using PartsHunter.Repositories.Interfaces;
 
@@ -21,6 +17,7 @@ namespace PartsHunter.Business
             _firebaseRepositorie = firebaseRepositorie;
         }
 
+        //TODO: SALVAR NO SETTINGS.SETTINGS
         public void SaveSecrets(string url, string key)
         {
             if (_firebaseRepositorie.Autheticate())
@@ -56,7 +53,7 @@ namespace PartsHunter.Business
         public void LoadSecrets()
         {
             FileStream fs = new FileStream("Firebase_Secrets.dat", FileMode.OpenOrCreate);
-            
+
             try
             {
                 BinaryFormatter formatter = new BinaryFormatter();
@@ -64,7 +61,7 @@ namespace PartsHunter.Business
                 string firebase_Database_URL = (string)variables["URL"];
                 string firebase_Database_KEY = (string)variables["KEY"];
             }
-            catch 
+            catch
             {
 
             }

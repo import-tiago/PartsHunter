@@ -1,32 +1,41 @@
-﻿using FireSharp.Config;
+﻿using System;
+using System.Threading.Tasks;
+using System.Web.Script.Serialization;
+using FireSharp.Config;
 using FireSharp.Interfaces;
 using FireSharp.Response;
 using Newtonsoft.Json;
+using PartsHunter.Models;
 using PartsHunter.Repositories.Interfaces;
-using System;
-using System.Collections.Specialized;
-using System.Configuration;
-using System.Threading.Tasks;
-using System.Web.Script.Serialization;
 
 namespace PartsHunter.Repositories
 {
-    public class FirebaseRepositorie: IFirebaseRepositorie
+    public class FirebaseRepositorie : IFirebaseRepositorie
     {
-        private readonly NameValueCollection configuration = ConfigurationManager.AppSettings;
-
         private readonly JavaScriptSerializer serializer = new JavaScriptSerializer();
 
         private readonly IFirebaseConfig config;
         private readonly IFirebaseClient client;
 
-        private dynamic JSON_Firebase;
+        private string _basePath = Properties.Settings.Default.BasePath;
+        private string _authSecret = Properties.Settings.Default.AuthSecret;
+
+        public dynamic JSON_Firebase { get; set; }
+        public string BasePath {
+            get { return _basePath; }
+            set { _basePath = value; }
+        }
+        public string AuthSecret {
+            get { return _authSecret; }
+            set { _authSecret = value; }
+        }
+
 
         public FirebaseRepositorie()
         {
             config = new FirebaseConfig {
-                BasePath = "path",
-                AuthSecret = "secret"
+                BasePath = _basePath,
+                AuthSecret = _authSecret
             };
             client = new FireSharp.FirebaseClient(config);
         }
@@ -42,17 +51,18 @@ namespace PartsHunter.Repositories
 
         public void Push_New_Component(string category, string description, string drawer)
         {
+            Component component = new Component {
+                Description = description,
+                Drawer = drawer
+            };
+
             try
             {
-                var todo = new
+                PushResponse response = client.Push(category, component);
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    Description = description,
-                    Drawer = drawer
-                };
-
-                PushResponse response = client.Push(category, todo);
-
-                string retorno = JsonConvert.SerializeObject(response).ToString();
+                    string retorno = JsonConvert.SerializeObject(response).ToString();
+                }
             }
             catch
             {
@@ -131,13 +141,11 @@ namespace PartsHunter.Repositories
             {
                 string address = "/";
 
-                var todo = new
-                {
-                    HardwareDevice = command_setup
-                };
-
-
-                FirebaseResponse response = client.Update(address, todo);
+                FirebaseResponse response = client.Update(address,
+                    new
+                    {
+                        HardwareDevice = command_setup
+                    });
 
                 string retorno = JsonConvert.SerializeObject(response).ToString();
             }
@@ -149,22 +157,14 @@ namespace PartsHunter.Repositories
 
         public async Task<dynamic> GetComponent(string input)
         {
-            FirebaseResponse response = null; 
-            try
-            {
-                response = await client.GetAsync(input);
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
+            FirebaseResponse response = await client.GetAsync(input);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 string result = response.Body;
                 JSON_Firebase = serializer.DeserializeObject(result);
 
-                if (!String.IsNullOrEmpty(JSON_Firebase))
+                if (JSON_Firebase != null)
                 {
                     return JSON_Firebase;
                 }

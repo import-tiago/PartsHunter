@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace PartsHunter.Repositories.Interfaces
 {
     public interface IFirebaseRepositorie
     {
+        dynamic JSON_Firebase { get; set; }
+
+        string BasePath { get; set; }
+
+        string AuthSecret { get; set; }
+
         bool Autheticate();
 
         void Push_New_Component(string category, string description, string drawer);
