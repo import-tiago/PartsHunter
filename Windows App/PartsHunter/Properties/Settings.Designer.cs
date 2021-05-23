@@ -23,19 +23,25 @@ namespace PartsHunter.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public string AuthSecret {
             get {
                 return ((string)(this["AuthSecret"]));
             }
+            set {
+                this["AuthSecret"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         public string BasePath {
             get {
                 return ((string)(this["BasePath"]));
+            }
+            set {
+                this["BasePath"] = value;
             }
         }
     }

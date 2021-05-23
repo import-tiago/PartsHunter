@@ -6,11 +6,9 @@ namespace PartsHunter.Repositories.Interfaces
     {
         dynamic JSON_Firebase { get; set; }
 
-        string BasePath { get; set; }
-
-        string AuthSecret { get; set; }
-
         bool Autheticate();
+
+        void Login(string basePath, string authSecret);
 
         void Push_New_Component(string category, string description, string drawer);
 

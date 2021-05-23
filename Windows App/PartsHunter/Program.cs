@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
+using PartsHunter.Repositories;
+using PartsHunter.Repositories.Interfaces;
 using SimpleInjector;
 using SimpleInjector.Diagnostics;
-using PartsHunter.Business;
-using PartsHunter.Business.Interfaces;
-using PartsHunter.Repositories.Interfaces;
-using PartsHunter.Repositories;
 
 namespace PartsHunter
 {
@@ -28,7 +26,6 @@ namespace PartsHunter
 
             // Register your types, for instance:
 
-            container.Register<IAuthenticationBusiness, AuthenticationBusiness>();
             container.Register<IFirebaseRepositorie, FirebaseRepositorie>();
             container.Register<ILocalRepositorie, LocalRepositorie>();
 

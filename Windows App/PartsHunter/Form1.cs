@@ -1,65 +1,25 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Configuration;
 using System.Globalization;
-using System.Net.Sockets;
 using System.Threading.Tasks;
-using System.Web.Script.Serialization;
 using System.Windows.Forms;
-using PartsHunter.Business.Interfaces;
 using PartsHunter.Models;
 using PartsHunter.Repositories.Interfaces;
-using PartsHunter.Services;
+using Component = PartsHunter.Models.Component;
 
 namespace PartsHunter
 {
     public partial class Form1 : Form
     {
-        private const int SEARCH = 0;
-        private const int REGISTER = 1;
-        private const int CLEAR_ALL = 0;
-        private const int CLEAR_KEEPING_FILLED_DRAWERS = 1;
-
-        // TODO: tornar dispensável construindo um método
-        private bool Pre_Load_Done = false;
-
-        // TODO: transformar em Model
-        private readonly string Current_Button_Click = String.Empty;
-        private readonly string Last_Button_Click = String.Empty;
-
         private readonly static Led Led = new Led();
-
-        private bool validatedCategory;
-        private bool validatedDescription;
-        private bool validatedDrawer;
-
-        private readonly string Current_Selected_Box = String.Empty;
-
-        private string BatcFileLocation;
-
-        // TODO: tornar dispensável, impementar em cada método
-        private readonly CultureInfo culture = new CultureInfo("es-ES", false);
-
-        private readonly string Current_Category = String.Empty;
-
-        private readonly NameValueCollection configuration = ConfigurationManager.AppSettings;
-
-        // TODO: tornar dispensável, impementar em cada método
-        private readonly JavaScriptSerializer serializer = new JavaScriptSerializer();
-
-        // TODO: mover para a classe correta
-        private readonly Server server = new Server();
 
         private readonly IFirebaseRepositorie _firebaseRepositorie;
         private readonly ILocalRepositorie _localRepositorie;
-        private readonly IAuthenticationBusiness _authenticationBusiness;
 
-        public Form1(IAuthenticationBusiness authenticationBusiness, IFirebaseRepositorie firebaseRepositorie, ILocalRepositorie localRepositorie)
+        public Form1(IFirebaseRepositorie firebaseRepositorie, ILocalRepositorie localRepositorie)
         {
             InitializeComponent();
 
-            _authenticationBusiness = authenticationBusiness;
             _firebaseRepositorie = firebaseRepositorie;
             _localRepositorie = localRepositorie;
         }
@@ -71,7 +31,7 @@ namespace PartsHunter
 
         private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (tabControl1.SelectedIndex == 1 && Pre_Load_Done == false)
+            if (tabControl1.SelectedIndex == 1 && SystemForm.Pre_Load_Done == false)
             {
                 FIll_ComboBox_Category();
             }
@@ -132,25 +92,21 @@ namespace PartsHunter
             comboBoxCategories_SearchTab.Text = comboBoxCategories_SearchTab.Items[0].ToString();
             comboBoxCategories_RegisterTab.Text = comboBoxCategories_RegisterTab.Items[0].ToString();
 
-            textBoxFirebase_URL.Text = _firebaseRepositorie.BasePath;
-            textBoxFirebase_Key.Text = _firebaseRepositorie.AuthSecret;
+            buttonSearch.Enabled = false;
+            buttonListAll.Enabled = false;
+            buttonEdit.Enabled = false;
+            buttonDelete.Enabled = false;
+            buttonClear.Enabled = false;
+            buttonSave.Enabled = false;
 
-            _authenticationBusiness.LoadSecrets();
-            _firebaseRepositorie.Load_Firebase_Database();
-            Pre_Load_Done = true;
+            if (_firebaseRepositorie.Autheticate())
+            {
+                _firebaseRepositorie.Load_Firebase_Database();
+                _firebaseRepositorie.SetHardwareDevice("-1,0,0,0,0,0");
+            }
 
             FIll_ComboBox_Category();
-            _firebaseRepositorie.SetHardwareDevice("-1,0,0,0,0,0");
-
-            if (_firebaseRepositorie.AuthSecret == null && _firebaseRepositorie.BasePath == null)
-            {
-                buttonSearch.Enabled = false;
-                buttonListAll.Enabled = false;
-                buttonEdit.Enabled = false;
-                buttonDelete.Enabled = false;
-                buttonClear.Enabled = false;
-                buttonSave.Enabled = false;
-            }
+            SystemForm.Pre_Load_Done = true;
         }
 
         private void FIll_ComboBox_Category()
@@ -240,6 +196,8 @@ namespace PartsHunter
 
         private void SearchByDescription(string input)
         {
+            CultureInfo culture = new CultureInfo("es-ES", false);
+
             string[] newRow;
             int numberResults = 0;
             _firebaseRepositorie.Load_Firebase_Database();
@@ -302,7 +260,7 @@ namespace PartsHunter
         {
 
             SearchByDescription(textBoxSearch.Text);
-            Pre_Load_Done = false;
+            SystemForm.Pre_Load_Done = false;
             labelNumberResults.Visible = true;
 
         }
@@ -321,9 +279,9 @@ namespace PartsHunter
 
         private void Highligth_From_Results()
         {
-
-            try
+            if (dataGridViewSearch.SelectedCells[0].Value != null)
             {
+
                 int x = dataGridViewSearch.SelectedCells[0].RowIndex;
 
 
@@ -333,13 +291,8 @@ namespace PartsHunter
                 string command = drawer + ',' + Led.Color.R + ',' + Led.Color.G + ',' + Led.Color.B + ',' + Led.Brightness + ',' + Led.Time;
 
                 _firebaseRepositorie.SetHardwareDevice(command);
-
-
             }
-            catch
-            {
 
-            }
         }
 
         private void DataGridViewResults_SelectionChanged(object sender, EventArgs e)
@@ -354,7 +307,7 @@ namespace PartsHunter
             if (comboBoxCategories_SearchTab.SelectedIndex != 0)
             {
                 await SearchByCategory();
-                Pre_Load_Done = false;
+                SystemForm.Pre_Load_Done = false;
                 labelNumberResults.Visible = true;
             }
             else
@@ -367,13 +320,13 @@ namespace PartsHunter
         {
             if (String.IsNullOrWhiteSpace(comboBoxCategories_RegisterTab.Text) || comboBoxCategories_RegisterTab.Text == comboBoxCategories_RegisterTab.Items[0].ToString())
             {
-                validatedCategory = false;
+                SystemForm.ComponentRegisterForm.ValidatedCategory = false;
                 errorProvider1.SetError(comboBoxCategories_RegisterTab, "should not be left blank!");
             }
             else
             {
                 e.Cancel = false;
-                validatedCategory = true;
+                SystemForm.ComponentRegisterForm.ValidatedCategory = true;
                 errorProvider1.SetError(comboBoxCategories_RegisterTab, "");
             }
         }
@@ -382,13 +335,13 @@ namespace PartsHunter
         {
             if (String.IsNullOrWhiteSpace(textBoxDescription.Text))
             {
-                validatedDescription = false;
+                SystemForm.ComponentRegisterForm.ValidatedDescription = false;
                 errorProvider1.SetError(textBoxDescription, "should not be left blank!");
             }
             else
             {
                 e.Cancel = false;
-                validatedDescription = true;
+                SystemForm.ComponentRegisterForm.ValidatedDescription = true;
                 errorProvider1.SetError(textBoxDescription, "");
             }
         }
@@ -397,13 +350,13 @@ namespace PartsHunter
         {
             if (String.IsNullOrWhiteSpace(textBoxDrawer.Text))
             {
-                validatedDrawer = false;
+                SystemForm.ComponentRegisterForm.ValidatedDrawer = false;
                 errorProvider1.SetError(textBoxDrawer, "should not be left blank!");
             }
             else
             {
                 e.Cancel = false;
-                validatedDrawer = true;
+                SystemForm.ComponentRegisterForm.ValidatedDrawer = true;
                 errorProvider1.SetError(textBoxDrawer, "");
             }
         }
@@ -427,7 +380,7 @@ namespace PartsHunter
             {
                 foreach (dynamic key2 in _firebaseRepositorie.JSON_Firebase[key].Keys)
                 {
-                    if (_firebaseRepositorie.JSON_Firebase[key][key2]["Box"] == Current_Selected_Box)
+                    if (_firebaseRepositorie.JSON_Firebase[key][key2]["Box"] == SystemForm.Current_Selected_Box)
                     {
                         switch (_firebaseRepositorie.JSON_Firebase[key][key2]["Drawer"])
                         {
@@ -443,14 +396,14 @@ namespace PartsHunter
         {
 
 
-            if (validatedCategory && validatedDescription && validatedDrawer)
+            if (SystemForm.ComponentRegisterForm.ValidatedCategory && SystemForm.ComponentRegisterForm.ValidatedDescription && SystemForm.ComponentRegisterForm.ValidatedDrawer)
             {
                 string category = comboBoxCategories_RegisterTab.Text.ToUpper();
                 string description = textBoxDescription.Text;
                 string drawer = textBoxDrawer.Text;
                 _firebaseRepositorie.Push_New_Component(category, description, drawer);
                 ReLoad_Fields();
-                Pre_Load_Done = false;
+                SystemForm.Pre_Load_Done = false;
             }
             else
             {
@@ -523,44 +476,29 @@ namespace PartsHunter
         {
             try
             {
-                string category = "";
-                if (dataGridViewSearch.SelectedCells.Count > 0)
-                {
-                    category = dataGridViewSearch.SelectedCells[0].Value.ToString();
-                }
-
-                string drawer = "";
-                if (dataGridViewSearch.SelectedCells.Count > 0)
-                {
-                    drawer = dataGridViewSearch.SelectedCells[2].Value.ToString();
-                }
-
-                string description = "";
-                if (dataGridViewSearch.SelectedCells.Count > 0)
-                {
-                    description = dataGridViewSearch.SelectedCells[1].Value.ToString();
-                }
+                Component oldComponent = new Component();
+                Component newComponent = new Component();
 
                 Form2 f2 = new Form2();
                 DialogResult result = f2.ShowDialog();
 
                 if (result == DialogResult.OK)
                 {
-                    string _category = f2.Category;
-                    string _drawer = f2.Drawer;
-                    string _description = f2.Description;
+                    newComponent.Category = f2.Category;
+                    newComponent.Drawer = f2.Drawer;
+                    newComponent.Description = f2.Description;
 
-                    if (category != _category || drawer != _drawer)
+                    if (oldComponent.Category != newComponent.Category || oldComponent.Drawer != newComponent.Drawer)
                     {
-                        _firebaseRepositorie.DeleteComponent(drawer);
-                        _firebaseRepositorie.Push_New_Component(_category, _description, _drawer);
+                        _firebaseRepositorie.DeleteComponent(oldComponent.Drawer);
+                        _firebaseRepositorie.Push_New_Component(newComponent.Category, newComponent.Description, newComponent.Drawer);
                     }
                     else
                     {
-                        _firebaseRepositorie.UpdateComponent(_drawer, _description);
+                        _firebaseRepositorie.UpdateComponent(newComponent.Drawer, newComponent.Description);
                     }
 
-                    Pre_Load_Done = false;
+                    SystemForm.Pre_Load_Done = false;
                     ReLoad_Fields();
                 }
             }
@@ -579,7 +517,7 @@ namespace PartsHunter
                 ReLoad_Fields();
             }
 
-            Pre_Load_Done = false;
+            SystemForm.Pre_Load_Done = false;
         }
 
         private void ButtonClear_Click(object sender, EventArgs e)
@@ -663,22 +601,11 @@ namespace PartsHunter
             labelNumberResults.Visible = false;
         }
 
-        private void Label9_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ButtonShow_Click_1(object sender, EventArgs e)
-        {
-            Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            Server.Send(client, "This is a test<EOF>");
-        }
-
         private void ButtonFirebase_Save_Click(object sender, EventArgs e)
         {
             if (!String.IsNullOrEmpty(textBoxFirebase_URL.Text) && !String.IsNullOrEmpty(textBoxFirebase_Key.Text))
             {
-                _authenticationBusiness.SaveSecrets(textBoxFirebase_URL.Text, textBoxFirebase_Key.Text);
+                _firebaseRepositorie.Login(textBoxFirebase_URL.Text, textBoxFirebase_Key.Text);
             }
         }
 
@@ -702,54 +629,56 @@ namespace PartsHunter
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 textBoxFileLocation.Text = openFileDialog1.FileName;
-                BatcFileLocation = openFileDialog1.FileName;
+                SystemForm.BatcFileLocation = openFileDialog1.FileName;
             }
         }
 
         private void ButtonSaveFromFile_Click(object sender, EventArgs e)
         {
-            _ = System.IO.File.ReadAllText(@BatcFileLocation);
-            string[] lines = System.IO.File.ReadAllLines(@BatcFileLocation);
+            Component component = new Component();
 
-            string category = String.Empty;
-            string description = String.Empty;
-            string drawer = String.Empty;
-            int totalParts = 0;
-
-            progressBar1.Visible = true;
-            progressBar1.Maximum = lines.Length;
-
-            try
+            if (!String.IsNullOrEmpty(textBoxFileLocation.Text))
             {
-                foreach (string l in lines)
-                {
-                    string[] words = l.Split(',');
+                _ = System.IO.File.ReadAllText(SystemForm.BatcFileLocation);
+                string[] lines = System.IO.File.ReadAllLines(SystemForm.BatcFileLocation);
 
-                    int index = 0;
-                    foreach (string w in words)
+                int totalParts = 0;
+
+                progressBar1.Visible = true;
+                progressBar1.Maximum = lines.Length;
+
+                try
+                {
+                    foreach (string l in lines)
                     {
-                        switch (index++)
+                        string[] words = l.Split(',');
+
+                        int index = 0;
+                        foreach (string w in words)
                         {
-                            case 0: category = w; break;
-                            case 1: description = w; break;
-                            case 2: drawer = w; break;
+                            switch (index++)
+                            {
+                                case 0: component.Category = w; break;
+                                case 1: component.Description = w; break;
+                                case 2: component.Drawer = w; break;
+                            }
                         }
+                        _firebaseRepositorie.Push_New_Component(component.Category.ToUpper(), component.Description, component.Drawer);
+                        totalParts++;
+                        progressBar1.Value++;
                     }
-                    _firebaseRepositorie.Push_New_Component(category.ToUpper(), description, drawer);
-                    totalParts++;
-                    progressBar1.Value++;
+
+                    ReLoad_Fields();
+                    SystemForm.Pre_Load_Done = false;
+                    MessageBox.Show("Success! " + totalParts + " Parts added to cloud databese.");
+                }
+                catch
+                {
+                    MessageBox.Show("Fail! Check the file and the text formatting rules.");
                 }
 
-                ReLoad_Fields();
-                Pre_Load_Done = false;
-                MessageBox.Show("Success! " + totalParts + " Parts added to cloud databese.");
+                progressBar1.Visible = false;
             }
-            catch
-            {
-                MessageBox.Show("Fail! Check the file and the text formatting rules.");
-            }
-
-            progressBar1.Visible = false;
         }
     }
 }

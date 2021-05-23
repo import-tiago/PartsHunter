@@ -12,37 +12,31 @@ namespace PartsHunter.Repositories
 {
     public class FirebaseRepositorie : IFirebaseRepositorie
     {
-        private readonly JavaScriptSerializer serializer = new JavaScriptSerializer();
-
-        private readonly IFirebaseConfig config;
-        private readonly IFirebaseClient client;
-
-        private string _basePath = Properties.Settings.Default.BasePath;
-        private string _authSecret = Properties.Settings.Default.AuthSecret;
+        private IFirebaseConfig _config;
+        private IFirebaseClient _client;
 
         public dynamic JSON_Firebase { get; set; }
-        public string BasePath {
-            get { return _basePath; }
-            set { _basePath = value; }
-        }
-        public string AuthSecret {
-            get { return _authSecret; }
-            set { _authSecret = value; }
-        }
-
 
         public FirebaseRepositorie()
         {
-            config = new FirebaseConfig {
-                BasePath = _basePath,
-                AuthSecret = _authSecret
+
+        }
+
+        public void Login(string basePath, string authSecret)
+        {
+            _config = new FirebaseConfig {
+                BasePath = basePath,
+                AuthSecret = authSecret
             };
-            client = new FireSharp.FirebaseClient(config);
+
+            Autheticate();
         }
 
         public bool Autheticate()
         {
-            if (client == null)
+            _client = new FireSharp.FirebaseClient(_config);
+
+            if (_client == null || _config == null)
             {
                 return false;
             }
@@ -56,17 +50,11 @@ namespace PartsHunter.Repositories
                 Drawer = drawer
             };
 
-            try
-            {
-                PushResponse response = client.Push(category, component);
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
-                {
-                    string retorno = JsonConvert.SerializeObject(response).ToString();
-                }
-            }
-            catch
-            {
+            PushResponse response = _client.Push(category, component);
 
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                JsonConvert.SerializeObject(response).ToString();
             }
         }
 
@@ -95,7 +83,7 @@ namespace PartsHunter.Repositories
             }
 
 
-            FirebaseResponse response = client.Delete(todo);
+            FirebaseResponse response = _client.Delete(todo);
             _ = JsonConvert.SerializeObject(response).ToString();
         }
 
@@ -131,7 +119,7 @@ namespace PartsHunter.Repositories
             };
 
 
-            FirebaseResponse response = client.Update(address, todo);
+            FirebaseResponse response = _client.Update(address, todo);
             _ = JsonConvert.SerializeObject(response).ToString();
         }
 
@@ -141,7 +129,7 @@ namespace PartsHunter.Repositories
             {
                 string address = "/";
 
-                FirebaseResponse response = client.Update(address,
+                FirebaseResponse response = _client.Update(address,
                     new
                     {
                         HardwareDevice = command_setup
@@ -157,12 +145,12 @@ namespace PartsHunter.Repositories
 
         public async Task<dynamic> GetComponent(string input)
         {
-            FirebaseResponse response = await client.GetAsync(input);
+            FirebaseResponse response = await _client.GetAsync(input);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 string result = response.Body;
-                JSON_Firebase = serializer.DeserializeObject(result);
+                JSON_Firebase = new JavaScriptSerializer().DeserializeObject(result);
 
                 if (JSON_Firebase != null)
                 {
@@ -170,7 +158,7 @@ namespace PartsHunter.Repositories
                 }
             }
 
-            return serializer.DeserializeObject("{void:0}");
+            return new JavaScriptSerializer().DeserializeObject("{void:0}");
         }
     }
 }

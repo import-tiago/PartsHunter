@@ -74,5 +74,11 @@ namespace PartsHunter.Services
             }
         }
 
+        private static void Test()
+        {
+            Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Server.Send(client, "This is a test<EOF>");
+        }
+
     }
 }
