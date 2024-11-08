@@ -50,10 +50,7 @@ namespace PartsHunter
             label2 = new Label();
             textBoxSearch = new TextBox();
             groupBox6 = new GroupBox();
-            dataGridViewSearch = new DataGridView();
-            _Category = new DataGridViewTextBoxColumn();
-            Description = new DataGridViewTextBoxColumn();
-            Drawer = new DataGridViewTextBoxColumn();
+            dataGridView = new DataGridView();
             tabPage2 = new TabPage();
             groupBox2 = new GroupBox();
             label10 = new Label();
@@ -66,12 +63,12 @@ namespace PartsHunter
             label8 = new Label();
             groupBox1 = new GroupBox();
             buttonSave = new Button();
-            comboBoxCategories_RegisterTab = new ComboBox();
+            cmbCategory = new ComboBox();
             label3 = new Label();
-            textBoxDescription = new TextBox();
+            txtDescription = new TextBox();
             label4 = new Label();
             label5 = new Label();
-            textBoxDrawer = new TextBox();
+            txtSlotID = new TextBox();
             tabPage3 = new TabPage();
             buttonShow = new Button();
             textBoxFirebase_URL = new TextBox();
@@ -88,7 +85,7 @@ namespace PartsHunter
             ((System.ComponentModel.ISupportInitialize)trackBarBright).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBarTime).BeginInit();
             groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridViewSearch).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             tabPage2.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -326,7 +323,7 @@ namespace PartsHunter
             // 
             // groupBox6
             // 
-            groupBox6.Controls.Add(dataGridViewSearch);
+            groupBox6.Controls.Add(dataGridView);
             groupBox6.Location = new Point(9, 117);
             groupBox6.Margin = new Padding(4, 3, 4, 3);
             groupBox6.Name = "groupBox6";
@@ -336,45 +333,23 @@ namespace PartsHunter
             groupBox6.TabStop = false;
             groupBox6.Text = "RESULTS";
             // 
-            // dataGridViewSearch
+            // dataGridView
             // 
-            dataGridViewSearch.AllowUserToResizeRows = false;
-            dataGridViewSearch.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewSearch.BackgroundColor = SystemColors.ControlLightLight;
-            dataGridViewSearch.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewSearch.Columns.AddRange(new DataGridViewColumn[] { _Category, Description, Drawer });
-            dataGridViewSearch.Dock = DockStyle.Fill;
-            dataGridViewSearch.Location = new Point(4, 19);
-            dataGridViewSearch.Margin = new Padding(4, 3, 4, 3);
-            dataGridViewSearch.MultiSelect = false;
-            dataGridViewSearch.Name = "dataGridViewSearch";
-            dataGridViewSearch.ReadOnly = true;
-            dataGridViewSearch.RowHeadersVisible = false;
-            dataGridViewSearch.RowHeadersWidth = 51;
-            dataGridViewSearch.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewSearch.Size = new Size(802, 548);
-            dataGridViewSearch.TabIndex = 0;
-            // 
-            // _Category
-            // 
-            _Category.HeaderText = "Category";
-            _Category.MinimumWidth = 6;
-            _Category.Name = "_Category";
-            _Category.ReadOnly = true;
-            // 
-            // Description
-            // 
-            Description.HeaderText = "Description";
-            Description.MinimumWidth = 6;
-            Description.Name = "Description";
-            Description.ReadOnly = true;
-            // 
-            // Drawer
-            // 
-            Drawer.HeaderText = "Drawer";
-            Drawer.MinimumWidth = 6;
-            Drawer.Name = "Drawer";
-            Drawer.ReadOnly = true;
+            dataGridView.AllowUserToResizeRows = false;
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView.BackgroundColor = SystemColors.ControlLightLight;
+            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView.Dock = DockStyle.Fill;
+            dataGridView.Location = new Point(4, 19);
+            dataGridView.Margin = new Padding(4, 3, 4, 3);
+            dataGridView.MultiSelect = false;
+            dataGridView.Name = "dataGridView";
+            dataGridView.ReadOnly = true;
+            dataGridView.RowHeadersVisible = false;
+            dataGridView.RowHeadersWidth = 51;
+            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView.Size = new Size(802, 548);
+            dataGridView.TabIndex = 0;
             // 
             // tabPage2
             // 
@@ -490,12 +465,12 @@ namespace PartsHunter
             // groupBox1
             // 
             groupBox1.Controls.Add(buttonSave);
-            groupBox1.Controls.Add(comboBoxCategories_RegisterTab);
+            groupBox1.Controls.Add(cmbCategory);
             groupBox1.Controls.Add(label3);
-            groupBox1.Controls.Add(textBoxDescription);
+            groupBox1.Controls.Add(txtDescription);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(label5);
-            groupBox1.Controls.Add(textBoxDrawer);
+            groupBox1.Controls.Add(txtSlotID);
             groupBox1.Location = new Point(9, 7);
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
@@ -519,15 +494,15 @@ namespace PartsHunter
             buttonSave.UseVisualStyleBackColor = false;
             buttonSave.Click += buttonSave_Click;
             // 
-            // comboBoxCategories_RegisterTab
+            // cmbCategory
             // 
-            comboBoxCategories_RegisterTab.FormattingEnabled = true;
-            comboBoxCategories_RegisterTab.Items.AddRange(new object[] { "<Select one or type a new one>" });
-            comboBoxCategories_RegisterTab.Location = new Point(88, 23);
-            comboBoxCategories_RegisterTab.Margin = new Padding(4, 3, 4, 3);
-            comboBoxCategories_RegisterTab.Name = "comboBoxCategories_RegisterTab";
-            comboBoxCategories_RegisterTab.Size = new Size(716, 23);
-            comboBoxCategories_RegisterTab.TabIndex = 0;
+            cmbCategory.FormattingEnabled = true;
+            cmbCategory.Items.AddRange(new object[] { "<Select one or type a new one>" });
+            cmbCategory.Location = new Point(88, 23);
+            cmbCategory.Margin = new Padding(4, 3, 4, 3);
+            cmbCategory.Name = "cmbCategory";
+            cmbCategory.Size = new Size(716, 23);
+            cmbCategory.TabIndex = 0;
             // 
             // label3
             // 
@@ -539,13 +514,13 @@ namespace PartsHunter
             label3.TabIndex = 54;
             label3.Text = "Category:";
             // 
-            // textBoxDescription
+            // txtDescription
             // 
-            textBoxDescription.Location = new Point(88, 68);
-            textBoxDescription.Margin = new Padding(4, 3, 4, 3);
-            textBoxDescription.Name = "textBoxDescription";
-            textBoxDescription.Size = new Size(716, 23);
-            textBoxDescription.TabIndex = 1;
+            txtDescription.Location = new Point(88, 68);
+            txtDescription.Margin = new Padding(4, 3, 4, 3);
+            txtDescription.Name = "txtDescription";
+            txtDescription.Size = new Size(716, 23);
+            txtDescription.TabIndex = 1;
             // 
             // label4
             // 
@@ -567,13 +542,13 @@ namespace PartsHunter
             label5.TabIndex = 60;
             label5.Text = "Drawer N°:";
             // 
-            // textBoxDrawer
+            // txtSlotID
             // 
-            textBoxDrawer.Location = new Point(88, 113);
-            textBoxDrawer.Margin = new Padding(4, 3, 4, 3);
-            textBoxDrawer.Name = "textBoxDrawer";
-            textBoxDrawer.Size = new Size(716, 23);
-            textBoxDrawer.TabIndex = 3;
+            txtSlotID.Location = new Point(88, 113);
+            txtSlotID.Margin = new Padding(4, 3, 4, 3);
+            txtSlotID.Name = "txtSlotID";
+            txtSlotID.Size = new Size(716, 23);
+            txtSlotID.TabIndex = 3;
             // 
             // tabPage3
             // 
@@ -674,6 +649,7 @@ namespace PartsHunter
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "PartsHunter";
+            Load += Form1_Load;
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
@@ -682,7 +658,7 @@ namespace PartsHunter
             ((System.ComponentModel.ISupportInitialize)trackBarBright).EndInit();
             ((System.ComponentModel.ISupportInitialize)trackBarTime).EndInit();
             groupBox6.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridViewSearch).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
             tabPage2.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
@@ -706,12 +682,11 @@ namespace PartsHunter
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxSearch;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBoxDrawer;
+        private System.Windows.Forms.TextBox txtSlotID;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBoxDescription;
+        private System.Windows.Forms.TextBox txtDescription;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox comboBoxCategories_RegisterTab;
-        private System.Windows.Forms.DataGridView dataGridViewSearch;
+        private System.Windows.Forms.ComboBox cmbCategory;
         private System.Windows.Forms.Button buttonListAll;
         private System.Windows.Forms.ComboBox comboBoxCategories_SearchTab;
         private System.Windows.Forms.Label label1;
@@ -727,9 +702,6 @@ namespace PartsHunter
         private System.Windows.Forms.TrackBar trackBarTime;
         private System.Windows.Forms.Button buttonColor;
         private System.Windows.Forms.Button buttonSettings;
-        private System.Windows.Forms.DataGridViewTextBoxColumn _Category;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Description;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Drawer;
         private System.Windows.Forms.Button buttonDelete;
         private System.Windows.Forms.Button buttonEdit;
         private System.Windows.Forms.TabPage tabPage3;
@@ -749,6 +721,7 @@ namespace PartsHunter
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
+        private DataGridView dataGridView;
     }
 }
 
