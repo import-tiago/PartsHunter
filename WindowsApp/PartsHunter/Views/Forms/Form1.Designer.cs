@@ -43,18 +43,16 @@ namespace PartsHunter
             buttonColor = new Button();
             buttonSettings = new Button();
             buttonListAll = new Button();
-            comboBoxCategories_SearchTab = new ComboBox();
+            cmbCategorySearch = new ComboBox();
             label1 = new Label();
             labelNumberResults = new Label();
             buttonSearch = new Button();
             label2 = new Label();
-            textBoxSearch = new TextBox();
+            txtSearch = new TextBox();
             groupBox6 = new GroupBox();
             dataGridView = new DataGridView();
             tabPage2 = new TabPage();
             groupBox2 = new GroupBox();
-            label10 = new Label();
-            label9 = new Label();
             pictureBox1 = new PictureBox();
             progressBar1 = new ProgressBar();
             buttonSaveFromFile = new Button();
@@ -63,22 +61,18 @@ namespace PartsHunter
             label8 = new Label();
             groupBox1 = new GroupBox();
             buttonSave = new Button();
-            cmbCategory = new ComboBox();
+            cmbCategoryRegister = new ComboBox();
             label3 = new Label();
             txtDescription = new TextBox();
             label4 = new Label();
             label5 = new Label();
             txtSlotID = new TextBox();
-            tabPage3 = new TabPage();
-            buttonShow = new Button();
-            textBoxFirebase_URL = new TextBox();
-            label6 = new Label();
-            buttonFirebase_Save = new Button();
-            label7 = new Label();
-            textBoxFirebase_Key = new TextBox();
             errorProvider1 = new ErrorProvider(components);
             colorDialog1 = new ColorDialog();
             openFileDialog1 = new OpenFileDialog();
+            label6 = new Label();
+            picHelp = new PictureBox();
+            toolTip1 = new ToolTip(components);
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
             groupBoxSettings.SuspendLayout();
@@ -90,20 +84,19 @@ namespace PartsHunter
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
-            tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picHelp).BeginInit();
             SuspendLayout();
             // 
             // tabControl1
             // 
             tabControl1.Controls.Add(tabPage1);
             tabControl1.Controls.Add(tabPage2);
-            tabControl1.Controls.Add(tabPage3);
             tabControl1.Location = new Point(0, 14);
             tabControl1.Margin = new Padding(4, 3, 4, 3);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(835, 813);
+            tabControl1.Size = new Size(836, 813);
             tabControl1.TabIndex = 35;
             // 
             // tabPage1
@@ -114,18 +107,18 @@ namespace PartsHunter
             tabPage1.Controls.Add(groupBoxSettings);
             tabPage1.Controls.Add(buttonSettings);
             tabPage1.Controls.Add(buttonListAll);
-            tabPage1.Controls.Add(comboBoxCategories_SearchTab);
+            tabPage1.Controls.Add(cmbCategorySearch);
             tabPage1.Controls.Add(label1);
             tabPage1.Controls.Add(labelNumberResults);
             tabPage1.Controls.Add(buttonSearch);
             tabPage1.Controls.Add(label2);
-            tabPage1.Controls.Add(textBoxSearch);
+            tabPage1.Controls.Add(txtSearch);
             tabPage1.Controls.Add(groupBox6);
             tabPage1.Location = new Point(4, 24);
             tabPage1.Margin = new Padding(4, 3, 4, 3);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(4, 3, 4, 3);
-            tabPage1.Size = new Size(827, 785);
+            tabPage1.Size = new Size(828, 785);
             tabPage1.TabIndex = 2;
             tabPage1.Text = "Search";
             tabPage1.UseVisualStyleBackColor = true;
@@ -258,16 +251,17 @@ namespace PartsHunter
             buttonListAll.TabIndex = 68;
             buttonListAll.Text = "List All";
             buttonListAll.UseVisualStyleBackColor = true;
+            buttonListAll.Click += buttonListAll_Click;
             // 
-            // comboBoxCategories_SearchTab
+            // cmbCategorySearch
             // 
-            comboBoxCategories_SearchTab.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBoxCategories_SearchTab.Items.AddRange(new object[] { "<Select One>" });
-            comboBoxCategories_SearchTab.Location = new Point(84, 17);
-            comboBoxCategories_SearchTab.Margin = new Padding(4, 3, 4, 3);
-            comboBoxCategories_SearchTab.Name = "comboBoxCategories_SearchTab";
-            comboBoxCategories_SearchTab.Size = new Size(602, 23);
-            comboBoxCategories_SearchTab.TabIndex = 67;
+            cmbCategorySearch.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbCategorySearch.Items.AddRange(new object[] { "<Select One>" });
+            cmbCategorySearch.Location = new Point(84, 17);
+            cmbCategorySearch.Margin = new Padding(4, 3, 4, 3);
+            cmbCategorySearch.Name = "cmbCategorySearch";
+            cmbCategorySearch.Size = new Size(602, 23);
+            cmbCategorySearch.TabIndex = 67;
             // 
             // label1
             // 
@@ -302,6 +296,7 @@ namespace PartsHunter
             buttonSearch.TabIndex = 58;
             buttonSearch.Text = "Search";
             buttonSearch.UseVisualStyleBackColor = false;
+            buttonSearch.Click += buttonSearch_Click;
             // 
             // label2
             // 
@@ -313,13 +308,13 @@ namespace PartsHunter
             label2.TabIndex = 57;
             label2.Text = "Description";
             // 
-            // textBoxSearch
+            // txtSearch
             // 
-            textBoxSearch.Location = new Point(84, 51);
-            textBoxSearch.Margin = new Padding(4, 3, 4, 3);
-            textBoxSearch.Name = "textBoxSearch";
-            textBoxSearch.Size = new Size(602, 23);
-            textBoxSearch.TabIndex = 56;
+            txtSearch.Location = new Point(84, 51);
+            txtSearch.Margin = new Padding(4, 3, 4, 3);
+            txtSearch.Name = "txtSearch";
+            txtSearch.Size = new Size(602, 23);
+            txtSearch.TabIndex = 56;
             // 
             // groupBox6
             // 
@@ -353,71 +348,54 @@ namespace PartsHunter
             // 
             // tabPage2
             // 
+            tabPage2.Controls.Add(label6);
             tabPage2.Controls.Add(groupBox2);
             tabPage2.Controls.Add(groupBox1);
             tabPage2.Location = new Point(4, 24);
             tabPage2.Margin = new Padding(4, 3, 4, 3);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(4, 3, 4, 3);
-            tabPage2.Size = new Size(827, 785);
+            tabPage2.Size = new Size(828, 785);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Register";
             tabPage2.UseVisualStyleBackColor = true;
+            tabPage2.Click += tabPage2_Click;
             // 
             // groupBox2
             // 
-            groupBox2.Controls.Add(label10);
-            groupBox2.Controls.Add(label9);
+            groupBox2.Controls.Add(picHelp);
             groupBox2.Controls.Add(pictureBox1);
             groupBox2.Controls.Add(progressBar1);
             groupBox2.Controls.Add(buttonSaveFromFile);
             groupBox2.Controls.Add(buttonGetFileAddress);
             groupBox2.Controls.Add(textBoxFileLocation);
             groupBox2.Controls.Add(label8);
-            groupBox2.Location = new Point(9, 257);
+            groupBox2.Location = new Point(9, 157);
             groupBox2.Margin = new Padding(4, 3, 4, 3);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(4, 3, 4, 3);
-            groupBox2.Size = new Size(810, 405);
+            groupBox2.Size = new Size(432, 349);
             groupBox2.TabIndex = 72;
             groupBox2.TabStop = false;
-            groupBox2.Text = "BATCH REGISTRATION";
-            // 
-            // label10
-            // 
-            label10.Location = new Point(481, 143);
-            label10.Margin = new Padding(4, 0, 4, 0);
-            label10.Name = "label10";
-            label10.Size = new Size(352, 189);
-            label10.TabIndex = 77;
-            label10.Text = resources.GetString("label10.Text");
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(7, 125);
-            label9.Margin = new Padding(4, 0, 4, 0);
-            label9.Name = "label9";
-            label9.Size = new Size(54, 15);
-            label9.TabIndex = 76;
-            label9.Text = "Example:";
+            groupBox2.Text = "Batch";
             // 
             // pictureBox1
             // 
-            pictureBox1.Location = new Point(9, 143);
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(9, 120);
             pictureBox1.Margin = new Padding(2);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(464, 243);
+            pictureBox1.Size = new Size(412, 220);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 75;
             pictureBox1.TabStop = false;
             // 
             // progressBar1
             // 
-            progressBar1.Location = new Point(88, 53);
+            progressBar1.Location = new Point(88, 86);
             progressBar1.Margin = new Padding(2);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(680, 9);
+            progressBar1.Size = new Size(325, 10);
             progressBar1.TabIndex = 74;
             progressBar1.Visible = false;
             // 
@@ -425,18 +403,18 @@ namespace PartsHunter
             // 
             buttonSaveFromFile.BackColor = Color.LightSkyBlue;
             buttonSaveFromFile.FlatStyle = FlatStyle.Flat;
-            buttonSaveFromFile.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonSaveFromFile.Location = new Point(88, 69);
+            buttonSaveFromFile.Font = new Font("Fira Code", 9.75F);
+            buttonSaveFromFile.Location = new Point(88, 56);
             buttonSaveFromFile.Margin = new Padding(4, 3, 4, 3);
             buttonSaveFromFile.Name = "buttonSaveFromFile";
-            buttonSaveFromFile.Size = new Size(97, 31);
+            buttonSaveFromFile.Size = new Size(325, 25);
             buttonSaveFromFile.TabIndex = 72;
             buttonSaveFromFile.Text = "SAVE";
             buttonSaveFromFile.UseVisualStyleBackColor = false;
             // 
             // buttonGetFileAddress
             // 
-            buttonGetFileAddress.Location = new Point(774, 27);
+            buttonGetFileAddress.Location = new Point(384, 27);
             buttonGetFileAddress.Margin = new Padding(2);
             buttonGetFileAddress.Name = "buttonGetFileAddress";
             buttonGetFileAddress.Size = new Size(29, 22);
@@ -449,7 +427,7 @@ namespace PartsHunter
             textBoxFileLocation.Location = new Point(88, 27);
             textBoxFileLocation.Margin = new Padding(4, 3, 4, 3);
             textBoxFileLocation.Name = "textBoxFileLocation";
-            textBoxFileLocation.Size = new Size(681, 23);
+            textBoxFileLocation.Size = new Size(290, 23);
             textBoxFileLocation.TabIndex = 72;
             // 
             // label8
@@ -465,7 +443,7 @@ namespace PartsHunter
             // groupBox1
             // 
             groupBox1.Controls.Add(buttonSave);
-            groupBox1.Controls.Add(cmbCategory);
+            groupBox1.Controls.Add(cmbCategoryRegister);
             groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(txtDescription);
             groupBox1.Controls.Add(label4);
@@ -475,34 +453,34 @@ namespace PartsHunter
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(810, 207);
+            groupBox1.Size = new Size(432, 144);
             groupBox1.TabIndex = 67;
             groupBox1.TabStop = false;
-            groupBox1.Text = "PART INFORMATION";
+            groupBox1.Text = "Single";
             // 
             // buttonSave
             // 
             buttonSave.BackColor = Color.PaleTurquoise;
             buttonSave.FlatStyle = FlatStyle.Flat;
-            buttonSave.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonSave.Location = new Point(88, 153);
+            buttonSave.Font = new Font("Fira Code", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            buttonSave.Location = new Point(88, 110);
             buttonSave.Margin = new Padding(4, 3, 4, 3);
             buttonSave.Name = "buttonSave";
-            buttonSave.Size = new Size(97, 31);
+            buttonSave.Size = new Size(325, 25);
             buttonSave.TabIndex = 71;
             buttonSave.Text = "SAVE";
             buttonSave.UseVisualStyleBackColor = false;
             buttonSave.Click += buttonSave_Click;
             // 
-            // cmbCategory
+            // cmbCategoryRegister
             // 
-            cmbCategory.FormattingEnabled = true;
-            cmbCategory.Items.AddRange(new object[] { "<Select one or type a new one>" });
-            cmbCategory.Location = new Point(88, 23);
-            cmbCategory.Margin = new Padding(4, 3, 4, 3);
-            cmbCategory.Name = "cmbCategory";
-            cmbCategory.Size = new Size(716, 23);
-            cmbCategory.TabIndex = 0;
+            cmbCategoryRegister.FormattingEnabled = true;
+            cmbCategoryRegister.Items.AddRange(new object[] { "<Select one or type a new one>" });
+            cmbCategoryRegister.Location = new Point(88, 23);
+            cmbCategoryRegister.Margin = new Padding(4, 3, 4, 3);
+            cmbCategoryRegister.Name = "cmbCategoryRegister";
+            cmbCategoryRegister.Size = new Size(325, 23);
+            cmbCategoryRegister.TabIndex = 0;
             // 
             // label3
             // 
@@ -516,16 +494,16 @@ namespace PartsHunter
             // 
             // txtDescription
             // 
-            txtDescription.Location = new Point(88, 68);
+            txtDescription.Location = new Point(88, 52);
             txtDescription.Margin = new Padding(4, 3, 4, 3);
             txtDescription.Name = "txtDescription";
-            txtDescription.Size = new Size(716, 23);
+            txtDescription.Size = new Size(325, 23);
             txtDescription.TabIndex = 1;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(7, 72);
+            label4.Location = new Point(7, 56);
             label4.Margin = new Padding(4, 0, 4, 0);
             label4.Name = "label4";
             label4.Size = new Size(70, 15);
@@ -535,7 +513,7 @@ namespace PartsHunter
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(7, 117);
+            label5.Location = new Point(7, 85);
             label5.Margin = new Padding(4, 0, 4, 0);
             label5.Name = "label5";
             label5.Size = new Size(64, 15);
@@ -544,88 +522,11 @@ namespace PartsHunter
             // 
             // txtSlotID
             // 
-            txtSlotID.Location = new Point(88, 113);
+            txtSlotID.Location = new Point(88, 81);
             txtSlotID.Margin = new Padding(4, 3, 4, 3);
             txtSlotID.Name = "txtSlotID";
-            txtSlotID.Size = new Size(716, 23);
+            txtSlotID.Size = new Size(325, 23);
             txtSlotID.TabIndex = 3;
-            // 
-            // tabPage3
-            // 
-            tabPage3.Controls.Add(buttonShow);
-            tabPage3.Controls.Add(textBoxFirebase_URL);
-            tabPage3.Controls.Add(label6);
-            tabPage3.Controls.Add(buttonFirebase_Save);
-            tabPage3.Controls.Add(label7);
-            tabPage3.Controls.Add(textBoxFirebase_Key);
-            tabPage3.Location = new Point(4, 24);
-            tabPage3.Margin = new Padding(2);
-            tabPage3.Name = "tabPage3";
-            tabPage3.Padding = new Padding(2);
-            tabPage3.Size = new Size(827, 785);
-            tabPage3.TabIndex = 3;
-            tabPage3.Text = "Firebase Config";
-            tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // buttonShow
-            // 
-            buttonShow.Location = new Point(691, 53);
-            buttonShow.Margin = new Padding(2);
-            buttonShow.Name = "buttonShow";
-            buttonShow.Size = new Size(65, 22);
-            buttonShow.TabIndex = 72;
-            buttonShow.Text = "Show";
-            buttonShow.UseVisualStyleBackColor = true;
-            // 
-            // textBoxFirebase_URL
-            // 
-            textBoxFirebase_URL.Location = new Point(107, 20);
-            textBoxFirebase_URL.Margin = new Padding(4, 3, 4, 3);
-            textBoxFirebase_URL.Name = "textBoxFirebase_URL";
-            textBoxFirebase_URL.Size = new Size(578, 23);
-            textBoxFirebase_URL.TabIndex = 71;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(8, 23);
-            label6.Margin = new Padding(4, 0, 4, 0);
-            label6.Name = "label6";
-            label6.Size = new Size(82, 15);
-            label6.TabIndex = 70;
-            label6.Text = "Database URL:";
-            // 
-            // buttonFirebase_Save
-            // 
-            buttonFirebase_Save.BackColor = Color.PaleTurquoise;
-            buttonFirebase_Save.FlatStyle = FlatStyle.Flat;
-            buttonFirebase_Save.Font = new Font("Microsoft New Tai Lue", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            buttonFirebase_Save.Location = new Point(561, 81);
-            buttonFirebase_Save.Margin = new Padding(4, 3, 4, 3);
-            buttonFirebase_Save.Name = "buttonFirebase_Save";
-            buttonFirebase_Save.Size = new Size(124, 27);
-            buttonFirebase_Save.TabIndex = 69;
-            buttonFirebase_Save.Text = "SAVE";
-            buttonFirebase_Save.UseVisualStyleBackColor = false;
-            // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(12, 55);
-            label7.Margin = new Padding(4, 0, 4, 0);
-            label7.Name = "label7";
-            label7.Size = new Size(80, 15);
-            label7.TabIndex = 68;
-            label7.Text = "Database Key:";
-            // 
-            // textBoxFirebase_Key
-            // 
-            textBoxFirebase_Key.Location = new Point(107, 53);
-            textBoxFirebase_Key.Margin = new Padding(4, 3, 4, 3);
-            textBoxFirebase_Key.Name = "textBoxFirebase_Key";
-            textBoxFirebase_Key.PasswordChar = '*';
-            textBoxFirebase_Key.Size = new Size(578, 23);
-            textBoxFirebase_Key.TabIndex = 67;
             // 
             // errorProvider1
             // 
@@ -635,6 +536,31 @@ namespace PartsHunter
             // openFileDialog1
             // 
             openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(448, 277);
+            label6.Name = "label6";
+            label6.Size = new Size(177, 15);
+            label6.TabIndex = 73;
+            label6.Text = "- The file name does not matter.";
+            // 
+            // picHelp
+            // 
+            picHelp.Image = (Image)resources.GetObject("picHelp.Image");
+            picHelp.Location = new Point(397, 316);
+            picHelp.Margin = new Padding(2);
+            picHelp.Name = "picHelp";
+            picHelp.Size = new Size(24, 24);
+            picHelp.SizeMode = PictureBoxSizeMode.StretchImage;
+            picHelp.TabIndex = 77;
+            picHelp.TabStop = false;
+            toolTip1.SetToolTip(picHelp, "- The file name does not matter.");
+            // 
+            // toolTip1
+            // 
+            toolTip1.ToolTipIcon = ToolTipIcon.Info;
             // 
             // Form1
             // 
@@ -660,14 +586,14 @@ namespace PartsHunter
             groupBox6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
             tabPage2.ResumeLayout(false);
+            tabPage2.PerformLayout();
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
-            tabPage3.ResumeLayout(false);
-            tabPage3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picHelp).EndInit();
             ResumeLayout(false);
         }
 
@@ -680,15 +606,15 @@ namespace PartsHunter
         private System.Windows.Forms.Label labelNumberResults;
         private System.Windows.Forms.Button buttonSearch;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBoxSearch;
+        private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtSlotID;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtDescription;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ComboBox cmbCategory;
+        private System.Windows.Forms.ComboBox cmbCategoryRegister;
         private System.Windows.Forms.Button buttonListAll;
-        private System.Windows.Forms.ComboBox comboBoxCategories_SearchTab;
+        private System.Windows.Forms.ComboBox cmbCategorySearch;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -704,13 +630,6 @@ namespace PartsHunter
         private System.Windows.Forms.Button buttonSettings;
         private System.Windows.Forms.Button buttonDelete;
         private System.Windows.Forms.Button buttonEdit;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.TextBox textBoxFirebase_URL;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Button buttonFirebase_Save;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBoxFirebase_Key;
-        private System.Windows.Forms.Button buttonShow;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button buttonSaveFromFile;
         private System.Windows.Forms.Button buttonGetFileAddress;
@@ -719,9 +638,10 @@ namespace PartsHunter
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label9;
         private DataGridView dataGridView;
+        private Label label6;
+        private PictureBox picHelp;
+        private ToolTip toolTip1;
     }
 }
 
