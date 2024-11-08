@@ -120,35 +120,44 @@
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="picHelp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAQSSURBVGhD7Znbb0xBHMeb4oE3twdVOqdtRERC3D2JJwkS
-        L4LgL/CARKJ4qQfFAxF0ZrutS/og2LqWCFoSkYprkxYNJdpS92q2M91tu7vNyO+sS89vzp7bnl0e9pt8
-        kk3Pmd98Z845M7/5NS8vp5xySl8hOaqoqm+pxvgewsRFjYqXGhO9hPIYoP9m/EXyGt9dxPqW5JXLfBwm
-        6yqh0WkaEwc1yrs1JqQbCOMfCBUHSo9GCnHcjKv0KJ+sMREklA9hY26BGIQKVnC8byLuJyMqZmKjRsUP
-        bMQHeggV63F/vml+UI4hVNSYdOw3gWXlcjTuPy1NCcpxGuU3TDrLCISJ69An9uFJMPPZNP8bGIQvTyJL
-        r40p8HFjP66kBcQmHDTbkIBYh305EixrhIrvOKAVJQEhN9dHZe3zmHz2OSHf9g7LjvCwbPmakHWv4nJr
-        w4CcWa22s6FnRpBPwv5sBeu8SbCUzD3ZL6+8jssPfNiSpu64XH4morS3glBeif1ZCnZHN5tUaZWQtzti
-        itlUNH9JyDkn+pU4qSCMDxYGIlOxz5TS0wOTQKnY3jCgmOwMD8ur7XH91Xn9I6Fcr2gaVOJYQZjYj32a
-        q1zmQ56CA1hx7Y1x9uG9Xx2K/rm+uLZftvUYB3GvK67EsYTybkgasV1FyazSJIAFL74bzdW2xpR7qpqH
-        DPe09yaUe2wJhBdhv4ogJVYa2uDk9Tj0KP0BFDO+C/tVpFFxCTf0g8ZO4wp16536lOwgTNRhv4rg4IEb
-        pkvZXfUj39YwoNxnB2G8FftV5HeqDJtXV5/R/I23MX3Tw/faARsr9qvIzfpvx5abUcX8w49xOe+U8z1g
-        JLAfYL+K/BoALKOdyPyD7ri+pOJ7neJoAH69QvVob3j6JeF55n/j7BXy4SOeXdOvzP6aC383Nq84+oj1
-        0odJYzesCkUN5h9/crnrpiaE/SryspFh1l+OGAZwrs39mm8GYbwM+1UERSfc8L+BRhZiv6qSydx7pfE/
-        hlDe5biaBxUzHMANpQEh994flHc6k+n0irPuDjBmECoqsM+UcnugwexEqUPrt4ScVe19CXV9oAFBRQAH
-        cgp8tCMHAKw8n84yyo9hf7YqrAlPIEx8U4PZc+SJMXWG09mC056fQI/numkRExtMAtoCO25DRzJ9htPZ
-        jkb3mecfKvla7MuVoFapBHUIDGRGUP27czy8OopCclSmDjlWECqu+VJaBEGhFWqVuJNMQZioLzwsx2If
-        aQlmI52VyTn8mG8zbyaoVbotOTqBUP417Q/WqfQllvJK2GCwEddQPgCzPp2Fx+N+Mi7YHaFi5iV3gtyG
-        MLFv2vFIAY6bfZXLfCg6Qd0GSh9w8ICTXfIfeHxI/814y69rZXpW6TQxyymnnCz1E8O2EmwQsMhnAAAA
-        AElFTkSuQmCC
+        iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        DAAACwwBP0AiyAAABBJJREFUaEPtmdtvTEEcx5vigTe3B1U6p21ERELcPYknCRIvguAv8IBEonipB8UD
+        EXRmu61L+iDYupYIWhKRimuTFg0l2lL3arYz3W27u83I76xLz2/OntueXR72m3ySTc+Z33xnzjkzv/k1
+        Ly+nnHJKXyE5qqiqb6nG+B7CxEWNipcaE72E8hig/2b8RfIa313E+pbklct8HCbrKqHRaRoTBzXKuzUm
+        pBsI4x8IFQdKj0YKcdyMq/Qon6wxESSUD2FjboEYhApWcLxvIu4nIypmYqNGxQ9sxAd6CBXrcX++aX5Q
+        jiFU1Jh07DeBZeVyNO4/LU0JynEa5TdMOssIhInr0Cf24Ukw89k0/xsYhC9PIkuvjSnwcWM/rqQFxCYc
+        NNuQgFiHfTkSLGuEiu84oBUlASE310dl7fOYfPY5Id/2DsuO8LBs+ZqQda/icmvDgJxZrbazoWdGkE/C
+        /mwF67xJsJTMPdkvr7yOyw982JKm7rhcfiaitLeCUF6J/VkKdkc3m1RplZC3O2KK2VQ0f0nIOSf6lTip
+        IIwPFgYiU7HPlNLTA5NAqdjeMKCY7AwPy6vtcf3Vef0joVyvaBpU4lhBmNiPfZqrXOZDnoIDWHHtjXH2
+        4b1fHYr+ub64tl+29RgHca8rrsSxhPJuSBqxXUXJrNIkgAUvvhvN1bbGlHuqmocM97T3JpR7bAmEF2G/
+        iiAlVhra4OT1OPQo/QEUM74L+1WkUXEJN/SDxk7jCnXrnfqU7CBM1GG/iuDggRumS9ld9SPf1jCg3GcH
+        YbwV+1Xkd6oMm1dXn9H8jbcxfdPD99oBGyv2q8jN+m/HlptRxfzDj3E575TzPWAksB9gv4r8GgAso53I
+        /IPuuL6k4nud4mgAfr1C9WhvePol4Xnmf+PsFfLhI55d06/M/poLfzc2rzj6iPXSh0ljN6wKRQ3mH39y
+        ueumJoT9KvKykWHWX44YBnCuzf2abwZhvAz7VQRFJ9zwv4FGFmK/qpLJ3Hul8T+GUN7luJoHFTMcwA2l
+        ASH33h+UdzqT6fSKs+4OMGYQKiqwz5Rye6DB7ESpQ+u3hJxV7X0JdX2gAUFFAAdyCny0IwcArDyfzjLK
+        j2F/tiqsCU8gTHxTg9lz5IkxdYbT2YLTnp9Aj+e6aRETG0wC2gI7bkNHMn2G09mORveZ5x8q+Vrsy5Wg
+        VqkEdQgMZEZQ/btzPLw6ikJyVKYOOVYQKq75UloEQaEVapW4k0xBmKgvPCzHYh9pCWYjnZXJOfyYbzNv
+        JqhVui05OoFQ/jXtD9ap9CWW8krYYLAR11A+ALM+nYXH434yLtgdoWLmJXeC3IYwsW/a8UgBjpt9lct8
+        KDpB3QZKH3DwgJNd8h94fEj/zXjLr2tlelbpNDHLKaecLPUTw7YSbBCwyGcAAAAASUVORK5CYII=
 </value>
   </data>
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>630, 16</value>
   </metadata>
+  <data name="picHelp.ToolTip" xml:space="preserve">
+    <value>- The file name does not matter.
+
+- Upper and lower case do not matter.
+
+- Components must be organized line by line.
+
+- Category, description and drawer's number must be
+separated by commas with no space between them.</value>
+  </data>
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAnwAAAFPCAYAAADX6xPIAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vwAADr8BOAVTJAAAUu9JREFUeF7tnWn3JEW95/st+cAH1EuY6+PhzJMZ5oE1M2537rn3irY6okh7ZesC
+        vAAADrwBlbxySQAAUu9JREFUeF7tnWn3JEW95/st+cAH1EuY6+PhzJMZ5oE1M2537rn3irY6okh7ZesC
         lUUWUUHRviiyVCuILTS90fTe9Fa90BsNLSCKyiIac36RGVmRv4yIjMzIzKqM+H7O+R74Vy6RkZmd8amI
         zMoNAkTNP/7xjyJ///vfi3z00Ufib3/7m8yHH34oPvjgA/H++++L9957T+avf/2r+POf/yzeffdd8ac/
         /Um88847Mn/4wx/E22+/Ld566y2ZN998U+b3v/89giAIsoJcvXq18pm6NqtrNV276Rr+xz/+UYau7XSN

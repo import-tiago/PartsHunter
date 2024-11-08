@@ -45,7 +45,7 @@ namespace PartsHunter
             buttonListAll = new Button();
             cmbCategorySearch = new ComboBox();
             label1 = new Label();
-            labelNumberResults = new Label();
+            labelResults = new Label();
             buttonSearch = new Button();
             label2 = new Label();
             txtSearch = new TextBox();
@@ -53,6 +53,7 @@ namespace PartsHunter
             dataGridView = new DataGridView();
             tabPage2 = new TabPage();
             groupBox2 = new GroupBox();
+            picHelp = new PictureBox();
             pictureBox1 = new PictureBox();
             progressBar1 = new ProgressBar();
             buttonSaveFromFile = new Button();
@@ -70,8 +71,6 @@ namespace PartsHunter
             errorProvider1 = new ErrorProvider(components);
             colorDialog1 = new ColorDialog();
             openFileDialog1 = new OpenFileDialog();
-            label6 = new Label();
-            picHelp = new PictureBox();
             toolTip1 = new ToolTip(components);
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
@@ -82,10 +81,10 @@ namespace PartsHunter
             ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
             tabPage2.SuspendLayout();
             groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picHelp).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)picHelp).BeginInit();
             SuspendLayout();
             // 
             // tabControl1
@@ -109,7 +108,7 @@ namespace PartsHunter
             tabPage1.Controls.Add(buttonListAll);
             tabPage1.Controls.Add(cmbCategorySearch);
             tabPage1.Controls.Add(label1);
-            tabPage1.Controls.Add(labelNumberResults);
+            tabPage1.Controls.Add(labelResults);
             tabPage1.Controls.Add(buttonSearch);
             tabPage1.Controls.Add(label2);
             tabPage1.Controls.Add(txtSearch);
@@ -148,7 +147,7 @@ namespace PartsHunter
             // buttonEdit
             // 
             buttonEdit.FlatStyle = FlatStyle.Flat;
-            buttonEdit.Location = new Point(542, 710);
+            buttonEdit.Location = new Point(540, 710);
             buttonEdit.Margin = new Padding(4, 3, 4, 3);
             buttonEdit.Name = "buttonEdit";
             buttonEdit.Size = new Size(134, 27);
@@ -233,7 +232,7 @@ namespace PartsHunter
             // buttonSettings
             // 
             buttonSettings.FlatStyle = FlatStyle.Flat;
-            buttonSettings.Location = new Point(542, 744);
+            buttonSettings.Location = new Point(540, 744);
             buttonSettings.Margin = new Padding(4, 3, 4, 3);
             buttonSettings.Name = "buttonSettings";
             buttonSettings.Size = new Size(134, 27);
@@ -249,7 +248,7 @@ namespace PartsHunter
             buttonListAll.Name = "buttonListAll";
             buttonListAll.Size = new Size(124, 27);
             buttonListAll.TabIndex = 68;
-            buttonListAll.Text = "List All";
+            buttonListAll.Text = "Refresh";
             buttonListAll.UseVisualStyleBackColor = true;
             buttonListAll.Click += buttonListAll_Click;
             // 
@@ -273,16 +272,16 @@ namespace PartsHunter
             label1.TabIndex = 66;
             label1.Text = "Category:";
             // 
-            // labelNumberResults
+            // labelResults
             // 
-            labelNumberResults.AutoSize = true;
-            labelNumberResults.ForeColor = Color.Red;
-            labelNumberResults.Location = new Point(80, 77);
-            labelNumberResults.Margin = new Padding(4, 0, 4, 0);
-            labelNumberResults.Name = "labelNumberResults";
-            labelNumberResults.Size = new Size(147, 15);
-            labelNumberResults.TabIndex = 59;
-            labelNumberResults.Text = "<Number's results found>";
+            labelResults.AutoSize = true;
+            labelResults.ForeColor = Color.Red;
+            labelResults.Location = new Point(80, 77);
+            labelResults.Margin = new Padding(4, 0, 4, 0);
+            labelResults.Name = "labelResults";
+            labelResults.Size = new Size(147, 15);
+            labelResults.TabIndex = 59;
+            labelResults.Text = "<Number's results found>";
             // 
             // buttonSearch
             // 
@@ -326,7 +325,6 @@ namespace PartsHunter
             groupBox6.Size = new Size(810, 570);
             groupBox6.TabIndex = 44;
             groupBox6.TabStop = false;
-            groupBox6.Text = "RESULTS";
             // 
             // dataGridView
             // 
@@ -348,7 +346,6 @@ namespace PartsHunter
             // 
             // tabPage2
             // 
-            tabPage2.Controls.Add(label6);
             tabPage2.Controls.Add(groupBox2);
             tabPage2.Controls.Add(groupBox1);
             tabPage2.Location = new Point(4, 24);
@@ -359,7 +356,6 @@ namespace PartsHunter
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Register";
             tabPage2.UseVisualStyleBackColor = true;
-            tabPage2.Click += tabPage2_Click;
             // 
             // groupBox2
             // 
@@ -370,7 +366,7 @@ namespace PartsHunter
             groupBox2.Controls.Add(buttonGetFileAddress);
             groupBox2.Controls.Add(textBoxFileLocation);
             groupBox2.Controls.Add(label8);
-            groupBox2.Location = new Point(9, 157);
+            groupBox2.Location = new Point(9, 184);
             groupBox2.Margin = new Padding(4, 3, 4, 3);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(4, 3, 4, 3);
@@ -378,6 +374,19 @@ namespace PartsHunter
             groupBox2.TabIndex = 72;
             groupBox2.TabStop = false;
             groupBox2.Text = "Batch";
+            // 
+            // picHelp
+            // 
+            picHelp.Cursor = Cursors.Help;
+            picHelp.Image = (Image)resources.GetObject("picHelp.Image");
+            picHelp.Location = new Point(288, 175);
+            picHelp.Margin = new Padding(2);
+            picHelp.Name = "picHelp";
+            picHelp.Size = new Size(24, 24);
+            picHelp.SizeMode = PictureBoxSizeMode.StretchImage;
+            picHelp.TabIndex = 77;
+            picHelp.TabStop = false;
+            toolTip1.SetToolTip(picHelp, resources.GetString("picHelp.ToolTip"));
             // 
             // pictureBox1
             // 
@@ -409,7 +418,7 @@ namespace PartsHunter
             buttonSaveFromFile.Name = "buttonSaveFromFile";
             buttonSaveFromFile.Size = new Size(325, 25);
             buttonSaveFromFile.TabIndex = 72;
-            buttonSaveFromFile.Text = "SAVE";
+            buttonSaveFromFile.Text = "LOAD";
             buttonSaveFromFile.UseVisualStyleBackColor = false;
             // 
             // buttonGetFileAddress
@@ -468,14 +477,13 @@ namespace PartsHunter
             buttonSave.Name = "buttonSave";
             buttonSave.Size = new Size(325, 25);
             buttonSave.TabIndex = 71;
-            buttonSave.Text = "SAVE";
+            buttonSave.Text = "INSERT";
             buttonSave.UseVisualStyleBackColor = false;
             buttonSave.Click += buttonSave_Click;
             // 
             // cmbCategoryRegister
             // 
             cmbCategoryRegister.FormattingEnabled = true;
-            cmbCategoryRegister.Items.AddRange(new object[] { "<Select one or type a new one>" });
             cmbCategoryRegister.Location = new Point(88, 23);
             cmbCategoryRegister.Margin = new Padding(4, 3, 4, 3);
             cmbCategoryRegister.Name = "cmbCategoryRegister";
@@ -537,30 +545,9 @@ namespace PartsHunter
             // 
             openFileDialog1.FileName = "openFileDialog1";
             // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(448, 277);
-            label6.Name = "label6";
-            label6.Size = new Size(177, 15);
-            label6.TabIndex = 73;
-            label6.Text = "- The file name does not matter.";
-            // 
-            // picHelp
-            // 
-            picHelp.Image = (Image)resources.GetObject("picHelp.Image");
-            picHelp.Location = new Point(397, 316);
-            picHelp.Margin = new Padding(2);
-            picHelp.Name = "picHelp";
-            picHelp.Size = new Size(24, 24);
-            picHelp.SizeMode = PictureBoxSizeMode.StretchImage;
-            picHelp.TabIndex = 77;
-            picHelp.TabStop = false;
-            toolTip1.SetToolTip(picHelp, "- The file name does not matter.");
-            // 
             // toolTip1
             // 
-            toolTip1.ToolTipIcon = ToolTipIcon.Info;
+            toolTip1.IsBalloon = true;
             // 
             // Form1
             // 
@@ -575,7 +562,6 @@ namespace PartsHunter
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "PartsHunter";
-            Load += Form1_Load;
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
@@ -586,14 +572,13 @@ namespace PartsHunter
             groupBox6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
             tabPage2.ResumeLayout(false);
-            tabPage2.PerformLayout();
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)picHelp).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)picHelp).EndInit();
             ResumeLayout(false);
         }
 
@@ -603,7 +588,7 @@ namespace PartsHunter
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Label labelNumberResults;
+        private System.Windows.Forms.Label labelResults;
         private System.Windows.Forms.Button buttonSearch;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtSearch;
@@ -639,7 +624,6 @@ namespace PartsHunter
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private DataGridView dataGridView;
-        private Label label6;
         private PictureBox picHelp;
         private ToolTip toolTip1;
     }
