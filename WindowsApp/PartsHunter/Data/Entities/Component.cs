@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PartsHunter.Data.Entities {
-    internal class Component {
+    public class Component {
+        public int Id { get; set; }
+        public string Description { get; set; }
+        public string Category { get; set; }
+        public int SlotID { get; set; }
     }
 }
