@@ -6,125 +6,125 @@ using System.Windows.Forms;
 using PartsHunter.Data.Entities;
 using PartsHunter.Services.DataService;
 
-
 namespace PartsHunter {
     public partial class Form1 : Form {
 
-        const String DEFAULT_CMB_SEARCH_ITEM = "SHOW ALL";
-        const String DEFAULT_CMB_REGISTER_ITEM = "< Select one or type a new one>";
+        const String DEFAULT_SEARCH_CATEGORY_ITEM = "SHOW ALL";
+        const String DEFAULT_REGISTER_CATEGORY_ITEM = "< Select one or type a new one>";
         const String NOTHING_FOUND = "nothing found";
 
-        private readonly ComponentService _repository;
+        private readonly ComponentService _componentService;
         public Form1() {
             InitializeComponent();
-            _repository = new ComponentService();
+            _componentService = new ComponentService();
             fill_data_grid();
             fill_categories();
         }
 
-        private void buttonSave_Click(object sender, EventArgs e) {
-            // Collect form input
-            string category = cmbCategoryRegister.Text;
-            string description = txtDescription.Text;
-
-            // Validate SlotID as integer
-            if (!int.TryParse(txtSlotID.Text, out int slotID)) {
-                MessageBox.Show("Please enter a valid number for Slot ID.");
-                return;
-            }
-
-            // Create and save new component
-            var newComponent = new Component {
-                Description = description,
-                Category = category,
-                SlotID = slotID
-            };
-
-            _repository.AddComponent(newComponent);
-
-            // Optionally, show a confirmation and clear inputs
-            MessageBox.Show("Component saved successfully.");
+        private void clear_register_form_inputs() {
             txtDescription.Clear();
-            cmbCategoryRegister.SelectedIndex = -1;
+            cmbCategoryRegister.SelectedIndex = 0;
             txtSlotID.Clear();
-            fill_data_grid();
+        }
+        private void clear_search_form_inputs() {
+            txtSearch.Clear();            
         }
 
-        private void fill_data_grid() {
-            var components = _repository.GetAllComponents();
-            dataGridView.DataSource = components;
+        private bool ValidateSlotId(out int slotID) {
+            if (int.TryParse(txtSlotID.Text, out slotID)) return true;
+
+            MessageBox.Show("Please enter a valid number for Slot ID.");
+            slotID = 0;
+            return false;
+        }
+
+        private int fill_data_grid() {
+            var results = _componentService.GetAllComponents();
+            dataGridView.DataSource = results;
             dataGridView.Columns["Category"].DisplayIndex = 0;
             dataGridView.Columns["Id"].Visible = false;
+            return results.Count;
         }
 
         void fill_categories() {
 
-            List<string> categories = _repository.GetUniqueCategories();
+            List<string> categories = _componentService.GetUniqueCategories();
 
-            List<string> search = new List<string>(categories);
-            List<string> register = new List<string>(categories);
+            List<string> search = new(categories);
+            List<string> register = new(categories);
 
-            search.Insert(0, DEFAULT_CMB_SEARCH_ITEM);
+            search.Insert(0, DEFAULT_SEARCH_CATEGORY_ITEM);
             cmbCategorySearch.DataSource = search;
 
-            register.Insert(0, DEFAULT_CMB_REGISTER_ITEM);
+            register.Insert(0, DEFAULT_REGISTER_CATEGORY_ITEM);
             cmbCategoryRegister.DataSource = register;
         }
 
-        void search_results(int qty) {
-            if (qty == 0) {
-                labelResults.ForeColor = Color.Red;
-                labelResults.Text = NOTHING_FOUND;
-            }
-            else if (qty == 1) {
-                labelResults.ForeColor = Color.ForestGreen;
-                labelResults.Text = $"{qty} item found";
-            }
-            else {
-                labelResults.ForeColor = Color.ForestGreen;
-                labelResults.Text = $"{qty} items found";
-            }
-        }
+        void display_search_results(int result_count) {
 
+            if (result_count < 0) {
+                labelResults.Visible = false;
+                return;
+            }
+            else
+                labelResults.Visible = true;
+
+            labelResults.ForeColor = result_count > 0 ? Color.ForestGreen : Color.Red;
+            labelResults.Text = result_count switch {
+                0 => NOTHING_FOUND,
+                1 => "1 item found",
+                _ => $"{result_count} items found"
+            };
+        }
+        private void buttonRegister_Click(object sender, EventArgs e) {
+
+            if (!ValidateSlotId(out int slotID)) return;
+
+            var newComponent = new Component {
+                Description = txtDescription.Text.Trim(),
+                Category = cmbCategoryRegister.Text.Trim(),
+                SlotID = slotID
+            };
+
+            _componentService.AddComponent(newComponent);
+
+            MessageBox.Show("Component saved successfully.");
+            clear_register_form_inputs();
+            fill_data_grid();
+        }
         private void buttonSearch_Click(object sender, EventArgs e) {
 
-            string searchTerm = txtSearch.Text.Trim();
-
+            var searchTerm = txtSearch.Text.Trim();
             if (string.IsNullOrEmpty(searchTerm)) {
-                MessageBox.Show("Enter a search term.");
+                fill_data_grid();
+                fill_categories();
+                display_search_results(-1);
                 return;
             }
 
-            string selected_category = cmbCategorySearch.Text;
-            if (selected_category != DEFAULT_CMB_SEARCH_ITEM) {
+            var selectedCategory = cmbCategorySearch.Text;
+            var results = selectedCategory == DEFAULT_SEARCH_CATEGORY_ITEM
+                ? _componentService.SearchComponentsByDescription(searchTerm)
+                : _componentService.SearchComponentsByDescriptionAndCategory(searchTerm, selectedCategory);
 
-                var results = _repository.SearchComponentsByDescriptionAndCategory(searchTerm, selected_category);
+            dataGridView.DataSource = results;
+            display_search_results(results.Count());
+        }
+        private void buttonListAll_Click(object sender, EventArgs e) {
 
-                if (results.Any()) {
-                    search_results(results.Count);
-                    dataGridView.DataSource = results;
-                }
-                else {
-                    search_results(0);
-                }
+            var selectedCategory = cmbCategorySearch.Text;
+
+            if (selectedCategory == DEFAULT_SEARCH_CATEGORY_ITEM) {
+                int results_count = fill_data_grid();
+                fill_categories();
+                clear_search_form_inputs();
+                display_search_results(results_count);
             }
             else {
-                
-                var results = _repository.SearchComponentsByDescription(searchTerm);
-
-                if (results.Any()) {
-                    search_results(results.Count);
-                    dataGridView.DataSource = results;
-                }
-                else {
-                    search_results(0);
-                }
+                var results = _componentService.GetComponentsByCategory(selectedCategory);
+                dataGridView.DataSource = results;
+                display_search_results(results.Count());
             }
-        }
-
-        private void buttonListAll_Click(object sender, EventArgs e) {
-            fill_data_grid();
-            fill_categories();
         }
     }
 }

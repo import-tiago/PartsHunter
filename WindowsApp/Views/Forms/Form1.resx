@@ -144,16 +144,6 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>630, 16</value>
   </metadata>
-  <data name="picHelp.ToolTip" xml:space="preserve">
-    <value>- The file name does not matter.
-
-- Upper and lower case do not matter.
-
-- Components must be organized line by line.
-
-- Category, description and drawer's number must be
-separated by commas with no space between them.</value>
-  </data>
   <data name="pictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAnwAAAFPCAYAAADX6xPIAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO

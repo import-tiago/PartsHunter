@@ -74,5 +74,12 @@ namespace PartsHunter.Services.DataService
                 .Distinct()                    // Remove duplicates
                 .ToList();                     // Convert to list
         }
+
+        // Method to get all components from a specific category
+        public List<Component> GetComponentsByCategory(string category) {
+            return _context.Components
+                .Where(c => c.Category == category)
+                .ToList();
+        }
     }
 }

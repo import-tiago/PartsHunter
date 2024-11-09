@@ -61,7 +61,7 @@ namespace PartsHunter
             textBoxFileLocation = new TextBox();
             label8 = new Label();
             groupBox1 = new GroupBox();
-            buttonSave = new Button();
+            buttonRegister = new Button();
             cmbCategoryRegister = new ComboBox();
             label3 = new Label();
             txtDescription = new TextBox();
@@ -248,7 +248,7 @@ namespace PartsHunter
             buttonListAll.Name = "buttonListAll";
             buttonListAll.Size = new Size(124, 27);
             buttonListAll.TabIndex = 68;
-            buttonListAll.Text = "Refresh";
+            buttonListAll.Text = "Show";
             buttonListAll.UseVisualStyleBackColor = true;
             buttonListAll.Click += buttonListAll_Click;
             // 
@@ -276,12 +276,13 @@ namespace PartsHunter
             // 
             labelResults.AutoSize = true;
             labelResults.ForeColor = Color.Red;
-            labelResults.Location = new Point(80, 77);
+            labelResults.Location = new Point(84, 77);
             labelResults.Margin = new Padding(4, 0, 4, 0);
             labelResults.Name = "labelResults";
             labelResults.Size = new Size(147, 15);
             labelResults.TabIndex = 59;
             labelResults.Text = "<Number's results found>";
+            labelResults.Visible = false;
             // 
             // buttonSearch
             // 
@@ -379,14 +380,14 @@ namespace PartsHunter
             // 
             picHelp.Cursor = Cursors.Help;
             picHelp.Image = (Image)resources.GetObject("picHelp.Image");
-            picHelp.Location = new Point(288, 175);
+            picHelp.Location = new Point(389, 26);
             picHelp.Margin = new Padding(2);
             picHelp.Name = "picHelp";
             picHelp.Size = new Size(24, 24);
             picHelp.SizeMode = PictureBoxSizeMode.StretchImage;
             picHelp.TabIndex = 77;
             picHelp.TabStop = false;
-            toolTip1.SetToolTip(picHelp, resources.GetString("picHelp.ToolTip"));
+            toolTip1.SetToolTip(picHelp, "- The file name can be anything.\r\n\r\n- Content is not case-sensitive.\r\n\r\n- List components one per line.\r\n\r\n- Use commas without spaces to separate category, description, and slot ID.");
             // 
             // pictureBox1
             // 
@@ -423,7 +424,7 @@ namespace PartsHunter
             // 
             // buttonGetFileAddress
             // 
-            buttonGetFileAddress.Location = new Point(384, 27);
+            buttonGetFileAddress.Location = new Point(356, 27);
             buttonGetFileAddress.Margin = new Padding(2);
             buttonGetFileAddress.Name = "buttonGetFileAddress";
             buttonGetFileAddress.Size = new Size(29, 22);
@@ -436,7 +437,7 @@ namespace PartsHunter
             textBoxFileLocation.Location = new Point(88, 27);
             textBoxFileLocation.Margin = new Padding(4, 3, 4, 3);
             textBoxFileLocation.Name = "textBoxFileLocation";
-            textBoxFileLocation.Size = new Size(290, 23);
+            textBoxFileLocation.Size = new Size(262, 23);
             textBoxFileLocation.TabIndex = 72;
             // 
             // label8
@@ -451,7 +452,7 @@ namespace PartsHunter
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(buttonSave);
+            groupBox1.Controls.Add(buttonRegister);
             groupBox1.Controls.Add(cmbCategoryRegister);
             groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(txtDescription);
@@ -467,19 +468,19 @@ namespace PartsHunter
             groupBox1.TabStop = false;
             groupBox1.Text = "Single";
             // 
-            // buttonSave
+            // buttonRegister
             // 
-            buttonSave.BackColor = Color.PaleTurquoise;
-            buttonSave.FlatStyle = FlatStyle.Flat;
-            buttonSave.Font = new Font("Fira Code", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            buttonSave.Location = new Point(88, 110);
-            buttonSave.Margin = new Padding(4, 3, 4, 3);
-            buttonSave.Name = "buttonSave";
-            buttonSave.Size = new Size(325, 25);
-            buttonSave.TabIndex = 71;
-            buttonSave.Text = "INSERT";
-            buttonSave.UseVisualStyleBackColor = false;
-            buttonSave.Click += buttonSave_Click;
+            buttonRegister.BackColor = Color.PaleTurquoise;
+            buttonRegister.FlatStyle = FlatStyle.Flat;
+            buttonRegister.Font = new Font("Fira Code", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            buttonRegister.Location = new Point(88, 110);
+            buttonRegister.Margin = new Padding(4, 3, 4, 3);
+            buttonRegister.Name = "buttonRegister";
+            buttonRegister.Size = new Size(325, 25);
+            buttonRegister.TabIndex = 71;
+            buttonRegister.Text = "INSERT";
+            buttonRegister.UseVisualStyleBackColor = false;
+            buttonRegister.Click += buttonRegister_Click;
             // 
             // cmbCategoryRegister
             // 
@@ -603,7 +604,7 @@ namespace PartsHunter
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.Button buttonRegister;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.GroupBox groupBoxSettings;
