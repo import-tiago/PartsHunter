@@ -1,6 +1,10 @@
 #include "MyAuthParameters.h"
 #include <Arduino.h>
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
 #include <WiFi.h>
+
+AsyncWebServer server(80);
 
 void setup() {
 
@@ -35,6 +39,13 @@ void setup() {
     }
 
     Serial.printf("\r\nLocal IP address: %s\r\n", WiFi.localIP().toString().c_str());
+
+    // ----- STEP 3
+    server.on("/", HTTP_POST, [](AsyncWebServerRequest* request) {
+        request->send(200, "text/plain", "Hello World!");
+    });
+
+    server.begin();
 }
 
 void loop() {
