@@ -1,0 +1,8 @@
+#pragma once
+
+#define WIFI_SSID "<value>"
+#define WIFI_PASSWORD "<value>"
+
+#define STATIC_GATEWAY_ADDR "192.168.0.1"
+#define STATIC_IP_ADDR "192.168.0.2"
+#define STATIC_SUBNET_MASK_ADDR "255.255.255.0"
