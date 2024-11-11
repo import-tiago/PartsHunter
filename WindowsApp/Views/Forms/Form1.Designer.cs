@@ -189,10 +189,12 @@ namespace PartsHunter
             trackBarBright.Location = new Point(313, 28);
             trackBarBright.Margin = new Padding(4, 3, 4, 3);
             trackBarBright.Maximum = 255;
+            trackBarBright.Minimum = 10;
             trackBarBright.Name = "trackBarBright";
             trackBarBright.Size = new Size(117, 29);
             trackBarBright.TabIndex = 59;
             trackBarBright.TickStyle = TickStyle.None;
+            trackBarBright.Value = 10;
             // 
             // labelTime
             // 
@@ -239,6 +241,7 @@ namespace PartsHunter
             buttonSettings.TabIndex = 69;
             buttonSettings.Text = "Config Highlight";
             buttonSettings.UseVisualStyleBackColor = true;
+            buttonSettings.Click += buttonSettings_Click;
             // 
             // buttonListAll
             // 
