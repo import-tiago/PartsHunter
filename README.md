@@ -3,7 +3,11 @@
 | <img src="Assets/modules_overview.png" width="5000"> | **PartsHunter** is an electronic component organization system composed of three main modules: a mechanical assembly for component storage, a Windows application that allows the user to search for the desired component by description, and a hardware device that remotely communicates with the Windows app and activates LEDs to indicate the location of each item based on the search performed. When a search is executed in the application, an SQLite database is queried, and the results are displayed on the screen. The user can then select the desired component(s), triggering REST POST requests to the hardware device, which uses an ESP32 as a web server. These requests are processed, and the corresponding LEDs are lit, indicating the slots where each component is located. |
 |--------------------------|--------------------------------------------------------------|
 
+## Usage Flow Overview
 <img src="Assets/flow_overview.png" alt="Flow Overview">
+
+## Hardware Device Circuit Diagram
+<img src="Assets/circuit_diagram.png" alt="Flow Overview">
 
 ### Contributing
 0. Give this project a :star:
