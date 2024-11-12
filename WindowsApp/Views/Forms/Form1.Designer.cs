@@ -195,6 +195,7 @@ namespace PartsHunter
             trackBarBright.TabIndex = 59;
             trackBarBright.TickStyle = TickStyle.None;
             trackBarBright.Value = 10;
+            trackBarBright.ValueChanged += trackBarBright_ValueChanged;
             // 
             // labelTime
             // 
@@ -210,7 +211,7 @@ namespace PartsHunter
             // 
             trackBarTime.AutoSize = false;
             trackBarTime.BackColor = SystemColors.Window;
-            trackBarTime.LargeChange = 50;
+            trackBarTime.LargeChange = 100;
             trackBarTime.Location = new Point(117, 28);
             trackBarTime.Margin = new Padding(4, 3, 4, 3);
             trackBarTime.Maximum = 1000;
@@ -218,7 +219,9 @@ namespace PartsHunter
             trackBarTime.Size = new Size(117, 29);
             trackBarTime.SmallChange = 50;
             trackBarTime.TabIndex = 57;
+            trackBarTime.TickFrequency = 50;
             trackBarTime.TickStyle = TickStyle.None;
+            trackBarTime.ValueChanged += trackBarTime_ValueChanged;
             // 
             // buttonColor
             // 
@@ -230,6 +233,7 @@ namespace PartsHunter
             buttonColor.TabIndex = 55;
             buttonColor.Text = "COLOR";
             buttonColor.UseVisualStyleBackColor = true;
+            buttonColor.Click += buttonColor_Click;
             // 
             // buttonSettings
             // 

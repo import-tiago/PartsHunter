@@ -9,6 +9,7 @@ using PartsHunter.Services.DataService;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Reflection.Emit;
 
 namespace PartsHunter {
     public partial class Form1 : Form {
@@ -25,22 +26,6 @@ namespace PartsHunter {
             _componentService = new ComponentService();
             fill_data_grid();
             fill_categories();
-            trackBarBright.ValueChanged += async (sender, e) => await AdjustBrightnessAsync(trackBarBright.Value);
-        }
-
-        private async Task AdjustBrightnessAsync(int level) {
-            try {
-                var endpoint = $"http://192.168.31.100/brightness?level={level}";
-                var response = await httpClient.PostAsync(endpoint, null);
-                
-                if (response.IsSuccessStatusCode)
-                    Debug.WriteLine($"Brightness adjusted to {level}.");
-                else
-                    Debug.WriteLine($"Failed to adjust brightness. Status Code: {response.StatusCode}");
-            }
-            catch (Exception ex) {
-                Debug.WriteLine($"Error adjusting brightness: {ex.Message}");
-            }
         }
 
         private void clear_register_form_inputs() {
@@ -149,8 +134,54 @@ namespace PartsHunter {
             }
         }
 
-        private void buttonSettings_Click(object sender, EventArgs e) {
+        private async void buttonSettings_Click(object sender, EventArgs e) {
             groupBoxSettings.Visible = !groupBoxSettings.Visible;
+
+            if (groupBoxSettings.Visible) {
+                buttonSettings.Text = "SAVE";
+                buttonSettings.BackColor = Color.LightGreen;
+            }
+            else {
+                try {
+                    var endpoint = $"http://192.168.31.100/color?r={r}&g={g}&b={b}";
+                    var responseColor = await httpClient.PostAsync(endpoint, null);
+
+                    endpoint = $"http://192.168.31.100/blink?interval={trackBarTime.Value}";
+                    var responseBlink = await httpClient.PostAsync(endpoint, null);
+
+                    endpoint = $"http://192.168.31.100/brightness?level={trackBarBright.Value}";
+                    var responseBrightness = await httpClient.PostAsync(endpoint, null);
+                }
+                catch (Exception ex) {
+                    Debug.WriteLine($"Error in POST requests: {ex.Message}");
+                }
+
+                buttonSettings.Text = "Config Highlight";
+                buttonSettings.BackColor = Color.Transparent;
+            }
+        }
+
+
+        int r, g, b;
+        private void buttonColor_Click(object sender, EventArgs e) {
+            using (var colorDialog = new ColorDialog()) {
+                if (colorDialog.ShowDialog() == DialogResult.OK) {
+                    r = colorDialog.Color.R;
+                    g = colorDialog.Color.G;
+                    b = colorDialog.Color.B;
+                    buttonColor.BackColor = colorDialog.Color;
+                }
+            }
+        }
+
+        private void trackBarTime_ValueChanged(object sender, EventArgs e) {
+            labelTime.Text = trackBarTime.Value.ToString() + "ms";
+        }
+
+        private void trackBarBright_ValueChanged(object sender, EventArgs e) {
+            int brightness = trackBarBright.Value;
+            int percentage = (int)((brightness - (float)trackBarBright.Minimum) / (float)(trackBarBright.Maximum - trackBarBright.Minimum) * 100);
+            labelBright.Text = percentage + "%";
         }
     }
 }
