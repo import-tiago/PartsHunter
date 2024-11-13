@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Reflection.Emit;
+using System.Net;
 
 namespace PartsHunter {
     public partial class Form1 : Form {
@@ -161,7 +162,6 @@ namespace PartsHunter {
             }
         }
 
-
         int r, g, b;
         private void buttonColor_Click(object sender, EventArgs e) {
             using (var colorDialog = new ColorDialog()) {
@@ -182,6 +182,48 @@ namespace PartsHunter {
             int brightness = trackBarBright.Value;
             int percentage = (int)((brightness - (float)trackBarBright.Minimum) / (float)(trackBarBright.Maximum - trackBarBright.Minimum) * 100);
             labelBright.Text = percentage + "%";
+        }
+
+        private async void buttonClear_Click(object sender, EventArgs e) {
+            var endpoint = "http://192.168.31.100/clear";
+            var response = await httpClient.PostAsync(endpoint, null);
+        }
+
+        int selected_component_id;
+        private void dataGridView_SelectionChanged(object sender, EventArgs e) {
+
+            if (dataGridView.SelectedRows.Count > 0) {
+                DataGridViewRow selectedRow = dataGridView.SelectedRows[0];
+                var idValue = selectedRow.Cells["Id"].Value;
+                selected_component_id = Convert.ToInt32(idValue);
+            }
+        }
+        private void buttonDelete_Click(object sender, EventArgs e) {
+
+            var result = MessageBox.Show("Are you sure you want to delete this component?", "Delete Component", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes) {
+                _componentService.DeleteComponent(selected_component_id);
+                fill_data_grid();
+                fill_categories();
+            }
+            else
+                return;
+        }
+
+        private void buttonEdit_Click(object sender, EventArgs e) {
+
+            using (Form2 form2 = new Form2()) {
+                
+                form2.selected_component_id = selected_component_id;
+
+                var result = form2.ShowDialog();
+
+                if (result == DialogResult.OK) {
+                    fill_data_grid();
+                    fill_categories();
+                }
+            }
         }
     }
 }

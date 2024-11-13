@@ -125,24 +125,26 @@ namespace PartsHunter
             // buttonDelete
             // 
             buttonDelete.FlatStyle = FlatStyle.Flat;
-            buttonDelete.Location = new Point(676, 710);
+            buttonDelete.Location = new Point(681, 710);
             buttonDelete.Margin = new Padding(4, 3, 4, 3);
             buttonDelete.Name = "buttonDelete";
             buttonDelete.Size = new Size(134, 27);
             buttonDelete.TabIndex = 72;
             buttonDelete.Text = "DELETE";
             buttonDelete.UseVisualStyleBackColor = true;
+            buttonDelete.Click += buttonDelete_Click;
             // 
             // buttonClear
             // 
             buttonClear.FlatStyle = FlatStyle.Flat;
-            buttonClear.Location = new Point(676, 744);
+            buttonClear.Location = new Point(681, 744);
             buttonClear.Margin = new Padding(4, 3, 4, 3);
             buttonClear.Name = "buttonClear";
             buttonClear.Size = new Size(134, 27);
             buttonClear.TabIndex = 56;
             buttonClear.Text = "Clear All";
             buttonClear.UseVisualStyleBackColor = true;
+            buttonClear.Click += buttonClear_Click;
             // 
             // buttonEdit
             // 
@@ -154,6 +156,7 @@ namespace PartsHunter
             buttonEdit.TabIndex = 71;
             buttonEdit.Text = "EDIT";
             buttonEdit.UseVisualStyleBackColor = true;
+            buttonEdit.Click += buttonEdit_Click;
             // 
             // groupBoxSettings
             // 
@@ -351,6 +354,7 @@ namespace PartsHunter
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView.Size = new Size(802, 548);
             dataGridView.TabIndex = 0;
+            dataGridView.SelectionChanged += dataGridView_SelectionChanged;
             // 
             // tabPage2
             // 
