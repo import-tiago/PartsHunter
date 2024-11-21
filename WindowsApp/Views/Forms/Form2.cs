@@ -8,13 +8,14 @@ using Component = PartsHunter.Data.Entities.Component;
 
 namespace PartsHunter {
     public partial class Form2 : Form {
+
         private readonly ComponentService _componentService;
         public int selected_component_id { get; set; }
         private Component component;
 
-        public Form2() {
+        public Form2(ComponentService componentService) {
             InitializeComponent();
-            _componentService = new ComponentService();
+            _componentService = componentService;
         }
 
         private void Form2_Load(object sender, EventArgs e) {

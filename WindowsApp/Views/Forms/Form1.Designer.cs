@@ -325,6 +325,7 @@ namespace PartsHunter
             txtSearch.Name = "txtSearch";
             txtSearch.Size = new Size(602, 23);
             txtSearch.TabIndex = 56;
+            txtSearch.KeyDown += buttonSearch_Click;
             // 
             // groupBox6
             // 
@@ -573,7 +574,7 @@ namespace PartsHunter
             MaximizeBox = false;
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "PartsHunter";
+            Text = "PartsHunter";            
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();

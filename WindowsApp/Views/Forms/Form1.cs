@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Reflection.Emit;
 using System.Net;
+using PartsHunter.Data;
 
 namespace PartsHunter {
     public partial class Form1 : Form {
@@ -213,15 +214,17 @@ namespace PartsHunter {
 
         private void buttonEdit_Click(object sender, EventArgs e) {
 
-            using (Form2 form2 = new Form2()) {
-                
+            using (Form2 form2 = new Form2(_componentService)) {
+
                 form2.selected_component_id = selected_component_id;
 
                 var result = form2.ShowDialog();
 
                 if (result == DialogResult.OK) {
+
                     fill_data_grid();
                     fill_categories();
+
                 }
             }
         }
