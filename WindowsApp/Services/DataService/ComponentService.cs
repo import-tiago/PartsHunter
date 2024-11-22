@@ -21,10 +21,10 @@ namespace PartsHunter.Services.DataService
             return _context.Components.ToList();
         }
 
-        public Component GetComponentById(int id)
-        {
+        public Component? GetComponentById(int id) {
             return _context.Components.Find(id);
         }
+
 
         public void AddComponent(Component component)
         {
@@ -67,13 +67,14 @@ namespace PartsHunter.Services.DataService
         }
 
         // Get unique categories from the database
-        public List<string> GetUniqueCategories()
-        {
+        public List<string> GetUniqueCategories() {
             return _context.Components
-                .Select(c => c.Category)       // Select the Category column
-                .Distinct()                    // Remove duplicates
-                .ToList();                     // Convert to list
+                .Where(c => c.Category != null) // Filter out null values
+                .Select(c => c.Category!)
+                .Distinct()
+                .ToList();
         }
+
 
         // Method to get all components from a specific category
         public List<Component> GetComponentsByCategory(string category) {

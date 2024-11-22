@@ -32,6 +32,11 @@ namespace PartsHunter
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
+            button1 = new Button();
+            groupBox3 = new GroupBox();
+            dgvBillOfMaterials = new DataGridView();
+            Item = new DataGridViewTextBoxColumn();
+            SlotID = new DataGridViewTextBoxColumn();
             buttonDelete = new Button();
             buttonClear = new Button();
             buttonEdit = new Button();
@@ -50,7 +55,7 @@ namespace PartsHunter
             label2 = new Label();
             txtSearch = new TextBox();
             groupBox6 = new GroupBox();
-            dataGridView = new DataGridView();
+            dgvDataSet = new DataGridView();
             tabPage2 = new TabPage();
             groupBox2 = new GroupBox();
             picHelp = new PictureBox();
@@ -74,11 +79,13 @@ namespace PartsHunter
             toolTip1 = new ToolTip(components);
             tabControl1.SuspendLayout();
             tabPage1.SuspendLayout();
+            groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvBillOfMaterials).BeginInit();
             groupBoxSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)trackBarBright).BeginInit();
             ((System.ComponentModel.ISupportInitialize)trackBarTime).BeginInit();
             groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvDataSet).BeginInit();
             tabPage2.SuspendLayout();
             groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picHelp).BeginInit();
@@ -100,6 +107,8 @@ namespace PartsHunter
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(button1);
+            tabPage1.Controls.Add(groupBox3);
             tabPage1.Controls.Add(buttonDelete);
             tabPage1.Controls.Add(buttonClear);
             tabPage1.Controls.Add(buttonEdit);
@@ -121,6 +130,62 @@ namespace PartsHunter
             tabPage1.TabIndex = 2;
             tabPage1.Text = "Search";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.Location = new Point(20, 660);
+            button1.Margin = new Padding(4, 3, 4, 3);
+            button1.Name = "button1";
+            button1.Size = new Size(204, 27);
+            button1.TabIndex = 74;
+            button1.Text = "SHOW ALL";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(dgvBillOfMaterials);
+            groupBox3.Location = new Point(16, 117);
+            groupBox3.Margin = new Padding(4, 3, 4, 3);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Padding = new Padding(4, 3, 4, 3);
+            groupBox3.Size = new Size(212, 537);
+            groupBox3.TabIndex = 73;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Bill of Materials";
+            // 
+            // dgvBillOfMaterials
+            // 
+            dgvBillOfMaterials.AllowUserToResizeRows = false;
+            dgvBillOfMaterials.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvBillOfMaterials.BackgroundColor = SystemColors.ControlLightLight;
+            dgvBillOfMaterials.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvBillOfMaterials.Columns.AddRange(new DataGridViewColumn[] { Item, SlotID });
+            dgvBillOfMaterials.Dock = DockStyle.Fill;
+            dgvBillOfMaterials.Location = new Point(4, 19);
+            dgvBillOfMaterials.Margin = new Padding(4, 3, 4, 3);
+            dgvBillOfMaterials.MultiSelect = false;
+            dgvBillOfMaterials.Name = "dgvBillOfMaterials";
+            dgvBillOfMaterials.ReadOnly = true;
+            dgvBillOfMaterials.RowHeadersVisible = false;
+            dgvBillOfMaterials.RowHeadersWidth = 51;
+            dgvBillOfMaterials.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvBillOfMaterials.Size = new Size(204, 515);
+            dgvBillOfMaterials.TabIndex = 0;
+            dgvBillOfMaterials.CellDoubleClick += dgvBillOfMaterials_CellDoubleClick;
+            // 
+            // Item
+            // 
+            Item.HeaderText = "Item";
+            Item.Name = "Item";
+            Item.ReadOnly = true;
+            // 
+            // SlotID
+            // 
+            SlotID.HeaderText = "SlotID";
+            SlotID.Name = "SlotID";
+            SlotID.ReadOnly = true;
             // 
             // buttonDelete
             // 
@@ -329,33 +394,35 @@ namespace PartsHunter
             // 
             // groupBox6
             // 
-            groupBox6.Controls.Add(dataGridView);
-            groupBox6.Location = new Point(9, 117);
+            groupBox6.Controls.Add(dgvDataSet);
+            groupBox6.Location = new Point(236, 117);
             groupBox6.Margin = new Padding(4, 3, 4, 3);
             groupBox6.Name = "groupBox6";
             groupBox6.Padding = new Padding(4, 3, 4, 3);
-            groupBox6.Size = new Size(810, 570);
+            groupBox6.Size = new Size(583, 570);
             groupBox6.TabIndex = 44;
             groupBox6.TabStop = false;
+            groupBox6.Text = "Stock";
             // 
-            // dataGridView
+            // dgvDataSet
             // 
-            dataGridView.AllowUserToResizeRows = false;
-            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView.BackgroundColor = SystemColors.ControlLightLight;
-            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Dock = DockStyle.Fill;
-            dataGridView.Location = new Point(4, 19);
-            dataGridView.Margin = new Padding(4, 3, 4, 3);
-            dataGridView.MultiSelect = false;
-            dataGridView.Name = "dataGridView";
-            dataGridView.ReadOnly = true;
-            dataGridView.RowHeadersVisible = false;
-            dataGridView.RowHeadersWidth = 51;
-            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.Size = new Size(802, 548);
-            dataGridView.TabIndex = 0;
-            dataGridView.SelectionChanged += dataGridView_SelectionChanged;
+            dgvDataSet.AllowUserToResizeRows = false;
+            dgvDataSet.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvDataSet.BackgroundColor = SystemColors.ControlLightLight;
+            dgvDataSet.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvDataSet.Dock = DockStyle.Fill;
+            dgvDataSet.Location = new Point(4, 19);
+            dgvDataSet.Margin = new Padding(4, 3, 4, 3);
+            dgvDataSet.MultiSelect = false;
+            dgvDataSet.Name = "dgvDataSet";
+            dgvDataSet.ReadOnly = true;
+            dgvDataSet.RowHeadersVisible = false;
+            dgvDataSet.RowHeadersWidth = 51;
+            dgvDataSet.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvDataSet.Size = new Size(575, 548);
+            dgvDataSet.TabIndex = 0;
+            dgvDataSet.CellDoubleClick += dgvDataSet_CellDoubleClick;
+            dgvDataSet.SelectionChanged += dataGridView_SelectionChanged;
             // 
             // tabPage2
             // 
@@ -574,16 +641,19 @@ namespace PartsHunter
             MaximizeBox = false;
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "PartsHunter";            
+            Text = "PartsHunter";
+            Load += Form1_Load;
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tabPage1.PerformLayout();
+            groupBox3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvBillOfMaterials).EndInit();
             groupBoxSettings.ResumeLayout(false);
             groupBoxSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)trackBarBright).EndInit();
             ((System.ComponentModel.ISupportInitialize)trackBarTime).EndInit();
             groupBox6.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridView).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvDataSet).EndInit();
             tabPage2.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
@@ -636,9 +706,14 @@ namespace PartsHunter
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private DataGridView dataGridView;
+        private DataGridView dgvDataSet;
         private PictureBox picHelp;
         private ToolTip toolTip1;
+        private GroupBox groupBox3;
+        private DataGridView dgvBillOfMaterials;
+        private Button button1;
+        private DataGridViewTextBoxColumn Item;
+        private DataGridViewTextBoxColumn SlotID;
     }
 }
 

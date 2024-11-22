@@ -49,9 +49,9 @@ namespace PartsHunter {
 
         private int fill_data_grid() {
             var results = _componentService.GetAllComponents();
-            dataGridView.DataSource = results;
-            dataGridView.Columns["Category"].DisplayIndex = 0;
-            dataGridView.Columns["Id"].Visible = false;
+            dgvDataSet.DataSource = results;
+            dgvDataSet.Columns["Category"].DisplayIndex = 0;
+            dgvDataSet.Columns["Id"].Visible = false;
             return results.Count;
         }
 
@@ -116,7 +116,7 @@ namespace PartsHunter {
                 ? _componentService.SearchComponentsByDescription(searchTerm)
                 : _componentService.SearchComponentsByDescriptionAndCategory(searchTerm, selectedCategory);
 
-            dataGridView.DataSource = results;
+            dgvDataSet.DataSource = results;
             display_search_results(results.Count());
         }
         private void buttonListAll_Click(object sender, EventArgs e) {
@@ -131,7 +131,7 @@ namespace PartsHunter {
             }
             else {
                 var results = _componentService.GetComponentsByCategory(selectedCategory);
-                dataGridView.DataSource = results;
+                dgvDataSet.DataSource = results;
                 display_search_results(results.Count());
             }
         }
@@ -191,12 +191,15 @@ namespace PartsHunter {
         }
 
         int selected_component_id;
-        private void dataGridView_SelectionChanged(object sender, EventArgs e) {
+        private async void dataGridView_SelectionChanged(object sender, EventArgs e) {
 
-            if (dataGridView.SelectedRows.Count > 0) {
-                DataGridViewRow selectedRow = dataGridView.SelectedRows[0];
+            if (dgvDataSet.SelectedRows.Count > 0) {
+                DataGridViewRow selectedRow = dgvDataSet.SelectedRows[0];
                 var idValue = selectedRow.Cells["Id"].Value;
                 selected_component_id = Convert.ToInt32(idValue);
+                int slotId = Convert.ToInt32(dgvDataSet.SelectedRows[0].Cells["SlotID"].Value) - 1;
+                var endpoint = $"http://192.168.31.100/slot?id={slotId}";
+                var response = await httpClient.PostAsync(endpoint, null);
             }
         }
         private void buttonDelete_Click(object sender, EventArgs e) {
@@ -211,7 +214,6 @@ namespace PartsHunter {
             else
                 return;
         }
-
         private void buttonEdit_Click(object sender, EventArgs e) {
 
             using (Form2 form2 = new Form2(_componentService)) {
@@ -226,6 +228,63 @@ namespace PartsHunter {
                     fill_categories();
 
                 }
+            }
+        }
+
+        private void dgvDataSet_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
+            if (e.RowIndex >= 0) {
+                // Get the selected row from dgvDataSet
+                DataGridViewRow selectedRow = dgvDataSet.Rows[e.RowIndex];
+
+                // Get the SlotID value from the selected row
+                int selectedSlotId = Convert.ToInt32(selectedRow.Cells["SlotID"].Value);
+
+                // Check if the SlotID already exists in dgvBillOfMaterials
+                bool slotIdExists = false;
+                foreach (DataGridViewRow row in dgvBillOfMaterials.Rows) {
+                    if (row.Cells["SlotID"].Value != null && Convert.ToInt32(row.Cells["SlotID"].Value) == selectedSlotId) {
+                        slotIdExists = true;
+                        break;
+                    }
+                }
+
+                // If SlotID does not exist, add the row to dgvBillOfMaterials
+                if (!slotIdExists) {
+                    int newRowIndex = dgvBillOfMaterials.Rows.Add();
+                    string concatenatedValue = selectedRow.Cells["Category"].Value.ToString() + " - " + selectedRow.Cells["Description"].Value.ToString();
+                    dgvBillOfMaterials.Rows[newRowIndex].Cells["Item"].Value = concatenatedValue;
+                    dgvBillOfMaterials.Rows[newRowIndex].Cells["SlotID"].Value = selectedRow.Cells["SlotID"].Value;
+                }
+            }
+        }
+
+        private async void button1_Click(object sender, EventArgs e) {
+            var endpoint = "http://192.168.31.100/clear";
+            var response = await httpClient.PostAsync(endpoint, null);
+
+            List<int> slotIds = new List<int>();
+
+            foreach (DataGridViewRow row in dgvBillOfMaterials.Rows) {
+                if (row.Cells["SlotID"].Value != null) {
+                    int slotId = Convert.ToInt32(row.Cells["SlotID"].Value);
+                    slotIds.Add(slotId);
+                }
+            }
+            string slotIdList = string.Join(",", slotIds);
+            endpoint = $"http://192.168.31.100/slot?id={slotIdList}";
+            using (HttpClient httpClient = new HttpClient()) {
+                response = await httpClient.PostAsync(endpoint, null);
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e) {
+            dgvBillOfMaterials.Columns["SlotID"].Visible = false;
+        }
+
+        private void dgvBillOfMaterials_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
+            if (e.RowIndex >= 0) {
+                dgvBillOfMaterials.Rows.RemoveAt(e.RowIndex);
+
             }
         }
     }
