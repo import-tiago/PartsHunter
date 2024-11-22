@@ -10,7 +10,7 @@ using PartsHunter.Data;
 namespace PartsHunter.Migrations
 {
     [DbContext(typeof(PartsHunterContext))]
-    [Migration("20241108171427_InitialCreate")]
+    [Migration("20241122171237_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -26,11 +26,9 @@ namespace PartsHunter.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Category")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("SlotID")
@@ -39,6 +37,35 @@ namespace PartsHunter.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Components");
+                });
+
+            modelBuilder.Entity("PartsHunter.Data.Entities.HardwareDevice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("IP")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("blinky_ms")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("blue")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("brightness")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("green")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("red")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ESP32", (string)null);
                 });
 #pragma warning restore 612, 618
         }

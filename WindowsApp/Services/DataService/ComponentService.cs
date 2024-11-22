@@ -26,11 +26,21 @@ namespace PartsHunter.Services.DataService
         }
 
 
-        public void AddComponent(Component component)
-        {
-            _context.Components.Add(component);
+        public void AddComponent(Component component) {
+            
+            var existingComponent = _context.Components.FirstOrDefault(c => c.SlotID == component.SlotID);
+
+            if (existingComponent != null) {                
+                existingComponent.Description = component.Description;
+                existingComponent.Category = component.Category;                
+                _context.Components.Update(existingComponent);
+            }
+            else                 
+                _context.Components.Add(component);            
+
             _context.SaveChanges();
         }
+
 
         public void UpdateComponent(Component component)
         {

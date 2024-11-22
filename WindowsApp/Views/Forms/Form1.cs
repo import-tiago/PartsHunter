@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Reflection.Emit;
 using System.Net;
 using PartsHunter.Data;
+using System.Text.RegularExpressions;
 
 namespace PartsHunter {
     public partial class Form1 : Form {
@@ -49,9 +50,9 @@ namespace PartsHunter {
 
         private int fill_data_grid() {
             var results = _componentService.GetAllComponents();
-            dgvDataSet.DataSource = results;
-            dgvDataSet.Columns["Category"].DisplayIndex = 0;
-            dgvDataSet.Columns["Id"].Visible = false;
+            dgvStock.DataSource = results;
+            dgvStock.Columns["Category"].DisplayIndex = 0;
+            dgvStock.Columns["Id"].Visible = false;
             return results.Count;
         }
 
@@ -91,7 +92,7 @@ namespace PartsHunter {
 
             var newComponent = new Component {
                 Description = txtDescription.Text.Trim(),
-                Category = cmbCategoryRegister.Text.Trim(),
+                Category = cmbCategoryRegister.Text.Trim().ToUpper(),
                 SlotID = slotID
             };
 
@@ -100,6 +101,7 @@ namespace PartsHunter {
             MessageBox.Show("Component saved successfully.");
             clear_register_form_inputs();
             fill_data_grid();
+            fill_categories();
         }
         private void buttonSearch_Click(object sender, EventArgs e) {
 
@@ -116,7 +118,7 @@ namespace PartsHunter {
                 ? _componentService.SearchComponentsByDescription(searchTerm)
                 : _componentService.SearchComponentsByDescriptionAndCategory(searchTerm, selectedCategory);
 
-            dgvDataSet.DataSource = results;
+            dgvStock.DataSource = results;
             display_search_results(results.Count());
         }
         private void buttonListAll_Click(object sender, EventArgs e) {
@@ -131,7 +133,7 @@ namespace PartsHunter {
             }
             else {
                 var results = _componentService.GetComponentsByCategory(selectedCategory);
-                dgvDataSet.DataSource = results;
+                dgvStock.DataSource = results;
                 display_search_results(results.Count());
             }
         }
@@ -145,13 +147,13 @@ namespace PartsHunter {
             }
             else {
                 try {
-                    var endpoint = $"http://192.168.31.100/color?r={r}&g={g}&b={b}";
+                    var endpoint = $"http://{web_server_ip}/color?r={r}&g={g}&b={b}";
                     var responseColor = await httpClient.PostAsync(endpoint, null);
 
-                    endpoint = $"http://192.168.31.100/blink?interval={trackBarTime.Value}";
+                    endpoint = $"http://{web_server_ip}/blink?interval={trackBarTime.Value}";
                     var responseBlink = await httpClient.PostAsync(endpoint, null);
 
-                    endpoint = $"http://192.168.31.100/brightness?level={trackBarBright.Value}";
+                    endpoint = $"http://{web_server_ip}/brightness?level={trackBarBright.Value}";
                     var responseBrightness = await httpClient.PostAsync(endpoint, null);
                 }
                 catch (Exception ex) {
@@ -186,20 +188,28 @@ namespace PartsHunter {
         }
 
         private async void buttonClear_Click(object sender, EventArgs e) {
-            var endpoint = "http://192.168.31.100/clear";
+            var endpoint = "http://{web_server_ip}/clear";
             var response = await httpClient.PostAsync(endpoint, null);
         }
 
         int selected_component_id;
         private async void dataGridView_SelectionChanged(object sender, EventArgs e) {
 
-            if (dgvDataSet.SelectedRows.Count > 0) {
-                DataGridViewRow selectedRow = dgvDataSet.SelectedRows[0];
+            if (dgvStock.SelectedRows.Count > 0) {
+                DataGridViewRow selectedRow = dgvStock.SelectedRows[0];
                 var idValue = selectedRow.Cells["Id"].Value;
                 selected_component_id = Convert.ToInt32(idValue);
-                int slotId = Convert.ToInt32(dgvDataSet.SelectedRows[0].Cells["SlotID"].Value) - 1;
-                var endpoint = $"http://192.168.31.100/slot?id={slotId}";
-                var response = await httpClient.PostAsync(endpoint, null);
+                int slotId = Convert.ToInt32(dgvStock.SelectedRows[0].Cells["SlotID"].Value) - 1;
+                try {
+                    var endpoint = $"http://{web_server_ip}/slot?id={slotId}";
+                    var response = await httpClient.PostAsync(endpoint, null);
+                }
+                catch (HttpRequestException httpEx) {
+
+                }
+                catch (Exception ex) {
+
+                }
             }
         }
         private void buttonDelete_Click(object sender, EventArgs e) {
@@ -234,7 +244,7 @@ namespace PartsHunter {
         private void dgvDataSet_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
             if (e.RowIndex >= 0) {
                 // Get the selected row from dgvDataSet
-                DataGridViewRow selectedRow = dgvDataSet.Rows[e.RowIndex];
+                DataGridViewRow selectedRow = dgvStock.Rows[e.RowIndex];
 
                 // Get the SlotID value from the selected row
                 int selectedSlotId = Convert.ToInt32(selectedRow.Cells["SlotID"].Value);
@@ -259,7 +269,7 @@ namespace PartsHunter {
         }
 
         private async void button1_Click(object sender, EventArgs e) {
-            var endpoint = "http://192.168.31.100/clear";
+            var endpoint = "http://{web_server_ip}/clear";
             var response = await httpClient.PostAsync(endpoint, null);
 
             List<int> slotIds = new List<int>();
@@ -271,14 +281,36 @@ namespace PartsHunter {
                 }
             }
             string slotIdList = string.Join(",", slotIds);
-            endpoint = $"http://192.168.31.100/slot?id={slotIdList}";
+            endpoint = $"http://{web_server_ip}/slot?id={slotIdList}";
             using (HttpClient httpClient = new HttpClient()) {
                 response = await httpClient.PostAsync(endpoint, null);
             }
         }
 
+        string? web_server_ip = string.Empty;
         private void Form1_Load(object sender, EventArgs e) {
+            dgvBillOfMaterials.Columns.Add("Item", "Item");
+            dgvBillOfMaterials.Columns.Add("SlotID", "SlotID");
             dgvBillOfMaterials.Columns["SlotID"].Visible = false;
+            dgvStock.Columns["SlotID"].Width = 30;
+            dgvStock.Columns["Category"].Width = 150;            
+            dgvStock.Columns["SlotID"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvStock.EnableHeadersVisualStyles = false;
+            dgvStock.ColumnHeadersDefaultCellStyle.SelectionBackColor = dgvStock.ColumnHeadersDefaultCellStyle.BackColor;
+            dgvBillOfMaterials.EnableHeadersVisualStyles = false;
+            dgvBillOfMaterials.ColumnHeadersDefaultCellStyle.SelectionBackColor = dgvStock.ColumnHeadersDefaultCellStyle.BackColor;
+
+
+            var service = new HardwareDeviceService();
+            web_server_ip = service.GetIPAddress(1);
+            if (web_server_ip == null)
+                tbIP.ReadOnly = true;
+            else {
+                tbIP.Enabled = false;
+                tbIP.Text = web_server_ip;
+            }
+
+
         }
 
         private void dgvBillOfMaterials_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
@@ -286,6 +318,95 @@ namespace PartsHunter {
                 dgvBillOfMaterials.Rows.RemoveAt(e.RowIndex);
 
             }
+        }
+
+        private void ProcessFile(string filePath) {
+            try {
+                var lines = File.ReadAllLines(filePath);
+
+                foreach (var line in lines) {
+
+                    var parts = line.Split(',');
+
+                    if (parts.Length == 3) {
+                        string category = parts[0].Trim().ToUpper();
+                        string description = parts[1].Trim();
+                        if (int.TryParse(parts[2].Trim(), out int slotID)) {
+
+                            var newComponent = new Component {
+                                Description = description,
+                                Category = category,
+                                SlotID = slotID
+                            };
+
+                            _componentService.AddComponent(newComponent);
+                            clear_register_form_inputs();
+                            fill_data_grid();
+                        }
+                        else {
+                            MessageBox.Show($"Invalid SlotID in line: {line}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    else {
+                        MessageBox.Show($"Invalid line format: {line}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+
+                MessageBox.Show("File processed successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex) {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void buttonGetFileAddress_Click(object sender, EventArgs e) {
+
+            using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
+                openFileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+                openFileDialog.Title = "Select a Text File";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK) {
+                    textBoxFileLocation.Text = openFileDialog.FileName;
+
+
+                }
+            }
+        }
+
+        private void buttonSaveFromFile_Click(object sender, EventArgs e) {
+            if (textBoxFileLocation.Text.Contains(".txt"))
+                ProcessFile(textBoxFileLocation.Text);
+            else
+                MessageBox.Show("Please specify a valid .txt file.");
+        }
+
+        public bool is_ip_valid(string ip_addr) {
+            // Regular expression to match IPv4 addresses
+            string pattern = @"^((25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$";
+
+            // Use Regex to match the input string
+            return Regex.IsMatch(ip_addr, pattern);
+        }
+        private void pictureBox2_Click(object sender, EventArgs e) {
+
+            string ip_addr = tbIP.Text;
+
+            if (is_ip_valid(ip_addr)) {
+
+                var service = new HardwareDeviceService();
+                if (service.AddIPAddress(1, ip_addr)) {
+                    MessageBox.Show("Saved successfully!");
+                    tbIP.Enabled = false;
+                }
+            }
+            else
+                MessageBox.Show("Invalid IP address!");
+        }
+
+        bool edit_ip = false;
+        private void pictureBoxEditIP_Click(object sender, EventArgs e) {
+            edit_ip = !edit_ip;
+            tbIP.Enabled = edit_ip;
         }
     }
 }
