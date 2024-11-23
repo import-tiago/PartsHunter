@@ -14,11 +14,8 @@
 ---
 
 ## How It Works
-
-The system operates seamlessly:  
-
 - When a search query is entered in the Windows application, an **SQLite database** is queried to retrieve relevant results.  
-- The user selects the desired component(s) from the displayed results, triggering **REST requests** to the hardware device.  
+- The user selects the desired component(s) from the displayed results, triggering **REST requests** to the hardware device via Wi-Fi.  
 - Powered by an **ESP32 web server**, the hardware processes these requests and illuminates the LEDs corresponding to the storage slots containing the selected components.  
 
 This integrated solution streamlines component management, saving time and reducing errors in locating items.
