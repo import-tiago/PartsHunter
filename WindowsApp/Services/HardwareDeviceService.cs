@@ -13,37 +13,58 @@ namespace PartsHunter.Services {
             _context = new PartsHunterContext();
             _context.Database.EnsureCreated();
         }
-        public void AddHardwareDevice(HardwareDeviceEntity hardwareDevice) {
-            _context.HardwareDevice.Add(hardwareDevice);
-            _context.SaveChanges();
-        }
-        public bool add_ip_addr(int deviceId, string ipAddress) {
-            var existingDevice = _context.HardwareDevice.FirstOrDefault(device => device.Id == deviceId);
 
-            if (existingDevice != null) {
-                existingDevice.IP = ipAddress;
+        public void AddHardwareDevice(HardwareDeviceEntity hardwareDevice) {
+            using var transaction = _context.Database.BeginTransaction();
+            try {
+                _context.HardwareDevice.Add(hardwareDevice);
+                _context.SaveChanges();
+                transaction.Commit();  // Commit transaction
             }
-            else {
-                var newDevice = new HardwareDeviceEntity {
-                    Id = deviceId,
-                    IP = ipAddress
-                };
-                _context.HardwareDevice.Add(newDevice);
+            catch (Exception) {
+                transaction.Rollback();  // Rollback transaction if an error occurs
+                throw;  // Optionally rethrow the exception
             }
-            _context.SaveChanges();
-            return true;
         }
+
+        public bool add_ip_addr(int deviceId, string ipAddress) {
+            using var transaction = _context.Database.BeginTransaction();
+            try {
+                var existingDevice = _context.HardwareDevice.FirstOrDefault(device => device.Id == deviceId);
+
+                if (existingDevice != null) {
+                    existingDevice.IP = ipAddress;
+                }
+                else {
+                    var newDevice = new HardwareDeviceEntity {
+                        Id = deviceId,
+                        IP = ipAddress
+                    };
+                    _context.HardwareDevice.Add(newDevice);
+                }
+
+                _context.SaveChanges();
+                transaction.Commit();  // Commit transaction
+                return true;
+            }
+            catch (Exception) {
+                transaction.Rollback();  // Rollback transaction if an error occurs
+                throw;  // Optionally rethrow the exception
+            }
+        }
+
         public string? get_ip_addr(int deviceId) {
             var value = _context.HardwareDevice.FirstOrDefault(device => device.Id == deviceId);
 
             if (value != null) {
-                ip_addr = value.IP; ;
+                ip_addr = value.IP;
                 return ip_addr;
             }
             else {
                 return null;
             }
         }
+
         public async void set_pixel_color() {
             try {
                 var endpoint = $"http://{ip_addr}/color?r={pixel_color.R}&g={pixel_color.G}&b={pixel_color.B}";
@@ -73,6 +94,7 @@ namespace PartsHunter.Services {
 
             }
         }
+
         public async void clear_pixels() {
             try {
                 var endpoint = $"http://{ip_addr}/clear";
@@ -82,6 +104,7 @@ namespace PartsHunter.Services {
 
             }
         }
+
         public async void turn_on_pixel(int pixel) {
             try {
                 var endpoint = $"http://{ip_addr}/slot?id={pixel}";
@@ -91,6 +114,7 @@ namespace PartsHunter.Services {
 
             }
         }
+
         public async void turn_on_pixels(List<int> pixels) {
             try {
                 string slotIdList = string.Join(",", pixels);

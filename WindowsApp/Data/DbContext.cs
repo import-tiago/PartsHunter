@@ -12,6 +12,5 @@ namespace PartsHunter.Data {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<HardwareDeviceEntity>().ToTable("HardwareDevice");
         }
-
     }
 }

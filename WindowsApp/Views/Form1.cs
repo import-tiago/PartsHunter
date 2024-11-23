@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using PartsHunter.Data.Entities;
+﻿using PartsHunter.Data.Entities;
 using PartsHunter.Services;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace PartsHunter {
     public partial class Form1 : Form {
@@ -31,7 +29,7 @@ namespace PartsHunter {
 
             dgvStock.EnableHeadersVisualStyles = false;
             dgvStock.ColumnHeadersDefaultCellStyle.SelectionBackColor = dgvStock.ColumnHeadersDefaultCellStyle.BackColor;
-          
+
             resize_datagrid_columns_width();
 
             hardware_device.get_ip_addr(1);
@@ -50,7 +48,7 @@ namespace PartsHunter {
 
             var results = component.GetAllComponents().OrderBy(c => c.SlotID).ToList();
 
-            dgvStock.DataSource = null; 
+            dgvStock.DataSource = null;
             dgvStock.DataSource = results;
 
             dgvStock.Columns["Category"].DisplayIndex = 0;
@@ -232,7 +230,7 @@ namespace PartsHunter {
             var result = MessageBox.Show("Are you sure you want to delete this component?", "Delete Component", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (result == DialogResult.Yes) {
-                
+
                 int currentIndex = dgvStock.SelectedRows[0].Index;
 
                 int scrollPosition = dgvStock.FirstDisplayedScrollingRowIndex;
@@ -408,13 +406,11 @@ namespace PartsHunter {
                 MessageBox.Show("Invalid IP address!");
             }
         }
-
         bool edit_ip = false;
         private void pictureBoxEditIP_Click(object sender, EventArgs e) {
             edit_ip = !edit_ip;
             tbIP.Enabled = edit_ip;
         }
-
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
             hardware_device.clear_pixels();
         }

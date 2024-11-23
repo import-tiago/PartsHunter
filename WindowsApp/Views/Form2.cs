@@ -12,7 +12,6 @@ namespace PartsHunter {
             InitializeComponent();
             component = componentService ?? throw new ArgumentNullException(nameof(componentService));
         }
-
         private void Form2_Load(object sender, EventArgs e) {
 
             dataGridView.EnableHeadersVisualStyles = false;
@@ -37,7 +36,6 @@ namespace PartsHunter {
                 }
             }
         }
-
         private void buttonSaveChanges_Click(object sender, EventArgs e) {
             if (componentEntity != null) {
                 componentEntity.Description = dataGridView.Rows[0].Cells["Description"].Value.ToString();
@@ -66,14 +64,13 @@ namespace PartsHunter {
                 Close();
             }
         }
-
         private void dataGridView_CellClick(object sender, DataGridViewCellEventArgs e) {
-            
+
             dataGridView.BeginEdit(true);
-            
+
             var editControl = dataGridView.EditingControl as TextBox;
             if (editControl != null) {
-            
+
                 editControl.SelectionStart = editControl.Text.Length;
                 editControl.SelectionLength = 0;
             }
