@@ -1,14 +1,17 @@
 # PartsHunter
 
-**PartsHunter** is an electronic component organization system designed for efficiency and precision. It consists of three core modules:  
+**PartsHunter** is an electronic component organization system designed for efficiency and precision. It consists of three core modules:
 
-1. **Mechanical Assembly**: A storage system that organizes components across dedicated slots.  
-2. **Windows Application**: A user-friendly interface for searching and managing components by description.  
-3. **Hardware Device**: A communication module that interacts with the Windows application to activate LEDs, pinpointing the location of each component.  
+
+1. [**Windows Application**](#windows-application): A user-friendly interface for searching and managing components by description.
+2. [**Hardware Device**](#hardware-device): A communication module that interacts with the Windows application to activate LEDs, pinpointing the location of each component.
+3. [**Mechanical Assembly**](#mechanical-assembly): A storage system that organizes components across dedicated slots.
 
 <div align="center">  
   <img src="Assets/modules_overview.png">  
 </div>  
+
+---
 
 ## How It Works
 
@@ -23,11 +26,16 @@ This integrated solution streamlines component management, saving time and reduc
 ## Flow Overview
 <img src="Assets/flow_overview.png">
 
-## Circuit Diagram
+---
+
+## Windows Application
+<img src="Assets/ui_preview.png">
+
+## Hardware Device
 <img src="Assets/circuit_diagram.png">
 
-## UI Preview
-<img src="Assets/ui_preview.png">
+## Mechanical Assembly
+<img src="Assets/mechanical_preview.png">
 
 ### Contributing
 0. Give this project a :star:
