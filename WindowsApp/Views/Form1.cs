@@ -9,6 +9,8 @@ namespace PartsHunter {
         const String DEFAULT_SEARCH_CATEGORY_ITEM = "SHOW ALL";
         const String DEFAULT_REGISTER_CATEGORY_ITEM = "< Select one or type a new one>";
         const String NOTHING_FOUND = "nothing found";
+        const String HARDWARE_DEVICE_READY = "Config Highlight";
+        const String HARDWARE_DEVICE_NOT_READY = "Missing IP Addr";
 
         private readonly ComponentService component;
         private readonly HardwareDeviceService hardware_device;
@@ -34,14 +36,20 @@ namespace PartsHunter {
 
             hardware_device.get_ip_addr(1);
 
-            if (hardware_device.ip_addr != null) {
+            if (hardware_device.ip_addr != null && hardware_device.ip_addr != string.Empty) {
                 tbIP.Enabled = false;
                 tbIP.Text = hardware_device.ip_addr;
                 hardware_device.clear_pixels();
+                buttonSettings.Enabled = true;
+                buttonSettings.Text = HARDWARE_DEVICE_READY;
+                buttonSettings.BackColor = SystemColors.Control;
             }
             else {
                 tbIP.Enabled = true;
                 tbIP.Text = string.Empty;
+                buttonSettings.Enabled = false;
+                buttonSettings.Text = HARDWARE_DEVICE_NOT_READY;
+                buttonSettings.BackColor = Color.MistyRose;
             }
         }
         private int fill_data_grid() {
@@ -400,6 +408,9 @@ namespace PartsHunter {
                 if (hardware_device.add_ip_addr(1, ip_addr)) {
                     MessageBox.Show("Saved successfully!");
                     tbIP.Enabled = false;
+                    buttonSettings.Enabled = true;
+                    buttonSettings.Text = HARDWARE_DEVICE_READY;
+                    buttonSettings.BackColor = SystemColors.Control;
                 }
             }
             else {
@@ -411,8 +422,32 @@ namespace PartsHunter {
             edit_ip = !edit_ip;
             tbIP.Enabled = edit_ip;
         }
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
-            hardware_device.clear_pixels();
+        private bool isClosingHandled = false; // Flag to prevent re-entry
+        private async void Form1_FormClosing(object sender, FormClosingEventArgs e) {
+            
+            if (isClosingHandled) {
+                return; // Skip if already handled
+            }
+
+            e.Cancel = true; // Prevent immediate closing
+
+            try {
+                Debug.WriteLine("Attempting to clear pixels...");
+                var success = await hardware_device.clear_pixels();
+
+                if (success) {
+                    Debug.WriteLine("Pixels cleared successfully.");
+                    isClosingHandled = true; // Mark as handled
+                    e.Cancel = false; // Allow closing
+                    this.Close(); // Explicitly close the form
+                }
+                else {
+                    Debug.WriteLine("Failed to clear pixels. Form will remain open.");
+                }
+            }
+            catch (Exception ex) {
+                Debug.WriteLine($"Exception during clear_pixels: {ex.Message}");
+            }
         }
     }
 }

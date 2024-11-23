@@ -1,5 +1,6 @@
 ﻿using PartsHunter.Data;
 using PartsHunter.Data.Entities;
+using System.Diagnostics;
 
 namespace PartsHunter.Services {
     public class HardwareDeviceService {
@@ -71,13 +72,22 @@ namespace PartsHunter.Services {
 
             }
         }
-        public async void clear_pixels() {
+        public async Task<bool> clear_pixels() {
             try {
                 var endpoint = $"http://{ip_addr}/clear";
                 var response = await httpClient.PostAsync(endpoint, null);
-            }
-            catch (Exception) {
 
+                if (response.IsSuccessStatusCode) {
+                    return true; // HTTP 200 success
+                }
+                else {
+                    Debug.WriteLine($"HTTP Error: {response.StatusCode}");
+                    return false; // Non-success status
+                }
+            }
+            catch (Exception ex) {
+                Debug.WriteLine($"Error in clear_pixels: {ex.Message}");
+                return false; // Exception occurred
             }
         }
         public async void turn_on_pixel(int pixel) {
