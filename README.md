@@ -7,7 +7,7 @@
 3. **Hardware Device**: A communication module that interacts with the Windows application to activate LEDs, pinpointing the location of each component.  
 
 <div align="center">  
-  <img src="Assets/modules_overview.png" alt="Modules Overview">  
+  <img src="Assets/modules_overview.png">  
 </div>  
 
 ## How It Works
@@ -20,12 +20,14 @@ The system operates seamlessly:
 
 This integrated solution streamlines component management, saving time and reducing errors in locating items.
 
-
 ## Flow Overview
-<img src="Assets/flow_overview.png" alt="Flow Overview">
+<img src="Assets/flow_overview.png">
 
 ## Circuit Diagram
-<img src="Assets/circuit_diagram.png" alt="Flow Overview">
+<img src="Assets/circuit_diagram.png">
+
+## UI Preview
+<img src="Assets/ui_preview.png">
 
 ### Contributing
 0. Give this project a :star:
