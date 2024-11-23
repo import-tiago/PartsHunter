@@ -1,0 +1,29 @@
+If an existing database or migrations need to be reset, follow these steps:
+
+Delete Existing Build Artifacts and Files:
+
+Remove the following directories and files from your project:
+/bin
+/obj
+/Migrations
+Any existing *.db files (your database file).
+Clean the Solution:
+
+In your IDE (e.g., Visual Studio), navigate to Build → Clean Solution to remove temporary files and ensure a clean build.
+Open the Package Manager Console:
+
+Go to Tools → NuGet Package Manager → Package Manager Console.
+Generate and Apply Migrations:
+
+Run the following commands in the Package Manager Console:
+	Add-Migration InitialCreate
+	Update-Database
+
+Verify the Database:
+
+Confirm that the new database and schema are created as expected.
+
+Notes:
+Make sure your DbContext and entity classes are correctly set up before regenerating the database.
+Use meaningful migration names instead of InitialCreate when adding migrations for clarity in version control.
+If using a source control system, commit your changes to the migration folder after verifying the database generation.

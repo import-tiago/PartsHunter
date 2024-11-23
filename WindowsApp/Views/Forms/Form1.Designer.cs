@@ -712,6 +712,7 @@ namespace PartsHunter
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "PartsHunter";
+            FormClosing += Form1_FormClosing;
             Load += Form1_Load;
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);

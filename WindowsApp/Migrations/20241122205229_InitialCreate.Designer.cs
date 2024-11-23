@@ -10,7 +10,7 @@ using PartsHunter.Data;
 namespace PartsHunter.Migrations
 {
     [DbContext(typeof(PartsHunterContext))]
-    [Migration("20241122171237_InitialCreate")]
+    [Migration("20241122205229_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

@@ -187,9 +187,23 @@ namespace PartsHunter {
             labelBright.Text = percentage + "%";
         }
 
-        private async void buttonClear_Click(object sender, EventArgs e) {
-            var endpoint = "http://{web_server_ip}/clear";
-            var response = await httpClient.PostAsync(endpoint, null);
+        async void clear_pixels() {
+            try {
+                var endpoint = $"http://{web_server_ip}/clear";
+                var response = await httpClient.PostAsync(endpoint, null);
+            }
+            catch (HttpRequestException httpEx) {
+
+            }
+            catch (Exception ex) {
+
+            }
+        }
+
+        private void buttonClear_Click(object sender, EventArgs e) {
+
+            clear_pixels();
+
         }
 
         int selected_component_id;
@@ -269,21 +283,30 @@ namespace PartsHunter {
         }
 
         private async void button1_Click(object sender, EventArgs e) {
-            var endpoint = "http://{web_server_ip}/clear";
-            var response = await httpClient.PostAsync(endpoint, null);
+            try {
+                var endpoint = $"http://{web_server_ip}/clear";
+                var response = await httpClient.PostAsync(endpoint, null);
 
-            List<int> slotIds = new List<int>();
 
-            foreach (DataGridViewRow row in dgvBillOfMaterials.Rows) {
-                if (row.Cells["SlotID"].Value != null) {
-                    int slotId = Convert.ToInt32(row.Cells["SlotID"].Value);
-                    slotIds.Add(slotId);
+                List<int> slotIds = new List<int>();
+
+                foreach (DataGridViewRow row in dgvBillOfMaterials.Rows) {
+                    if (row.Cells["SlotID"].Value != null) {
+                        int slotId = Convert.ToInt32(row.Cells["SlotID"].Value);
+                        slotIds.Add(slotId);
+                    }
+                }
+                string slotIdList = string.Join(",", slotIds);
+                endpoint = $"http://{web_server_ip}/slot?id={slotIdList}";
+                using (HttpClient httpClient = new HttpClient()) {
+                    response = await httpClient.PostAsync(endpoint, null);
                 }
             }
-            string slotIdList = string.Join(",", slotIds);
-            endpoint = $"http://{web_server_ip}/slot?id={slotIdList}";
-            using (HttpClient httpClient = new HttpClient()) {
-                response = await httpClient.PostAsync(endpoint, null);
+            catch (HttpRequestException httpEx) {
+
+            }
+            catch (Exception ex) {
+
             }
         }
 
@@ -293,7 +316,7 @@ namespace PartsHunter {
             dgvBillOfMaterials.Columns.Add("SlotID", "SlotID");
             dgvBillOfMaterials.Columns["SlotID"].Visible = false;
             dgvStock.Columns["SlotID"].Width = 30;
-            dgvStock.Columns["Category"].Width = 150;            
+            dgvStock.Columns["Category"].Width = 150;
             dgvStock.Columns["SlotID"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dgvStock.EnableHeadersVisualStyles = false;
             dgvStock.ColumnHeadersDefaultCellStyle.SelectionBackColor = dgvStock.ColumnHeadersDefaultCellStyle.BackColor;
@@ -303,22 +326,34 @@ namespace PartsHunter {
 
             var service = new HardwareDeviceService();
             web_server_ip = service.GetIPAddress(1);
-            if (web_server_ip == null)
-                tbIP.ReadOnly = true;
-            else {
+            if (web_server_ip != null) {
                 tbIP.Enabled = false;
                 tbIP.Text = web_server_ip;
+                clear_pixels();
+            }
+            else {
+                tbIP.Enabled = true;
+                tbIP.Text = string.Empty;
             }
 
 
         }
 
         private void dgvBillOfMaterials_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
-            if (e.RowIndex >= 0) {
+            if (e.RowIndex >= 0 && !dgvBillOfMaterials.Rows[e.RowIndex].IsNewRow) {
                 dgvBillOfMaterials.Rows.RemoveAt(e.RowIndex);
 
+                if (dgvBillOfMaterials.Rows.Count == 1 && dgvBillOfMaterials.Rows[0].IsNewRow) {
+                    // Clear all rows if only the new row is left
+                    dgvBillOfMaterials.Rows.Clear();
+                    dgvBillOfMaterials.Refresh();
+                    clear_pixels();
+                }
             }
         }
+
+
+
 
         private void ProcessFile(string filePath) {
             try {
@@ -407,6 +442,10 @@ namespace PartsHunter {
         private void pictureBoxEditIP_Click(object sender, EventArgs e) {
             edit_ip = !edit_ip;
             tbIP.Enabled = edit_ip;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
+            clear_pixels();
         }
     }
 }
