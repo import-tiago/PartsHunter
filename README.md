@@ -1,12 +1,30 @@
 # PartsHunter
 
-| <img src="Assets/modules_overview.png" width="5000"> | **PartsHunter** is an electronic component organization system composed of three main modules: a mechanical assembly for component storage, a Windows application that allows the user to search for the desired component by description, and a hardware device that remotely communicates with the Windows app and activates LEDs to indicate the location of each item based on the search performed. When a search is executed in the application, an SQLite database is queried, and the results are displayed on the screen. The user can then select the desired component(s), triggering REST POST requests to the hardware device, which uses an ESP32 as a web server. These requests are processed, and the corresponding LEDs are lit, indicating the slots where each component is located. |
-|--------------------------|--------------------------------------------------------------|
+**PartsHunter** is an electronic component organization system designed for efficiency and precision. It consists of three core modules:  
 
-## Usage Flow Overview
+1. **Mechanical Assembly**: A storage system that organizes components across dedicated slots.  
+2. **Windows Application**: A user-friendly interface for searching and managing components by description.  
+3. **Hardware Device**: A communication module that interacts with the Windows application to activate LEDs, pinpointing the location of each component.  
+
+<div align="center">  
+  <img src="Assets/modules_overview.png" alt="Modules Overview">  
+</div>  
+
+## How It Works
+
+The system operates seamlessly:  
+
+- When a search query is entered in the Windows application, an **SQLite database** is queried to retrieve relevant results.  
+- The user selects the desired component(s) from the displayed results, triggering **REST requests** to the hardware device.  
+- Powered by an **ESP32 web server**, the hardware processes these requests and illuminates the LEDs corresponding to the storage slots containing the selected components.  
+
+This integrated solution streamlines component management, saving time and reducing errors in locating items.
+
+
+## Flow Overview
 <img src="Assets/flow_overview.png" alt="Flow Overview">
 
-## Hardware Device Circuit Diagram
+## Circuit Diagram
 <img src="Assets/circuit_diagram.png" alt="Flow Overview">
 
 ### Contributing
