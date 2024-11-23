@@ -10,7 +10,6 @@ namespace PartsHunter.Services {
             _context = new PartsHunterContext();
             _context.Database.EnsureCreated();
         }
-
         public List<ComponentEntity> GetAllComponents() {
             return _context.Components.OrderBy(c => c.SlotID).ToList();
         }
@@ -18,71 +17,42 @@ namespace PartsHunter.Services {
         public ComponentEntity? GetComponentById(int id) {
             return _context.Components.Find(id);
         }
-
         public void AddComponent(ComponentEntity component) {
-            using var transaction = _context.Database.BeginTransaction();
-            try {
-                var existingComponent = _context.Components.FirstOrDefault(c => c.SlotID == component.SlotID);
 
-                if (existingComponent != null) {
-                    existingComponent.Description = component.Description;
-                    existingComponent.Category = component.Category;
-                    _context.Components.Update(existingComponent);
-                }
-                else {
-                    _context.Components.Add(component);
-                }
+            var existingComponent = _context.Components.FirstOrDefault(c => c.SlotID == component.SlotID);
 
-                _context.SaveChanges();
-                transaction.Commit();  // Commit transaction if everything is successful
+            if (existingComponent != null) {
+                existingComponent.Description = component.Description;
+                existingComponent.Category = component.Category;
+                _context.Components.Update(existingComponent);
             }
-            catch (Exception) {
-                transaction.Rollback();  // Rollback transaction if an error occurs
-                throw;  // Optionally rethrow the exception to handle it elsewhere
+            else {
+                _context.Components.Add(component);
             }
+
+            _context.SaveChanges();
         }
-
         public void UpdateComponent(ComponentEntity component) {
-            using var transaction = _context.Database.BeginTransaction();
-            try {
-                _context.Components.Update(component);
-                _context.SaveChanges();
-                transaction.Commit();  // Commit transaction
-            }
-            catch (Exception) {
-                transaction.Rollback();  // Rollback transaction if an error occurs
-                throw;  // Optionally rethrow the exception
-            }
+            _context.Components.Update(component);
+            _context.SaveChanges();
         }
-
         public void DeleteComponent(int id) {
-            using var transaction = _context.Database.BeginTransaction();
-            try {
-                var component = _context.Components.Find(id);
-                if (component != null) {
-                    _context.Components.Remove(component);
-                    _context.SaveChanges();
-                    transaction.Commit();  // Commit transaction
-                }
-            }
-            catch (Exception) {
-                transaction.Rollback();  // Rollback transaction if an error occurs
-                throw;  // Optionally rethrow the exception
+            var component = _context.Components.Find(id);
+            if (component != null) {
+                _context.Components.Remove(component);
+                _context.SaveChanges();
             }
         }
-
         public List<ComponentEntity> SearchComponentsByDescription(string searchTerm) {
             return _context.Components
                 .Where(c => EF.Functions.Like(c.Description, "%" + searchTerm + "%"))
                 .ToList();
         }
-
         public List<ComponentEntity> SearchComponentsByDescriptionAndCategory(string searchTerm, string category) {
             return _context.Components
                 .Where(c => EF.Functions.Like(c.Description, "%" + searchTerm + "%") && c.Category == category)
                 .ToList();
         }
-
         public List<string> GetUniqueCategories() {
             return _context.Components
                 .Where(c => c.Category != null)
@@ -90,7 +60,6 @@ namespace PartsHunter.Services {
                 .Distinct()
                 .ToList();
         }
-
         public List<ComponentEntity> GetComponentsByCategory(string category) {
             return _context.Components
                 .Where(c => c.Category == category)
