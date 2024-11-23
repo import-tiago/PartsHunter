@@ -5,7 +5,7 @@
 namespace PartsHunter.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class MyStock : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,7 +26,7 @@ namespace PartsHunter.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ESP32",
+                name: "HardwareDevice",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -40,7 +40,7 @@ namespace PartsHunter.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ESP32", x => x.Id);
+                    table.PrimaryKey("PK_HardwareDevice", x => x.Id);
                 });
         }
 
@@ -51,7 +51,7 @@ namespace PartsHunter.Migrations
                 name: "Components");
 
             migrationBuilder.DropTable(
-                name: "ESP32");
+                name: "HardwareDevice");
         }
     }
 }

@@ -71,6 +71,7 @@ namespace PartsHunter
             dataGridView.SelectionMode = DataGridViewSelectionMode.CellSelect;
             dataGridView.Size = new Size(934, 52);
             dataGridView.TabIndex = 74;
+            dataGridView.CellClick += dataGridView_CellClick;
             // 
             // Form2
             // 

@@ -10,8 +10,8 @@ using PartsHunter.Data;
 namespace PartsHunter.Migrations
 {
     [DbContext(typeof(PartsHunterContext))]
-    [Migration("20241122205229_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241123113103_MyStock")]
+    partial class MyStock
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,7 +19,7 @@ namespace PartsHunter.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
-            modelBuilder.Entity("PartsHunter.Data.Entities.Component", b =>
+            modelBuilder.Entity("PartsHunter.Data.Entities.ComponentEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -39,7 +39,7 @@ namespace PartsHunter.Migrations
                     b.ToTable("Components");
                 });
 
-            modelBuilder.Entity("PartsHunter.Data.Entities.HardwareDevice", b =>
+            modelBuilder.Entity("PartsHunter.Data.Entities.HardwareDeviceEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,7 +65,7 @@ namespace PartsHunter.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ESP32", (string)null);
+                    b.ToTable("HardwareDevice", (string)null);
                 });
 #pragma warning restore 612, 618
         }

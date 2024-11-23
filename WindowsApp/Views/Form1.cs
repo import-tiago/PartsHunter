@@ -1,18 +1,9 @@
-﻿using System;
-using System.Globalization;
-using System.Net.Http;
-using System.Security.Policy;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PartsHunter.Data.Entities;
-using PartsHunter.Services.DataService;
-using System.Net.Http;
-using System.Threading.Tasks;
+using PartsHunter.Services;
 using System.Diagnostics;
-using System.Reflection.Emit;
-using System.Net;
-using PartsHunter.Data;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace PartsHunter {
     public partial class Form1 : Form {
@@ -20,46 +11,65 @@ namespace PartsHunter {
         const String DEFAULT_SEARCH_CATEGORY_ITEM = "SHOW ALL";
         const String DEFAULT_REGISTER_CATEGORY_ITEM = "< Select one or type a new one>";
         const String NOTHING_FOUND = "nothing found";
-        private static readonly HttpClient httpClient = new HttpClient();
 
-
-        private readonly ComponentService _componentService;
+        private readonly ComponentService component;
+        private readonly HardwareDeviceService hardware_device;
         public Form1() {
             InitializeComponent();
-            _componentService = new ComponentService();
+            component = new ComponentService();
+            hardware_device = new HardwareDeviceService();
             fill_data_grid();
             fill_categories();
         }
 
-        private void clear_register_form_inputs() {
-            txtDescription.Clear();
-            cmbCategoryRegister.SelectedIndex = 0;
-            txtSlotID.Clear();
-        }
-        private void clear_search_form_inputs() {
-            txtSearch.Clear();
-        }
+        private void Form1_Load(object sender, EventArgs e) {
 
-        private bool ValidateSlotId(out int slotID) {
-            if (int.TryParse(txtSlotID.Text, out slotID)) return true;
+            dgvBoM.EnableHeadersVisualStyles = false;
+            dgvBoM.ColumnHeadersDefaultCellStyle.SelectionBackColor = dgvStock.ColumnHeadersDefaultCellStyle.BackColor;
+            dgvBoM.Columns.Add("Item", "Item");
+            dgvBoM.Columns.Add("SlotID", "SlotID");
+            dgvBoM.Columns["SlotID"].Visible = false;
 
-            MessageBox.Show("Please enter a valid number for Slot ID.");
-            slotID = 0;
-            return false;
+            dgvStock.EnableHeadersVisualStyles = false;
+            dgvStock.ColumnHeadersDefaultCellStyle.SelectionBackColor = dgvStock.ColumnHeadersDefaultCellStyle.BackColor;
+            //dgvStock.Columns["SlotID"].Width = 30;
+            //dgvStock.Columns["Category"].Width = 150;            
+            // Center the text in all column headers
+            
+
+            resize_datagrid_columns_width();
+
+            hardware_device.get_ip_addr(1);
+
+            if (hardware_device.ip_addr != null) {
+                tbIP.Enabled = false;
+                tbIP.Text = hardware_device.ip_addr;
+                hardware_device.clear_pixels();
+            }
+            else {
+                tbIP.Enabled = true;
+                tbIP.Text = string.Empty;
+            }
         }
-
         private int fill_data_grid() {
-            var results = _componentService.GetAllComponents();
+            // Get the data
+            var results = component.GetAllComponents().OrderBy(c => c.SlotID).ToList();
+
+            // Re-assign the DataSource, this will automatically update the grid and clear previous rows
+            dgvStock.DataSource = null;  // Optional: clear the current binding
             dgvStock.DataSource = results;
+
+            // Customize columns after binding
             dgvStock.Columns["Category"].DisplayIndex = 0;
             dgvStock.Columns["Id"].Visible = false;
+
             return results.Count;
         }
 
+
         void fill_categories() {
 
-            List<string> categories = _componentService.GetUniqueCategories();
-
+            List<string> categories = component.GetUniqueCategories();
             List<string> search = new(categories);
             List<string> register = new(categories);
 
@@ -69,6 +79,29 @@ namespace PartsHunter {
             register.Insert(0, DEFAULT_REGISTER_CATEGORY_ITEM);
             cmbCategoryRegister.DataSource = register;
         }
+        private void clear_user_inputs() {
+            txtDescription.Clear();
+            cmbCategoryRegister.SelectedIndex = 0;
+            txtSlotID.Clear();
+        }
+        private void clear_search_form_inputs() {
+            txtSearch.Clear();
+        }
+
+        private bool ValidateSlotId(out int slotID) {
+            if (int.TryParse(txtSlotID.Text, out slotID)) {
+                return true;
+            }
+
+            MessageBox.Show("Slot ID must be a number");
+            slotID = 0;
+            return false;
+        }
+
+
+
+
+
 
         void display_search_results(int result_count) {
 
@@ -76,8 +109,9 @@ namespace PartsHunter {
                 labelResults.Visible = false;
                 return;
             }
-            else
+            else {
                 labelResults.Visible = true;
+            }
 
             labelResults.ForeColor = result_count > 0 ? Color.ForestGreen : Color.Red;
             labelResults.Text = result_count switch {
@@ -88,20 +122,30 @@ namespace PartsHunter {
         }
         private void buttonRegister_Click(object sender, EventArgs e) {
 
-            if (!ValidateSlotId(out int slotID)) return;
+            if (!ValidateSlotId(out int slotID)) {
+                return;
+            }
 
-            var newComponent = new Component {
+            var newComponent = new ComponentEntity {
                 Description = txtDescription.Text.Trim(),
                 Category = cmbCategoryRegister.Text.Trim().ToUpper(),
                 SlotID = slotID
             };
 
-            _componentService.AddComponent(newComponent);
+            component.AddComponent(newComponent);
 
             MessageBox.Show("Component saved successfully.");
-            clear_register_form_inputs();
+
+            clear_user_inputs();
             fill_data_grid();
             fill_categories();
+            resize_datagrid_columns_width();
+        }
+        void resize_datagrid_columns_width() {
+            dgvStock.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvStock.Columns["SlotID"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvStock.AutoResizeColumn(dgvStock.Columns["SlotID"].Index, DataGridViewAutoSizeColumnMode.AllCells);
+            dgvStock.AutoResizeColumn(dgvStock.Columns["Category"].Index, DataGridViewAutoSizeColumnMode.AllCells);
         }
         private void buttonSearch_Click(object sender, EventArgs e) {
 
@@ -115,8 +159,8 @@ namespace PartsHunter {
 
             var selectedCategory = cmbCategorySearch.Text;
             var results = selectedCategory == DEFAULT_SEARCH_CATEGORY_ITEM
-                ? _componentService.SearchComponentsByDescription(searchTerm)
-                : _componentService.SearchComponentsByDescriptionAndCategory(searchTerm, selectedCategory);
+                ? component.SearchComponentsByDescription(searchTerm)
+                : component.SearchComponentsByDescriptionAndCategory(searchTerm, selectedCategory);
 
             dgvStock.DataSource = results;
             display_search_results(results.Count());
@@ -132,7 +176,7 @@ namespace PartsHunter {
                 display_search_results(results_count);
             }
             else {
-                var results = _componentService.GetComponentsByCategory(selectedCategory);
+                var results = component.GetComponentsByCategory(selectedCategory);
                 dgvStock.DataSource = results;
                 display_search_results(results.Count());
             }
@@ -147,14 +191,9 @@ namespace PartsHunter {
             }
             else {
                 try {
-                    var endpoint = $"http://{web_server_ip}/color?r={r}&g={g}&b={b}";
-                    var responseColor = await httpClient.PostAsync(endpoint, null);
-
-                    endpoint = $"http://{web_server_ip}/blink?interval={trackBarTime.Value}";
-                    var responseBlink = await httpClient.PostAsync(endpoint, null);
-
-                    endpoint = $"http://{web_server_ip}/brightness?level={trackBarBright.Value}";
-                    var responseBrightness = await httpClient.PostAsync(endpoint, null);
+                    hardware_device.set_pixel_color();
+                    hardware_device.set_pixel_blinky(trackBarTime.Value);
+                    hardware_device.set_pixel_brightness(trackBarBright.Value);
                 }
                 catch (Exception ex) {
                     Debug.WriteLine($"Error in POST requests: {ex.Message}");
@@ -164,14 +203,10 @@ namespace PartsHunter {
                 buttonSettings.BackColor = Color.Transparent;
             }
         }
-
-        int r, g, b;
         private void buttonColor_Click(object sender, EventArgs e) {
             using (var colorDialog = new ColorDialog()) {
                 if (colorDialog.ShowDialog() == DialogResult.OK) {
-                    r = colorDialog.Color.R;
-                    g = colorDialog.Color.G;
-                    b = colorDialog.Color.B;
+                    hardware_device.pixel_color = colorDialog.Color;
                     buttonColor.BackColor = colorDialog.Color;
                 }
             }
@@ -187,42 +222,23 @@ namespace PartsHunter {
             labelBright.Text = percentage + "%";
         }
 
-        async void clear_pixels() {
-            try {
-                var endpoint = $"http://{web_server_ip}/clear";
-                var response = await httpClient.PostAsync(endpoint, null);
-            }
-            catch (HttpRequestException httpEx) {
-
-            }
-            catch (Exception ex) {
-
-            }
-        }
-
         private void buttonClear_Click(object sender, EventArgs e) {
-
-            clear_pixels();
-
+            hardware_device.clear_pixels();
         }
 
-        int selected_component_id;
-        private async void dataGridView_SelectionChanged(object sender, EventArgs e) {
+        int selected_database_id;
+        private void dgvStock_SelectionChanged(object sender, EventArgs e) {
 
             if (dgvStock.SelectedRows.Count > 0) {
                 DataGridViewRow selectedRow = dgvStock.SelectedRows[0];
-                var idValue = selectedRow.Cells["Id"].Value;
-                selected_component_id = Convert.ToInt32(idValue);
-                int slotId = Convert.ToInt32(dgvStock.SelectedRows[0].Cells["SlotID"].Value) - 1;
-                try {
-                    var endpoint = $"http://{web_server_ip}/slot?id={slotId}";
-                    var response = await httpClient.PostAsync(endpoint, null);
-                }
-                catch (HttpRequestException httpEx) {
 
+                if (selectedRow.Cells["Id"].Value is int database_id) {
+                    selected_database_id = database_id;
                 }
-                catch (Exception ex) {
 
+                if (selectedRow.Cells["SlotID"].Value is int id) {
+                    int pixel = id - 1;
+                    hardware_device.turn_on_pixel(pixel);
                 }
             }
         }
@@ -231,18 +247,20 @@ namespace PartsHunter {
             var result = MessageBox.Show("Are you sure you want to delete this component?", "Delete Component", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (result == DialogResult.Yes) {
-                _componentService.DeleteComponent(selected_component_id);
+                component.DeleteComponent(selected_database_id);
                 fill_data_grid();
                 fill_categories();
+                resize_datagrid_columns_width();
             }
-            else
+            else {
                 return;
+            }
         }
         private void buttonEdit_Click(object sender, EventArgs e) {
 
-            using (Form2 form2 = new Form2(_componentService)) {
+            using (Form2 form2 = new Form2(component)) {
 
-                form2.selected_component_id = selected_component_id;
+                form2.selected_database_id = selected_database_id;
 
                 var result = form2.ShowDialog();
 
@@ -257,104 +275,60 @@ namespace PartsHunter {
 
         private void dgvDataSet_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
             if (e.RowIndex >= 0) {
-                // Get the selected row from dgvDataSet
+
                 DataGridViewRow selectedRow = dgvStock.Rows[e.RowIndex];
 
-                // Get the SlotID value from the selected row
                 int selectedSlotId = Convert.ToInt32(selectedRow.Cells["SlotID"].Value);
 
-                // Check if the SlotID already exists in dgvBillOfMaterials
                 bool slotIdExists = false;
-                foreach (DataGridViewRow row in dgvBillOfMaterials.Rows) {
+                foreach (DataGridViewRow row in dgvBoM.Rows) {
                     if (row.Cells["SlotID"].Value != null && Convert.ToInt32(row.Cells["SlotID"].Value) == selectedSlotId) {
                         slotIdExists = true;
                         break;
                     }
                 }
 
-                // If SlotID does not exist, add the row to dgvBillOfMaterials
                 if (!slotIdExists) {
-                    int newRowIndex = dgvBillOfMaterials.Rows.Add();
+                    int newRowIndex = dgvBoM.Rows.Add();
                     string concatenatedValue = selectedRow.Cells["Category"].Value.ToString() + " - " + selectedRow.Cells["Description"].Value.ToString();
-                    dgvBillOfMaterials.Rows[newRowIndex].Cells["Item"].Value = concatenatedValue;
-                    dgvBillOfMaterials.Rows[newRowIndex].Cells["SlotID"].Value = selectedRow.Cells["SlotID"].Value;
+                    dgvBoM.Rows[newRowIndex].Cells["Item"].Value = concatenatedValue;
+                    dgvBoM.Rows[newRowIndex].Cells["SlotID"].Value = selectedRow.Cells["SlotID"].Value;
                 }
             }
         }
 
-        private async void button1_Click(object sender, EventArgs e) {
+        private async void btnShowAll_Click(object sender, EventArgs e) {
             try {
-                var endpoint = $"http://{web_server_ip}/clear";
-                var response = await httpClient.PostAsync(endpoint, null);
+                hardware_device.clear_pixels();
 
+                List<int> pixels = new List<int>();
 
-                List<int> slotIds = new List<int>();
-
-                foreach (DataGridViewRow row in dgvBillOfMaterials.Rows) {
+                foreach (DataGridViewRow row in dgvBoM.Rows) {
                     if (row.Cells["SlotID"].Value != null) {
                         int slotId = Convert.ToInt32(row.Cells["SlotID"].Value);
-                        slotIds.Add(slotId);
+                        pixels.Add(slotId);
                     }
                 }
-                string slotIdList = string.Join(",", slotIds);
-                endpoint = $"http://{web_server_ip}/slot?id={slotIdList}";
-                using (HttpClient httpClient = new HttpClient()) {
-                    response = await httpClient.PostAsync(endpoint, null);
-                }
-            }
-            catch (HttpRequestException httpEx) {
 
+                hardware_device.turn_on_pixels(pixels);
             }
-            catch (Exception ex) {
+            catch (Exception) {
 
             }
         }
 
-        string? web_server_ip = string.Empty;
-        private void Form1_Load(object sender, EventArgs e) {
-            dgvBillOfMaterials.Columns.Add("Item", "Item");
-            dgvBillOfMaterials.Columns.Add("SlotID", "SlotID");
-            dgvBillOfMaterials.Columns["SlotID"].Visible = false;
-            dgvStock.Columns["SlotID"].Width = 30;
-            dgvStock.Columns["Category"].Width = 150;
-            dgvStock.Columns["SlotID"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dgvStock.EnableHeadersVisualStyles = false;
-            dgvStock.ColumnHeadersDefaultCellStyle.SelectionBackColor = dgvStock.ColumnHeadersDefaultCellStyle.BackColor;
-            dgvBillOfMaterials.EnableHeadersVisualStyles = false;
-            dgvBillOfMaterials.ColumnHeadersDefaultCellStyle.SelectionBackColor = dgvStock.ColumnHeadersDefaultCellStyle.BackColor;
-
-
-            var service = new HardwareDeviceService();
-            web_server_ip = service.GetIPAddress(1);
-            if (web_server_ip != null) {
-                tbIP.Enabled = false;
-                tbIP.Text = web_server_ip;
-                clear_pixels();
-            }
-            else {
-                tbIP.Enabled = true;
-                tbIP.Text = string.Empty;
-            }
-
-
-        }
 
         private void dgvBillOfMaterials_CellDoubleClick(object sender, DataGridViewCellEventArgs e) {
-            if (e.RowIndex >= 0 && !dgvBillOfMaterials.Rows[e.RowIndex].IsNewRow) {
-                dgvBillOfMaterials.Rows.RemoveAt(e.RowIndex);
+            if (e.RowIndex >= 0 && !dgvBoM.Rows[e.RowIndex].IsNewRow) {
+                dgvBoM.Rows.RemoveAt(e.RowIndex);
 
-                if (dgvBillOfMaterials.Rows.Count == 1 && dgvBillOfMaterials.Rows[0].IsNewRow) {
-                    // Clear all rows if only the new row is left
-                    dgvBillOfMaterials.Rows.Clear();
-                    dgvBillOfMaterials.Refresh();
-                    clear_pixels();
+                if (dgvBoM.Rows.Count == 1 && dgvBoM.Rows[0].IsNewRow) {
+                    dgvBoM.Rows.Clear();
+                    dgvBoM.Refresh();
+                    hardware_device.clear_pixels();
                 }
             }
         }
-
-
-
-
         private void ProcessFile(string filePath) {
             try {
                 var lines = File.ReadAllLines(filePath);
@@ -368,14 +342,14 @@ namespace PartsHunter {
                         string description = parts[1].Trim();
                         if (int.TryParse(parts[2].Trim(), out int slotID)) {
 
-                            var newComponent = new Component {
+                            var newComponent = new ComponentEntity {
                                 Description = description,
                                 Category = category,
                                 SlotID = slotID
                             };
 
-                            _componentService.AddComponent(newComponent);
-                            clear_register_form_inputs();
+                            component.AddComponent(newComponent);
+                            clear_user_inputs();
                             fill_data_grid();
                         }
                         else {
@@ -393,7 +367,6 @@ namespace PartsHunter {
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         private void buttonGetFileAddress_Click(object sender, EventArgs e) {
 
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
@@ -407,19 +380,27 @@ namespace PartsHunter {
                 }
             }
         }
-
         private void buttonSaveFromFile_Click(object sender, EventArgs e) {
-            if (textBoxFileLocation.Text.Contains(".txt"))
-                ProcessFile(textBoxFileLocation.Text);
-            else
+            if (textBoxFileLocation.Text.Contains(".txt")) {
+                Cursor.Current = Cursors.WaitCursor;
+                try {
+                    ProcessFile(textBoxFileLocation.Text);
+                }
+                finally {
+                    Cursor.Current = Cursors.Default;
+                    clear_user_inputs();
+                    fill_data_grid();
+                    fill_categories();
+                    resize_datagrid_columns_width();
+                }
+            }
+            else {
                 MessageBox.Show("Please specify a valid .txt file.");
+            }
         }
 
         public bool is_ip_valid(string ip_addr) {
-            // Regular expression to match IPv4 addresses
             string pattern = @"^((25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$";
-
-            // Use Regex to match the input string
             return Regex.IsMatch(ip_addr, pattern);
         }
         private void pictureBox2_Click(object sender, EventArgs e) {
@@ -427,15 +408,14 @@ namespace PartsHunter {
             string ip_addr = tbIP.Text;
 
             if (is_ip_valid(ip_addr)) {
-
-                var service = new HardwareDeviceService();
-                if (service.AddIPAddress(1, ip_addr)) {
+                if (hardware_device.add_ip_addr(1, ip_addr)) {
                     MessageBox.Show("Saved successfully!");
                     tbIP.Enabled = false;
                 }
             }
-            else
+            else {
                 MessageBox.Show("Invalid IP address!");
+            }
         }
 
         bool edit_ip = false;
@@ -445,7 +425,7 @@ namespace PartsHunter {
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
-            clear_pixels();
+            hardware_device.clear_pixels();
         }
     }
 }
