@@ -9,7 +9,7 @@ Remove the following directories and files from your project:
 Any existing *.db files (your database file).
 Clean the Solution:
 
-In your IDE (e.g., Visual Studio), navigate to Build → Clean Solution to remove temporary files and ensure a clean build.
+In Visual Studio, navigate to Build → Clean Solution to remove temporary files and ensure a clean build.
 Open the Package Manager Console:
 
 Go to Tools → NuGet Package Manager → Package Manager Console.

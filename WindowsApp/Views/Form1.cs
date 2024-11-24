@@ -211,7 +211,6 @@ namespace PartsHunter {
         private void buttonClear_Click(object sender, EventArgs e) {
             hardware_device.clear_pixels();
         }
-
         int selected_database_id;
         private void dgvStock_SelectionChanged(object sender, EventArgs e) {
 
@@ -307,8 +306,8 @@ namespace PartsHunter {
 
                 foreach (DataGridViewRow row in dgvBoM.Rows) {
                     if (row.Cells["SlotID"].Value != null) {
-                        int slotId = Convert.ToInt32(row.Cells["SlotID"].Value);
-                        pixels.Add(slotId);
+                        int pixel = Convert.ToInt32(row.Cells["SlotID"].Value) - 1;
+                        pixels.Add(pixel);
                     }
                 }
                 hardware_device.turn_on_pixels(pixels);
@@ -395,7 +394,6 @@ namespace PartsHunter {
                 MessageBox.Show("Please specify a valid .txt file.");
             }
         }
-
         public bool is_ip_valid(string ip_addr) {
             string pattern = @"^((25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$";
             return Regex.IsMatch(ip_addr, pattern);
@@ -423,10 +421,12 @@ namespace PartsHunter {
             edit_ip = !edit_ip;
             tbIP.Enabled = edit_ip;
         }
-
         private async void Form1_FormClosing(object sender, FormClosingEventArgs e) {
-            await hardware_device.clear_pixels();
-            Task.Delay(5000).Wait(); // Wait synchronously for demonstration 
+            bool pixelsCleared = await hardware_device.clear_pixels();
+            if (!pixelsCleared) {
+                Debug.WriteLine("Failed to clear pixels after multiple attempts.");
+            }
+            await Task.Delay(5000);
         }
     }
 }

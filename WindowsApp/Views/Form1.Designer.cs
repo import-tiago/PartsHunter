@@ -166,6 +166,7 @@ namespace PartsHunter
             // 
             // dgvBoM
             // 
+            dgvBoM.AllowUserToAddRows = false;
             dgvBoM.AllowUserToResizeRows = false;
             dgvBoM.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvBoM.BackgroundColor = SystemColors.ControlLightLight;

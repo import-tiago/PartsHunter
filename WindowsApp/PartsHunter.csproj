@@ -6,6 +6,18 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <StartupObject>PartsHunter.Program</StartupObject>
+    <Title>PartsHunter</Title>
+    <Authors>Tiago Silva</Authors>
+    <Company>Controlando Elétrons</Company>
+    <Description>PartsHunter is an electronic component organization system designed for efficiency and precision. It consists of three core modules:
+
+Windows Application: A user-friendly interface for searching and managing components by description.
+Hardware Device: A communication module that interacts with the Windows application to activate LEDs, pinpointing the location of each component.
+Mechanical Assembly: A storage system that organizes components across dedicated slots.</Description>
+    <PackageProjectUrl>https://github.com/import-tiago/PartsHunter</PackageProjectUrl>
+    <PackageIcon>logo-image.png</PackageIcon>
+    <RepositoryUrl>https://github.com/import-tiago/PartsHunter</RepositoryUrl>
     <ApplicationIcon>logo_icon.ico</ApplicationIcon>
   </PropertyGroup>
 
@@ -28,6 +40,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -35,6 +52,24 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\Tables\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Assets\logo-image.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>

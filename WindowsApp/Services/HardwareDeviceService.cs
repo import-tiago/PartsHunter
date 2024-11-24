@@ -93,20 +93,27 @@ namespace PartsHunter.Services {
 
             }
         }
-        public async Task clear_pixels() {
-            try {
-                var endpoint = $"http://{ip_addr}/clear";
-                var response = await httpClient.PostAsync(endpoint, null);
-                if (response.IsSuccessStatusCode) {
-                    Debug.WriteLine("Pixels cleared successfully!");
+        public async Task<bool> clear_pixels(int retries = 3, int delay = 2000) {
+
+            for (int attempt = 0; attempt < retries; attempt++) {
+                try {
+                    var endpoint = $"http://{ip_addr}/clear";
+                    var response = await httpClient.PostAsync(endpoint, null);
+
+                    if (response.IsSuccessStatusCode) {                        
+                        return true;
+                    }
+                    else {
+                        Debug.WriteLine($"Attempt {attempt + 1} failed: Status code {response.StatusCode}");
+                    }
                 }
-                else {
-                    Debug.WriteLine($"Failed to clear pixels. Status code: {response.StatusCode}");
+                catch (Exception ex) {
+                    Debug.WriteLine($"Attempt {attempt + 1} exception: {ex.Message}");
                 }
+
+                await Task.Delay(delay);
             }
-            catch (Exception ex) {
-                Debug.WriteLine($"Exception occurred: {ex.Message}");
-            }
+            return false;
         }
     }
 }
