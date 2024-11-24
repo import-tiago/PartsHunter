@@ -411,6 +411,7 @@ namespace PartsHunter {
                     buttonSettings.Enabled = true;
                     buttonSettings.Text = HARDWARE_DEVICE_READY;
                     buttonSettings.BackColor = SystemColors.Control;
+                    Application.Restart();
                 }
             }
             else {
@@ -422,32 +423,10 @@ namespace PartsHunter {
             edit_ip = !edit_ip;
             tbIP.Enabled = edit_ip;
         }
-        private bool isClosingHandled = false; // Flag to prevent re-entry
+
         private async void Form1_FormClosing(object sender, FormClosingEventArgs e) {
-            
-            if (isClosingHandled) {
-                return; // Skip if already handled
-            }
-
-            e.Cancel = true; // Prevent immediate closing
-
-            try {
-                Debug.WriteLine("Attempting to clear pixels...");
-                var success = await hardware_device.clear_pixels();
-
-                if (success) {
-                    Debug.WriteLine("Pixels cleared successfully.");
-                    isClosingHandled = true; // Mark as handled
-                    e.Cancel = false; // Allow closing
-                    this.Close(); // Explicitly close the form
-                }
-                else {
-                    Debug.WriteLine("Failed to clear pixels. Form will remain open.");
-                }
-            }
-            catch (Exception ex) {
-                Debug.WriteLine($"Exception during clear_pixels: {ex.Message}");
-            }
+            await hardware_device.clear_pixels();
+            Task.Delay(5000).Wait(); // Wait synchronously for demonstration 
         }
     }
 }

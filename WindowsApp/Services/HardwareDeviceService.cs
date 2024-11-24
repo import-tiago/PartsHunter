@@ -72,24 +72,6 @@ namespace PartsHunter.Services {
 
             }
         }
-        public async Task<bool> clear_pixels() {
-            try {
-                var endpoint = $"http://{ip_addr}/clear";
-                var response = await httpClient.PostAsync(endpoint, null);
-
-                if (response.IsSuccessStatusCode) {
-                    return true; // HTTP 200 success
-                }
-                else {
-                    Debug.WriteLine($"HTTP Error: {response.StatusCode}");
-                    return false; // Non-success status
-                }
-            }
-            catch (Exception ex) {
-                Debug.WriteLine($"Error in clear_pixels: {ex.Message}");
-                return false; // Exception occurred
-            }
-        }
         public async void turn_on_pixel(int pixel) {
             try {
                 var endpoint = $"http://{ip_addr}/slot?id={pixel}";
@@ -109,6 +91,21 @@ namespace PartsHunter.Services {
             }
             catch (Exception) {
 
+            }
+        }
+        public async Task clear_pixels() {
+            try {
+                var endpoint = $"http://{ip_addr}/clear";
+                var response = await httpClient.PostAsync(endpoint, null);
+                if (response.IsSuccessStatusCode) {
+                    Debug.WriteLine("Pixels cleared successfully!");
+                }
+                else {
+                    Debug.WriteLine($"Failed to clear pixels. Status code: {response.StatusCode}");
+                }
+            }
+            catch (Exception ex) {
+                Debug.WriteLine($"Exception occurred: {ex.Message}");
             }
         }
     }
