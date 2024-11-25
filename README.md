@@ -7,14 +7,10 @@
 2. [**Hardware Device**](#hardware-device): A communication module that interacts with the Windows application to activate LEDs, pinpointing the location of each component.
 3. [**Mechanical Assembly**](#mechanical-assembly): A storage system that organizes components across dedicated slots.
 
-<div align="center">  
-  <img src="Assets/modules_overview.png">  
-</div>  
-
 ---
 ## Video - Demo
 
-<p align="center"><a href="https://vimeo.com/1032888161"><img src="Assets/VideoThumbnail.png" width="80%" height="80%" title="Watch the video" alt="Watch the video"></a></p>
+<p align="center"><a href="https://vimeo.com/1032888161"><img src="Assets/VideoThumbnail.png"" title="Watch the video" alt="Watch the video"></a></p>
 
 ## How It Works
 - When a search query is entered in the Windows application, an **SQLite database** is queried to retrieve relevant results.  
