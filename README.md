@@ -35,6 +35,13 @@ This integrated solution streamlines component management, saving time and reduc
 ## Mechanical Assembly
 <img src="Assets/mechanical_preview.png">
 
+| ![](Assets/3D%20Models/1.png) | ![](Assets/3D%20Models/2.png) | ![](Assets/3D%20Models/3.png) |
+|--|--|--|
+| ![](Assets/3D%20Models/4.png) | ![](Assets/3D%20Models/5.png) | ![](Assets/3D%20Models/6.png) |
+| ![](Assets/3D%20Models/7.png) | ![](Assets/3D%20Models/8.png) | ![](Assets/3D%20Models/9.png) |
+
+
+
 ### Contributing
 0. Give this project a :star:
 1. Create an issue and describe your idea.
