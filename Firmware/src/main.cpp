@@ -197,15 +197,12 @@ void loop() {
     server.handleClient();
 
     if (!active_slots.empty()) {
-
         static uint32_t t0 = 0;
         static bool state = false;
 
         if (millis() - t0 > blink_interval) {
-
             if (state && blink_interval > 0)
                 pixels.clear();
-
             else {
                 for (int16_t slot : active_slots)
                     pixels.setPixelColor(slot, pixels.Color(color_r, color_g, color_b));
@@ -213,7 +210,6 @@ void loop() {
 
             pixels.show();
             state = !state;
-
             t0 = millis();
         }
     }
